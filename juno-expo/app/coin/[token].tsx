@@ -1355,13 +1355,6 @@ const CellValue = styled.Text`
   color: ${(p) => p.theme.colors.text};
 `;
 
-/** A hairline inside a card, where the sheet's own rules do not reach. */
-const Split = styled.View`
-  height: ${(p) => p.theme.hairline}px;
-  background-color: ${(p) => p.theme.colors.line};
-  margin-vertical: ${(p) => p.theme.space(4)}px;
-`;
-
 const Divider = styled.View`
   width: ${(p) => p.theme.hairline}px;
   background-color: ${(p) => p.theme.colors.line};

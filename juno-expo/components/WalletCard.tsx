@@ -195,7 +195,14 @@ function KeyBackup() {
       <View style={styles.head}>
         <Text style={styles.label}>Device key</Text>
         <View style={{ flexDirection: "row", gap: 6 }}>
-          <Tappable onPress={() => (mode === "export" ? (setMode("idle"), setShown(null)) : void reveal())} to={0.95} accessibilityRole="button">
+          <Tappable onPress={() => {
+              if (mode === "export") {
+                setMode("idle");
+                setShown(null);
+              } else {
+                void reveal();
+              }
+            }} to={0.95} accessibilityRole="button">
             <View style={styles.copy}>
               <Text style={styles.copyText}>{mode === "export" ? "Hide" : "Export"}</Text>
             </View>

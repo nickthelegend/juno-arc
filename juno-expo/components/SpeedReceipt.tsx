@@ -45,6 +45,7 @@ export function SpeedReceipt({
   // lands a moment too early is asked again a few times, quietly.
   const tries = useRef(0);
   const { poll } = cost;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: a new error is what asks for the next retry.
   useEffect(() => {
     if (cost.data || cost.loading || tries.current >= 4) return;
     const timer = setTimeout(() => {

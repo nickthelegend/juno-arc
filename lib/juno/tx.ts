@@ -738,7 +738,7 @@ export type SubmitResult = {
   /** Set when a buy filled the curve to its top. */
   completed?: Address[];
   /** The Arc Memo the transaction emitted, when it went through Memo. */
-  memo?: { id: Hex; line: string; sender: Address; target: Address };
+  memo?: { id: Hex; tagged: true; line: string; sender: Address; target: Address };
   /** Creator fees burned on Arc through CCTP V2 for another chain. */
   cctp?: { token: Address; destinationDomain: number; mintRecipient: Hex; amount: number; maxFee: number };
   /** A Chainlink CCIP message the transaction sent: follow it on ccip.chain.link. */
@@ -900,7 +900,7 @@ export async function describeReceipt(receipt: TransactionReceipt, from: Address
       } catch {
         line = "";
       }
-      result.memo = { id: tag.args.memoId, line, sender: getAddress(tag.args.sender), target: getAddress(tag.args.target) };
+      result.memo = { id: tag.args.memoId, tagged: true, line, sender: getAddress(tag.args.sender), target: getAddress(tag.args.target) };
     }
   }
 
