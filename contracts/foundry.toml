@@ -38,6 +38,8 @@ remappings = [
 fs_permissions = [
   # deployments/arc-<network>.json at the repo root
   { access = "read-write", path = "../deployments" },
+  # scripts/arc-fork.sh writes the local fork's addresses here (git-ignored)
+  { access = "read-write", path = "../.fork" },
   # Uniswap v2's published artifacts and Chainlink's published CCIP bytecode
   { access = "read", path = "./node_modules/@uniswap" },
   { access = "read", path = "./node_modules/@chainlink/contracts-ccip/bytecode" },
