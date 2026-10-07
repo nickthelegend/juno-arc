@@ -1,0 +1,119 @@
+# yaml-language-server: $schema=./node_modules/envio/evm.schema.json
+#
+# Juno launchpad indexer on Arc — Envio HyperIndex v3. OPTIONAL and UNVERIFIED
+# on Arc: the app works without it (receipts + its own log tail). See README.md.
+#
+# One contract, `JunoLaunchpad`, holds every bonding curve. Every token it
+# launches is also registered dynamically (see `contractRegister` in
+# src/EventHandlers.ts) so its ERC-20 `Transfer`s are indexed too: that is what
+# turns trade-derived positions into real balances and holder counts. So is the
+# coin's TOKEN/USDC Uniswap v2 pair, whose address is fixed at launch.
+#
+# Addresses and start blocks come from the environment, because the launchpad is
+# deployed per network (`deployments/arc-<network>.json` → `launchpad`,
+# `deployBlock`). Envio only passes `ENVIO_`-prefixed variables through (and
+# Envio Cloud only accepts that prefix), hence the names. See .env.example.
+name: juno-indexer
+description: Juno — every post is a market. Trades, pools, positions and graduations on Arc (USDC-quoted).
+
+# Handlers live in src/ (not the default src/handlers/). Every .ts file there is
+# loaded; *.test.ts files are skipped.
+handlers: src
+
+# Rows are keyed by (id, chainId): a token address on testnet and the same
+# address on mainnet are two different pools. GraphQL exposes `chainId` on
+# every entity for filtering when both chains are enabled.
+disable_default_cross_chain: true
+
+contracts:
+  - name: JunoLaunchpad
+    # Block number and timestamp come with every event. The transaction hash is
+    # fetched only for the events that store it.
+    events:
+      - event: "Launched(address indexed token, address indexed creator, address indexed quote, uint8 preset, string name, string symbol, string uri, uint160 sqrtStartPriceX96, uint160 sqrtEndPriceX96, uint256 curveBase, uint256 migrationBase, uint256 migrationQuoteThreshold, address venue)"
+        field_selection:
+          transaction_fields: [hash]
+      - event: "Trade(address indexed token, address indexed trader, bool isBuy, uint256 baseAmount, uint256 quoteAmount, uint256 fee, uint160 sqrtPriceX96, uint256 quoteReserve)"
+        field_selection:
+          transaction_fields: [hash]
+      - event: "CurveCompleted(address indexed token, uint256 quoteReserve)"
+      - event: "Graduated(address indexed token, address indexed venue, uint256 baseAmount, uint256 quoteAmount, uint256 liquidity, uint256 burned)"
+        field_selection:
+          transaction_fields: [hash]
+      - event: "CreatorFeesClaimed(address indexed token, address indexed creator, address to, uint256 amount)"
+        field_selection:
+          transaction_fields: [hash]
+      # Creator fees burned through Circle CCTP V2 to another chain.
+      - event: "CreatorFeesBridged(address indexed token, address indexed creator, uint32 destinationDomain, bytes32 mintRecipient, uint256 amount, uint256 maxFee)"
+        field_selection:
+          transaction_fields: [hash]
+      - event: "ProtocolFeesClaimed(address indexed quote, address to, uint256 amount)"
+      - event: "QuoteAllowed(address indexed quote, bool allowed)"
+      - event: "GraduatorSet(address indexed graduator)"
+      - event: "ProtocolShareSet(uint16 bps)"
+
+  # Every token the launchpad deploys. No address here: each one is added from
+  # its `Launched` event, and HyperIndex backfills the whole creation block, so
+  # the constructor's mint is seen too.
+  - name: JunoToken
+    events:
+      - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+
+  # The TOKEN/USDC Uniswap v2 pair a coin graduates into. Its address
+  # is fixed at launch (the token refuses transfers into it until then), so it
+  # is registered from `Launched`; it emits nothing until graduation mints its
+  # liquidity. `Sync` carries the reserves after every change; `Swap` is a
+  # trade, through Juno's router or any other, attributed to the sender.
+  - name: UniswapV2Pair
+    events:
+      - event: "Sync(uint112 reserve0, uint112 reserve1)"
+      - event: "Swap(address indexed sender, uint256 amount0In, uint256 amount1In, uint256 amount0Out, uint256 amount1Out, address indexed to)"
+        field_selection:
+          transaction_fields: [hash, from]
+
+chains:
+  # Arc testnet. HyperSync does not cover Arc (as far as we know), so the RPC is
+  # the primary data source (`for: sync`). Arc has sub-second deterministic
+  # finality, so there are no reorgs to track.
+  - id: 5042002
+    # PLACEHOLDER until Juno is deployed to Arc testnet: set it to
+    # `deployBlock` from deployments/arc-testnet.json. It must not be later than
+    # the deployment: the constructor emits `ProtocolShareSet` and
+    # `QuoteAllowed(USDC)`, which the fee split and quote table depend on. Left
+    # at 0, an RPC-only sync walks the whole chain from genesis (slow, but
+    # harmless: with the zero-address launchpad below nothing matches).
+    start_block: ${ENVIO_JUNO_TESTNET_START_BLOCK:-0}
+    rpc:
+      - url: ${ENVIO_ARC_TESTNET_RPC_URL:-https://rpc.testnet.arc.io}
+        for: sync
+        # Blocks per eth_getLogs. The public testnet RPC answers a 10,000-block
+        # range (inclusive) and refuses anything larger ("requested range too
+        # large", checked 2026-10-08); the ceiling stays a little under that.
+        initial_block_interval: ${ENVIO_ARC_RPC_BLOCK_INTERVAL:-2000}
+        interval_ceiling: ${ENVIO_ARC_RPC_BLOCK_CEILING:-9000}
+    contracts:
+      - name: JunoLaunchpad
+        # PLACEHOLDER: `launchpad` from deployments/arc-testnet.json, which does
+        # not exist yet (only a dry run). The local fork's launchpad
+        # (.fork/arc-fork.json) is valid on the fork only, not on Arc testnet.
+        # With the zero address nothing emits, so the indexer runs and stays empty.
+        address: "${ENVIO_JUNO_TESTNET_LAUNCHPAD:-0x0000000000000000000000000000000000000000}"
+      - name: JunoToken
+      - name: UniswapV2Pair
+
+  # Arc mainnet: chain 5042, RPC https://rpc.mainnet.arc.io (same USDC address).
+  # Skipped until there is a mainnet launchpad: set ENVIO_JUNO_SKIP_MAINNET=false
+  # with its address and `deployBlock` from deployments/arc-mainnet.json.
+  - id: 5042
+    skip: ${ENVIO_JUNO_SKIP_MAINNET:-true}
+    start_block: ${ENVIO_JUNO_MAINNET_START_BLOCK:-0}
+    rpc:
+      - url: ${ENVIO_ARC_MAINNET_RPC_URL:-https://rpc.mainnet.arc.io}
+        for: sync
+        initial_block_interval: ${ENVIO_ARC_RPC_BLOCK_INTERVAL:-2000}
+        interval_ceiling: ${ENVIO_ARC_RPC_BLOCK_CEILING:-9000}
+    contracts:
+      - name: JunoLaunchpad
+        address: "${ENVIO_JUNO_MAINNET_LAUNCHPAD:-0x0000000000000000000000000000000000000000}"
+      - name: JunoToken
+      - name: UniswapV2Pair
