@@ -174,7 +174,13 @@ describe("CCTP cross-chain claims", () => {
   it("left-pads an EVM recipient to bytes32 and takes a raw 32-byte account for Solana", () => {
     const evm = "0x1111111111111111111111111111111111111111";
     expect(mintRecipientFor(evm, base)).toBe(`0x000000000000000000000000${evm.slice(2)}`);
-    expect(() => mintRecipientFor(evm, solana)).toThrow(/32-byte/);
+    expect(() => mintRecipientFor(evm, solana)).toThrow(/Solana account/);
+    // The System Program id is 32 zero bytes; a real-looking account round-trips to 32 bytes.
+    expect(mintRecipientFor("11111111111111111111111111111111", solana)).toBe(`0x${"00".repeat(32)}`);
+    expect(mintRecipientFor("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", solana)).toBe(
+      "0xc6fa7af3bedbad3a3d65f36aabc97431b1bbe4c2d2f6e0e47ca60203452f5d61",
+    );
+    expect(() => mintRecipientFor("not-base58-0OIl", solana)).toThrow(/not a Solana account/);
     const account = `0x${"ab".repeat(32)}`;
     expect(mintRecipientFor(account, solana)).toBe(account);
     expect(() => mintRecipientFor(account, base)).toThrow(/not an EVM address/);

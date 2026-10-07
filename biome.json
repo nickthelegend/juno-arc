@@ -8,9 +8,7 @@
       "juno-expo/app/**/*.tsx",
       "juno-expo/components/**/*.tsx",
       "juno-expo/lib/**/*.ts",
-      "juno-expo/lib/**/*.tsx",
-      "mm-plugin-juno/src/**/*.ts",
-      "cre/juno-nav/*.ts"
+      "juno-expo/lib/**/*.tsx"
     ]
   },
   "formatter": { "enabled": false },

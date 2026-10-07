@@ -67,7 +67,7 @@ export function feedIdOf(name: string): Hex {
 }
 
 export function isFeedName(name: string): name is FeedName {
-  return Object.prototype.hasOwnProperty.call(ARC_MAINNET_FEEDS, name);
+  return Object.hasOwn(ARC_MAINNET_FEEDS, name);
 }
 
 /** The feed name for a stored id or name ("BTC/USD" or its keccak). */

@@ -274,7 +274,6 @@ export function ensureLive(): void {
     live.connecting = false;
     live.socket = socket;
     live.error = null;
-    const staged = stagedCommits();
     socket.send(
       JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_subscribe", params: ["newHeads"] }),
     );

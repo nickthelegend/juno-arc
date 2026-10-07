@@ -79,8 +79,10 @@ export function memoAddress(): Address | null {
  * Read once per process and cached; it is a single `eth_call`.
  */
 const PROBE_FROM: Address = "0x000000000000000000000000000000000000dEaD";
-let probe: Promise<boolean> | null = null;
-let probedAt = 0;
+// Kept on globalThis so every route bundle in the process shares one probe.
+const shared = globalThis as typeof globalThis & { __junoMemoProbe?: { probe: Promise<boolean> | null; at: number } };
+shared.__junoMemoProbe ??= { probe: null, at: 0 };
+const state = shared.__junoMemoProbe;
 const PROBE_TTL_MS = 10 * 60_000;
 
 export function memoProbeCall(memo: Address, usdc: Address): { to: Address; data: Hex; from: Address } {
@@ -125,26 +127,39 @@ function revertDataOf(error: unknown): string | null {
   return found;
 }
 
-/** Whether Memo-wrapped calls execute on this network's node. Cached; never throws. */
+/**
+ * Whether Memo-wrapped calls execute on this network's node. Cached; never throws.
+ *
+ * Only an answer from the node is cached: the proof (a wrapped revert) as live,
+ * any other revert or a success as not live. A transport failure — a busy RPC,
+ * a timeout — is not an answer, so it is not cached: this call says "not live"
+ * and the next one asks again. (One process, one probe: the config route and the
+ * trade builders read the same cache, so they cannot disagree for long.)
+ */
 export function memoLive(): Promise<boolean> {
-  if (probe && Date.now() - probedAt < PROBE_TTL_MS) return probe;
+  if (state.probe && Date.now() - state.at < PROBE_TTL_MS) return state.probe;
   const memo = memoAddress();
   if (!memo) return Promise.resolve(false);
-  probedAt = Date.now();
+  state.at = Date.now();
   const call = memoProbeCall(memo, deployment().usdc);
-  probe = publicClient()
+  const attempt = publicClient()
     .call({ account: call.from, to: call.to, data: call.data })
     .then(() => false)
-    .catch((error: unknown) => probeRevertProvesCallFrom(revertDataOf(error)));
-  // A transport failure must not pin "not live" for ten minutes.
-  probe.then((live) => {
-    if (!live) probedAt = Date.now() - PROBE_TTL_MS + 30_000;
-  });
-  return probe;
+    .catch((error: unknown) => {
+      const data = revertDataOf(error);
+      if (data === null) {
+        // No revert data: the node never answered the question. Ask again next time.
+        if (state.probe === attempt) state.probe = null;
+        return false;
+      }
+      return probeRevertProvesCallFrom(data);
+    });
+  state.probe = attempt;
+  return attempt;
 }
 
 /** For tests. */
 export function resetMemoProbe(): void {
-  probe = null;
-  probedAt = 0;
+  state.probe = null;
+  state.at = 0;
 }

@@ -1,4 +1,4 @@
-import { decodeAbiParameters, type Hex, type Log } from "viem";
+import { decodeAbiParameters, type Hex } from "viem";
 
 /**
  * Chainlink CCIP message ids, read from a send's receipt.
@@ -14,7 +14,7 @@ export const CCIP_MESSAGE_SENT_V2: Hex = "0x371bc2ff0a006f4ef863b1d27a065d4e9f93
 /** `CCIPMessageSent(uint64 indexed destChainSelector, uint64 indexed sequenceNumber, EVM2AnyRampMessage message)` — OnRamp 1.6. */
 export const CCIP_MESSAGE_SENT_V16: Hex = "0x192442a2b2adb6a7948f097023cb6b57d29d3a7a5dd33e6666d33c39cc456f32";
 
-export function ccipMessageIdsIn(logs: ReadonlyArray<Pick<Log, "topics" | "data">>): Hex[] {
+export function ccipMessageIdsIn(logs: ReadonlyArray<{ topics: readonly Hex[]; data: Hex }>): Hex[] {
   const ids: Hex[] = [];
   for (const log of logs) {
     const topic0 = log.topics[0]?.toLowerCase();

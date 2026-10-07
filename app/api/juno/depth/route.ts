@@ -32,7 +32,8 @@ export async function GET(request: Request) {
     const row = await getPool(token);
     if (!row) return junoError("Coin not found", 404);
 
-    const rate = (await quoteTokenUsdPrice(row.quoteToken).catch(() => null)) ?? 1;
+    const usd = await quoteTokenUsdPrice(row.quoteToken).catch(() => null);
+    const rate = usd ?? 1;
     // Read from the launchpad this coin was recorded against, which is the one
     // that holds its curve.
     const snapshot = await fetchPoolSnapshot(row.token, rate, row.launchpad);
@@ -78,7 +79,7 @@ export async function GET(request: Request) {
       /** Spot, for the axis the impact is measured against. */
       spot: snapshot.price,
       quoteSymbol: snapshot.quote.symbol,
-      quoteUsdRate: rate === 1 ? null : rate,
+      quoteUsdRate: usd,
       max,
       points,
       /** Null when no size at all fits the budget — a real answer on a thin curve. */

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { encodeFunctionData, getAddress, isAddress, isHex, pad, parseEventLogs, type Address, type Hex } from "viem";
+import { encodeFunctionData, getAddress, isAddress, isHex, pad, parseEventLogs, toHex, type Address, type Hex } from "viem";
 
 import { junoLaunchpadAbi } from "./abi";
 import { CallerError } from "./api";
@@ -63,17 +63,49 @@ export function maxFeeFor(amount: bigint, feeBps: number): bigint {
   return fee + fee / 5n + 10_000n;
 }
 
-/** A recipient on the destination as CCTP's bytes32: an EVM address left-padded, or 32 raw bytes (Solana). Pure. */
+const BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+
+/** A base58 string (a Solana account) as bytes, or null when it isn't base58. Pure. */
+export function base58Decode(text: string): Uint8Array | null {
+  if (!/^[1-9A-HJ-NP-Za-km-z]+$/.test(text)) return null;
+  let value = 0n;
+  for (const char of text) value = value * 58n + BigInt(BASE58.indexOf(char));
+  const bytes: number[] = [];
+  while (value > 0n) {
+    bytes.unshift(Number(value & 0xffn));
+    value >>= 8n;
+  }
+  for (const char of text) {
+    if (char !== "1") break;
+    bytes.unshift(0);
+  }
+  return Uint8Array.from(bytes);
+}
+
+/**
+ * A recipient on the destination as CCTP's bytes32: an EVM address
+ * left-padded; for Solana, the base58 account (or its 32 raw bytes as hex) —
+ * for USDC that is the recipient's USDC token account, which CCTP mints to. Pure.
+ */
 export function mintRecipientFor(recipient: string, destination: CctpDomain): Hex {
   if (isAddress(recipient)) {
-    if (!destination.evm) throw new CallerError(`${destination.name} needs a 32-byte recipient, not an EVM address`);
+    if (!destination.evm) {
+      throw new CallerError(`${destination.name} needs a Solana account (base58), not an EVM address`);
+    }
     return pad(getAddress(recipient), { size: 32 }).toLowerCase() as Hex;
   }
   if (isHex(recipient) && recipient.length === 66) {
     if (destination.evm && !/^0x0{24}/i.test(recipient)) throw new CallerError("That recipient is not an EVM address");
     return recipient.toLowerCase() as Hex;
   }
-  throw new CallerError("recipient must be an address (or a 32-byte hex account for Solana)");
+  if (!destination.evm) {
+    const bytes = base58Decode(recipient.trim());
+    if (!bytes || bytes.length !== 32) {
+      throw new CallerError(`"${recipient}" is not a Solana account: expected 32 bytes in base58`);
+    }
+    return toHex(bytes);
+  }
+  throw new CallerError(`recipient must be an address on ${destination.name}`);
 }
 
 export type CrossChainClaimBuild = {
