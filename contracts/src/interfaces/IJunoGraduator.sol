@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.30;
+
+/// @notice Where a completed curve's reserves go.
+/// @dev Kept behind an interface so the venue can change without touching the
+/// curve. The launchpad calls `prepare` once at launch, so the token can lock
+/// the venue's address, and `graduate` once when the curve fills.
+interface IJunoGraduator {
+    /// @notice Create (or find) the venue for `token`/`quote` and return the
+    /// address the token must refuse transfers to until graduation.
+    /// @dev Revert here to refuse a launch the venue could not list: the curve
+    /// is fixed at launch, so a graduation that would revert would strand it.
+    /// @param quote The quote token (USDC on Arc).
+    /// @param baseAmount The base the curve will hand over at graduation.
+    /// @param quoteAmount The quote it will raise by then.
+    function prepare(address token, address quote, uint256 baseAmount, uint256 quoteAmount)
+        external
+        returns (address venue);
+
+    /// @notice Seed the venue with the curve's reserves and lock the position.
+    /// @dev The launchpad has already transferred `baseAmount` of `token` and
+    /// `quoteAmount` of `quote` to this contract.
+    /// @return venue The pool the reserves now live in.
+    /// @return liquidity The LP units minted and permanently locked.
+    function graduate(address token, address quote, uint256 baseAmount, uint256 quoteAmount)
+        external
+        returns (address venue, uint256 liquidity);
+}

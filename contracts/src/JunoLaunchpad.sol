@@ -1,0 +1,993 @@
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.30;
+
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {Ownable, Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
+import {ReentrancyGuardTransient} from "@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol";
+import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {Create2} from "@openzeppelin/contracts/utils/Create2.sol";
+
+import {JunoToken} from "./JunoToken.sol";
+import {CurveMath} from "./libraries/CurveMath.sol";
+import {IJunoGraduator} from "./interfaces/IJunoGraduator.sol";
+import {IERC3009, ITokenMessengerV2} from "./interfaces/ICircle.sol";
+
+/// @title JunoLaunchpad
+/// @notice Every post is a market, on Arc. Publishing a post launches a token
+/// whose entire supply is sold on a sixteen-segment bonding curve quoted in
+/// USDC (Arc's gas token, 6 decimals on its ERC-20 face); the creator earns the
+/// trading fees and can withdraw them to any CCTP chain in one call; when the
+/// curve fills, its reserves graduate into a Uniswap v2 pair whose liquidity
+/// is locked for good.
+///
+/// ## Arc specifics
+///
+/// - Quotes are ERC-20 only (USDC at 0x3600…0000; the owner may also allow
+///   EURC). There is no native-coin path: on Arc the native balance *is* USDC
+///   with 18 decimals, and mixing the two faces in one pool is how pools go
+///   insolent. `msg.value` is refused everywhere.
+/// - `buyWithAuthorization`: the buyer signs one EIP-3009 authorization and
+///   anyone (Juno's relayer) submits it, so a buyer whose USDC just arrived
+///   through Circle Gateway buys without holding gas or approving first.
+/// - `claimCreatorFeesCrossChain`: creator fees leave through Circle CCTP V2
+///   straight to the creator's wallet on Base, Ethereum, Solana…
+/// - Each curve's raise is capped (`maxRaise`), so no single pool can pool
+///   more USDC than the owner has allowed.
+///
+/// ## The curve
+///
+/// A curve is a start price and sixteen ranges above it, each with its own
+/// liquidity. The liquidity in a range sets how much supply that stretch of the
+/// curve absorbs per unit of price — so the sixteen weights are the character
+/// of a launch. Back-loaded weights make a content coin (cheap to enter, steep
+/// late); front-loaded weights make a thin listed name (a deep book at the
+/// issue price); a book shape makes an IPO (depth at both ends, discovery in
+/// the middle); uniform weights make a tracker that should not drift.
+///
+/// The curve itself is computed off-chain (`lib/juno/curves.ts`) and validated
+/// here: prices strictly increasing, liquidity non-zero, and the supply the
+/// curve sells plus the supply reserved for migration must fit inside the
+/// fixed one-billion-token supply. The quote the curve raises by its top is
+/// the migration threshold, computed here from the ranges rather than trusted
+/// from the caller.
+///
+/// ## Price continuity at graduation
+///
+/// The base reserved for migration is the threshold priced at the curve's top.
+/// The AMM therefore opens at exactly the price the curve finished on: nobody
+/// can buy the last token on the curve and sell it into the pair for a
+/// guaranteed profit.
+///
+/// ## Fees
+///
+/// Charged in the quote token on both sides. They decay exponentially from a
+/// launch fee, which blunts snipers in the first minutes, to a resting fee,
+/// over sixty periods. The protocol takes a share fixed at launch; the creator
+/// takes the rest, claimable at any time.
+contract JunoLaunchpad is Ownable2Step, ReentrancyGuardTransient {
+    using SafeERC20 for IERC20;
+
+    /* ------------------------------------------------------------------ */
+    /* Constants                                                          */
+    /* ------------------------------------------------------------------ */
+
+    uint256 public constant SEGMENTS = 16;
+    /// @notice Every Juno token has one billion units of 18 decimals.
+    uint256 public constant TOTAL_SUPPLY = 1_000_000_000 ether;
+    uint16 public constant MAX_FEE_BPS = 9_900;
+    uint16 public constant MIN_FEE_BPS = 25;
+    uint16 public constant MAX_PROTOCOL_SHARE_BPS = 5_000;
+    uint256 public constant FEE_PERIODS = 60;
+    uint256 internal constant FEE_DENOMINATOR = 1_000_000;
+    uint256 internal constant WAD = 1e18;
+    /// @notice Below this the Q96 square root has too few bits to trade on.
+    uint160 public constant MIN_SQRT_PRICE = 1 << 32;
+    /// @notice The most `maxRaise` can ever be set to: 10M USDC.
+    uint256 public constant MAX_RAISE_LIMIT = 10_000_000e6;
+    /// @notice CCTP's Arc domain; a cross-chain claim can't target it.
+    uint32 public constant ARC_CCTP_DOMAIN = 26;
+
+    /* ------------------------------------------------------------------ */
+    /* Types                                                              */
+    /* ------------------------------------------------------------------ */
+
+    /// @notice One range of the curve: its upper bound and its liquidity.
+    /// The lower bound is the previous range's upper bound, or the start price.
+    struct Segment {
+        uint160 sqrtPriceX96;
+        uint128 liquidity;
+    }
+
+    struct LaunchParams {
+        string name;
+        string symbol;
+        /// @dev Pinned metadata, usually `ipfs://…`.
+        string uri;
+        /// @dev An allowed ERC-20 quote token: USDC on Arc.
+        address quote;
+        /// @dev Which preset shaped this curve. Informational: the curve is the rule.
+        uint8 preset;
+        uint160 sqrtStartPriceX96;
+        Segment[16] curve;
+        uint16 startFeeBps;
+        uint16 endFeeBps;
+        uint32 feeDecaySeconds;
+        /// @dev Per-period decay in WAD: fee(n) = start * (1 - decay)^n, floored at end.
+        uint64 feeDecayWad;
+        /// @dev Where the curve graduates: an allowlisted graduator, or address(0)
+        /// for the launchpad's default. Chosen by the creator, fixed at launch.
+        address graduator;
+    }
+
+    struct Pool {
+        address creator;
+        uint40 launchedAt;
+        uint8 preset;
+        bool complete;
+        bool graduated;
+        address quote;
+        uint16 startFeeBps;
+        uint16 endFeeBps;
+        uint32 feeDecaySeconds;
+        uint16 protocolShareBps;
+        uint64 feeDecayWad;
+        uint160 sqrtPriceX96;
+        uint160 sqrtStartPriceX96;
+        /// @dev The pair this token graduates into, locked at launch.
+        address venue;
+        address graduator;
+        /// @dev Curve supply not yet sold.
+        uint256 baseReserve;
+        /// @dev Quote the curve holds, fees excluded.
+        uint256 quoteReserve;
+        /// @dev Base set aside for the AMM at graduation.
+        uint256 migrationBase;
+        /// @dev Quote the curve holds at its top.
+        uint256 migrationQuoteThreshold;
+        /// @dev Supply neither sold nor migrated — the rounding buffer, burned at graduation.
+        uint256 leftover;
+        uint256 creatorFees;
+        uint256 creatorFeesClaimed;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* State                                                              */
+    /* ------------------------------------------------------------------ */
+
+    mapping(address token => Pool) internal _pools;
+    // Written in `launch` through a storage pointer, which Slither misses.
+    // slither-disable-next-line uninitialized-state
+    mapping(address token => Segment[16]) internal _curves;
+    mapping(address quote => bool) public allowedQuote;
+    mapping(address quote => uint256) public protocolFees;
+    mapping(address creator => uint256) public launchCount;
+    address[] public tokens;
+
+    /// @notice The graduator a launch gets when it does not choose one.
+    IJunoGraduator public graduator;
+    /// @notice Graduators a creator may choose between — one per venue.
+    mapping(address graduator => bool) public graduatorAllowed;
+    uint16 public protocolShareBps;
+
+    /// @notice Arc's USDC, the default quote.
+    address public immutable usdc;
+    /// @notice Circle CCTP V2 TokenMessengerV2, for cross-chain fee claims. Zero disables them.
+    ITokenMessengerV2 public immutable tokenMessenger;
+    /// @notice The CCIP admin new tokens are given (Juno's `JunoCrossChain`).
+    /// Zero: the creator is the token's CCIP admin.
+    address public crossChain;
+    /// @notice A curve may raise at most this much quote before it graduates.
+    uint256 public maxRaise;
+
+    /* ------------------------------------------------------------------ */
+    /* Events                                                             */
+    /* ------------------------------------------------------------------ */
+
+    event Launched(
+        address indexed token,
+        address indexed creator,
+        address indexed quote,
+        uint8 preset,
+        string name,
+        string symbol,
+        string uri,
+        uint160 sqrtStartPriceX96,
+        uint160 sqrtEndPriceX96,
+        uint256 curveBase,
+        uint256 migrationBase,
+        uint256 migrationQuoteThreshold,
+        address venue
+    );
+
+    /// @param trader Whose position changed: the recipient of a buy, the seller of a sell.
+    /// @param quoteAmount What the trader paid (buy, fee included) or received (sell, fee deducted).
+    event Trade(
+        address indexed token,
+        address indexed trader,
+        bool isBuy,
+        uint256 baseAmount,
+        uint256 quoteAmount,
+        uint256 fee,
+        uint160 sqrtPriceX96,
+        uint256 quoteReserve
+    );
+
+    event CurveCompleted(address indexed token, uint256 quoteReserve);
+    event Graduated(
+        address indexed token,
+        address indexed venue,
+        uint256 baseAmount,
+        uint256 quoteAmount,
+        uint256 liquidity,
+        uint256 burned
+    );
+    event CreatorFeesClaimed(address indexed token, address indexed creator, address to, uint256 amount);
+    event ProtocolFeesClaimed(address indexed quote, address to, uint256 amount);
+    event QuoteAllowed(address indexed quote, bool allowed);
+    event GraduatorSet(address indexed graduator);
+    event GraduatorAllowed(address indexed graduator, bool allowed);
+    event ProtocolShareSet(uint16 bps);
+    event MaxRaiseSet(uint256 maxRaise);
+    event CrossChainSet(address indexed crossChain);
+    /// @notice Creator fees sent through CCTP V2 to another chain.
+    event CreatorFeesBridged(
+        address indexed token,
+        address indexed creator,
+        uint32 destinationDomain,
+        bytes32 mintRecipient,
+        uint256 amount,
+        uint256 maxFee
+    );
+
+    /* ------------------------------------------------------------------ */
+    /* Errors                                                             */
+    /* ------------------------------------------------------------------ */
+
+    error UnknownPool();
+    error QuoteNotAllowed();
+    error BadMetadata();
+    error BadFees();
+    error BadCurve();
+    error SupplyExceeded(uint256 required);
+    error CurveComplete();
+    error CurveNotComplete();
+    error AlreadyGraduated();
+    error NoGraduator();
+    error GraduatorNotAllowed();
+    error Expired();
+    error ZeroAmount();
+    error BadValue();
+    error Slippage(uint256 got, uint256 wanted);
+    /// @dev An exact-out buy would cost more than the buyer allowed.
+    error ExceedsMax(uint256 cost, uint256 max);
+    error InsufficientLiquidity();
+    error NotCreator();
+    error RaiseTooLarge(uint256 threshold, uint256 maxRaise);
+    error CrossChainDisabled();
+    error BadDestination();
+
+    constructor(
+        address owner_,
+        uint16 protocolShareBps_,
+        address usdc_,
+        ITokenMessengerV2 tokenMessenger_,
+        uint256 maxRaise_
+    ) Ownable(owner_) {
+        if (usdc_ == address(0)) revert QuoteNotAllowed();
+        _setProtocolShare(protocolShareBps_);
+        _setMaxRaise(maxRaise_);
+        usdc = usdc_;
+        tokenMessenger = tokenMessenger_;
+        allowedQuote[usdc_] = true;
+        emit QuoteAllowed(usdc_, true);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Launch                                                             */
+    /* ------------------------------------------------------------------ */
+
+    /// @notice Launch a post as a market, optionally with the creator's own first buy.
+    /// @param firstBuy Quote to spend buying from the fresh curve in the same
+    /// transaction, so nobody can get in ahead of the creator. Zero for none.
+    function launch(LaunchParams calldata params, uint256 firstBuy, uint256 minBaseOut)
+        external
+        nonReentrant
+        returns (address token)
+    {
+        if (!allowedQuote[params.quote]) revert QuoteNotAllowed();
+        _checkMetadata(params);
+        _checkFees(params);
+        (uint256 curveBase, uint256 threshold) = _checkCurve(params);
+
+        uint160 top = params.curve[SEGMENTS - 1].sqrtPriceX96;
+        uint256 migrationBase = CurveMath.baseForQuoteAt(threshold, top);
+        uint256 required = curveBase + migrationBase;
+        if (required > TOTAL_SUPPLY) revert SupplyExceeded(required);
+        if (threshold > maxRaise) revert RaiseTooLarge(threshold, maxRaise);
+
+        token = address(
+            new JunoToken{salt: _salt(msg.sender)}(
+                params.name, params.symbol, params.uri, msg.sender, TOTAL_SUPPLY, crossChain
+            )
+        );
+        launchCount[msg.sender] += 1;
+        tokens.push(token);
+
+        IJunoGraduator g = graduator;
+        if (params.graduator != address(0)) {
+            if (!graduatorAllowed[params.graduator]) revert GraduatorNotAllowed();
+            g = IJunoGraduator(params.graduator);
+        }
+        // A curve with nowhere to graduate would fill, stop trading and hold
+        // its reserves for good. Refuse it here, before anyone can buy in.
+        if (address(g) == address(0)) revert NoGraduator();
+        address venue = g.prepare(token, params.quote, migrationBase, threshold);
+        JunoToken(token).setPair(venue);
+
+        Pool storage p = _pools[token];
+        p.creator = msg.sender;
+        p.launchedAt = uint40(block.timestamp);
+        p.preset = params.preset;
+        p.quote = params.quote;
+        p.startFeeBps = params.startFeeBps;
+        p.endFeeBps = params.endFeeBps;
+        p.feeDecaySeconds = params.feeDecaySeconds;
+        p.feeDecayWad = params.feeDecayWad;
+        p.protocolShareBps = protocolShareBps;
+        p.sqrtPriceX96 = params.sqrtStartPriceX96;
+        p.sqrtStartPriceX96 = params.sqrtStartPriceX96;
+        p.venue = venue;
+        p.graduator = address(g);
+        p.baseReserve = curveBase;
+        p.migrationBase = migrationBase;
+        p.migrationQuoteThreshold = threshold;
+        p.leftover = TOTAL_SUPPLY - required;
+
+        Segment[16] storage stored = _curves[token];
+        for (uint256 i; i < SEGMENTS; ++i) {
+            stored[i] = params.curve[i];
+        }
+
+        emit Launched(
+            token,
+            msg.sender,
+            params.quote,
+            params.preset,
+            params.name,
+            params.symbol,
+            params.uri,
+            params.sqrtStartPriceX96,
+            top,
+            curveBase,
+            migrationBase,
+            threshold,
+            venue
+        );
+
+        if (firstBuy > 0) {
+            _collect(params.quote, firstBuy);
+            _buy(token, p, firstBuy, minBaseOut, msg.sender, msg.sender);
+        }
+    }
+
+    /// @notice The address `launch` will deploy the caller's next token to.
+    function predictToken(address creator, string calldata name, string calldata symbol, string calldata uri)
+        external
+        view
+        returns (address)
+    {
+        bytes32 codeHash = keccak256(
+            abi.encodePacked(
+                type(JunoToken).creationCode, abi.encode(name, symbol, uri, creator, TOTAL_SUPPLY, crossChain)
+            )
+        );
+        return Create2.computeAddress(_salt(creator), codeHash);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Trade                                                              */
+    /* ------------------------------------------------------------------ */
+
+    /// @notice Buy with an exact amount of quote.
+    /// @dev If the curve fills part-way through, the buy takes what the curve
+    /// can sell and refunds the rest — so "finish this curve" is one call, not
+    /// a search for the exact remaining size.
+    /// @return baseOut Tokens sent to `recipient`.
+    /// @return quotePaid Quote actually spent, fee included.
+    function buy(address token, uint256 quoteIn, uint256 minBaseOut, address recipient, uint256 deadline)
+        external
+        nonReentrant
+        returns (uint256 baseOut, uint256 quotePaid)
+    {
+        if (block.timestamp > deadline) revert Expired();
+        Pool storage p = _live(token);
+        _collect(p.quote, quoteIn);
+        (baseOut, quotePaid) = _buy(token, p, quoteIn, minBaseOut, recipient, msg.sender);
+    }
+
+    /// @notice A relayed buy. The buyer signs one EIP-3009
+    /// `ReceiveWithAuthorization` for `quoteIn` to this launchpad, with the
+    /// nonce `buyNonce(token, buyer, quoteIn, minBaseOut, deadline, salt)`, so
+    /// the authorization is only good for this exact trade. Anyone may submit
+    /// it — Juno's relayer pays the (USDC) gas. The tokens and any refund from
+    /// a partial fill at the top go to the buyer.
+    function buyWithAuthorization(
+        address token,
+        address buyer,
+        uint256 quoteIn,
+        uint256 minBaseOut,
+        uint256 deadline,
+        bytes32 salt,
+        uint256 validAfter,
+        uint256 validBefore,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external nonReentrant returns (uint256 baseOut, uint256 quotePaid) {
+        if (block.timestamp > deadline) revert Expired();
+        if (quoteIn == 0) revert ZeroAmount();
+        Pool storage p = _live(token);
+        IERC3009(p.quote).receiveWithAuthorization(
+            buyer,
+            address(this),
+            quoteIn,
+            validAfter,
+            validBefore,
+            buyNonce(token, buyer, quoteIn, minBaseOut, deadline, salt),
+            v,
+            r,
+            s
+        );
+        (baseOut, quotePaid) = _buy(token, p, quoteIn, minBaseOut, buyer, buyer);
+    }
+
+    /// @notice The EIP-3009 nonce a buyer signs for `buyWithAuthorization`.
+    function buyNonce(
+        address token,
+        address buyer,
+        uint256 quoteIn,
+        uint256 minBaseOut,
+        uint256 deadline,
+        bytes32 salt
+    ) public view returns (bytes32) {
+        return keccak256(
+            abi.encode(keccak256("JunoBuy"), block.chainid, address(this), token, buyer, quoteIn, minBaseOut, deadline, salt)
+        );
+    }
+
+    /// @notice Buy an exact number of tokens, paying at most `maxQuoteIn`.
+    /// @dev The trader names what they want to hold and the curve names the
+    /// price: the quote needed is walked up the ranges by base out, the fee is
+    /// added on top, and the buy reverts if that comes to more than the cap.
+    /// Only the cost is pulled. It never fills part-way: past the curve's
+    /// supply it reverts.
+    /// @return quotePaid Quote actually spent, fee included.
+    function buyExactOut(address token, uint256 baseOut, uint256 maxQuoteIn, address recipient, uint256 deadline)
+        external
+        nonReentrant
+        returns (uint256 quotePaid)
+    {
+        if (block.timestamp > deadline) revert Expired();
+        if (baseOut == 0) revert ZeroAmount();
+        Pool storage p = _live(token);
+
+        (uint256 net, uint256 fee, uint160 sqrtAfter) = _quoteBuyExactOut(token, p, baseOut);
+        quotePaid = net + fee;
+        if (quotePaid > maxQuoteIn) revert ExceedsMax(quotePaid, maxQuoteIn);
+
+        IERC20(p.quote).safeTransferFrom(msg.sender, address(this), quotePaid);
+
+        p.sqrtPriceX96 = sqrtAfter;
+        p.baseReserve -= baseOut;
+        p.quoteReserve += net;
+        _accrue(p, fee);
+
+        uint160 top = _curves[token][SEGMENTS - 1].sqrtPriceX96;
+        bool completed = sqrtAfter >= top;
+        if (completed) p.complete = true;
+
+        IERC20(token).safeTransfer(recipient, baseOut);
+
+        emit Trade(token, recipient, true, baseOut, quotePaid, fee, sqrtAfter, p.quoteReserve);
+        if (completed) emit CurveCompleted(token, p.quoteReserve);
+    }
+
+    /// @notice Sell an exact amount of tokens back to the curve. No approval
+    /// needed: Juno tokens let their launchpad pull from the seller directly.
+    function sell(address token, uint256 baseIn, uint256 minQuoteOut, address recipient, uint256 deadline)
+        external
+        nonReentrant
+        returns (uint256 quoteOut)
+    {
+        if (block.timestamp > deadline) revert Expired();
+        if (baseIn == 0) revert ZeroAmount();
+        Pool storage p = _live(token);
+
+        (uint256 gross, uint160 sqrtAfter) = _walkDown(token, p.sqrtPriceX96, p.sqrtStartPriceX96, baseIn);
+        if (gross > p.quoteReserve) gross = p.quoteReserve;
+        uint256 fee = Math.mulDiv(gross, _feePpm(p), FEE_DENOMINATOR, Math.Rounding.Ceil);
+        quoteOut = gross - fee;
+        if (quoteOut == 0) revert ZeroAmount();
+        if (quoteOut < minQuoteOut) revert Slippage(quoteOut, minQuoteOut);
+
+        p.sqrtPriceX96 = sqrtAfter;
+        p.baseReserve += baseIn;
+        p.quoteReserve -= gross;
+        _accrue(p, fee);
+
+        IERC20(token).safeTransferFrom(msg.sender, address(this), baseIn);
+        _pay(p.quote, recipient, quoteOut);
+
+        emit Trade(token, msg.sender, false, baseIn, quoteOut, fee, sqrtAfter, p.quoteReserve);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Graduation                                                         */
+    /* ------------------------------------------------------------------ */
+
+    /// @notice Move a completed curve's reserves into its AMM pair and lock the
+    /// liquidity. Anyone may call it; the outcome does not depend on who does.
+    function graduate(address token) external nonReentrant returns (address venue, uint256 liquidity) {
+        Pool storage p = _pools[token];
+        if (p.creator == address(0)) revert UnknownPool();
+        if (p.graduated) revert AlreadyGraduated();
+        if (!p.complete) revert CurveNotComplete();
+        if (p.graduator == address(0)) revert NoGraduator();
+
+        p.graduated = true;
+        uint256 quoteAmount = p.quoteReserve;
+        uint256 baseAmount = p.migrationBase;
+        // Whatever the curve did not sell is rounding dust; add the buffer and burn both.
+        uint256 burned = p.baseReserve + p.leftover;
+        p.quoteReserve = 0;
+        p.baseReserve = 0;
+        p.leftover = 0;
+
+        JunoToken(token).markGraduated();
+        IERC20(token).safeTransfer(p.graduator, baseAmount);
+        IERC20(p.quote).safeTransfer(p.graduator, quoteAmount);
+        (venue, liquidity) = IJunoGraduator(p.graduator).graduate(token, p.quote, baseAmount, quoteAmount);
+        if (burned > 0) JunoToken(token).burn(burned);
+
+        emit Graduated(token, venue, baseAmount, quoteAmount, liquidity, burned);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Fees                                                               */
+    /* ------------------------------------------------------------------ */
+
+    /// @notice Pay a creator everything their post's market has earned so far.
+    function claimCreatorFees(address token, address to) external nonReentrant returns (uint256 amount) {
+        Pool storage p = _pools[token];
+        if (p.creator == address(0)) revert UnknownPool();
+        if (msg.sender != p.creator) revert NotCreator();
+        amount = p.creatorFees;
+        if (amount == 0) revert ZeroAmount();
+        p.creatorFees = 0;
+        p.creatorFeesClaimed += amount;
+        _pay(p.quote, to, amount);
+        emit CreatorFeesClaimed(token, msg.sender, to, amount);
+    }
+
+    /// @notice Pay a creator's fees out through Circle CCTP V2, straight to
+    /// their wallet on another chain (Base, Ethereum, Arbitrum, Solana…).
+    /// `mintRecipient` is the recipient on the destination domain as bytes32;
+    /// `maxFee` and `minFinalityThreshold` are CCTP's (1000 = Fast Transfer,
+    /// 2000 = Standard). Arc has deterministic sub-second finality, so even a
+    /// Standard transfer is attested as soon as Circle sees the block.
+    function claimCreatorFeesCrossChain(
+        address token,
+        uint32 destinationDomain,
+        bytes32 mintRecipient,
+        uint256 maxFee,
+        uint32 minFinalityThreshold
+    ) external nonReentrant returns (uint256 amount) {
+        if (address(tokenMessenger) == address(0)) revert CrossChainDisabled();
+        if (destinationDomain == ARC_CCTP_DOMAIN || mintRecipient == bytes32(0)) revert BadDestination();
+        Pool storage p = _pools[token];
+        if (p.creator == address(0)) revert UnknownPool();
+        if (msg.sender != p.creator) revert NotCreator();
+        amount = p.creatorFees;
+        if (amount == 0 || maxFee >= amount) revert ZeroAmount();
+        p.creatorFees = 0;
+        p.creatorFeesClaimed += amount;
+        IERC20(p.quote).forceApprove(address(tokenMessenger), amount);
+        tokenMessenger.depositForBurn(
+            amount, destinationDomain, mintRecipient, p.quote, bytes32(0), maxFee, minFinalityThreshold
+        );
+        emit CreatorFeesClaimed(token, msg.sender, address(tokenMessenger), amount);
+        emit CreatorFeesBridged(token, msg.sender, destinationDomain, mintRecipient, amount, maxFee);
+    }
+
+    function claimProtocolFees(address quote, address to)
+        external
+        onlyOwner
+        nonReentrant
+        returns (uint256 amount)
+    {
+        amount = protocolFees[quote];
+        if (amount == 0) revert ZeroAmount();
+        protocolFees[quote] = 0;
+        _pay(quote, to, amount);
+        emit ProtocolFeesClaimed(quote, to, amount);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Admin                                                              */
+    /* ------------------------------------------------------------------ */
+
+    function setQuoteAllowed(address quote, bool allowed) external onlyOwner {
+        allowedQuote[quote] = allowed;
+        emit QuoteAllowed(quote, allowed);
+    }
+
+    /// @notice The default venue, for launches from now on. Existing pools keep
+    /// theirs. The default is always allowed as an explicit choice too.
+    function setGraduator(IJunoGraduator graduator_) external onlyOwner {
+        graduator = graduator_;
+        emit GraduatorSet(address(graduator_));
+        if (address(graduator_) != address(0) && !graduatorAllowed[address(graduator_)]) {
+            graduatorAllowed[address(graduator_)] = true;
+            emit GraduatorAllowed(address(graduator_), true);
+        }
+    }
+
+    /// @notice Offer (or withdraw) a venue creators may choose at launch.
+    /// Withdrawing it stops new launches from choosing it; pools already
+    /// launched with it keep it.
+    function setGraduatorAllowed(IJunoGraduator graduator_, bool allowed) external onlyOwner {
+        graduatorAllowed[address(graduator_)] = allowed;
+        emit GraduatorAllowed(address(graduator_), allowed);
+    }
+
+    /// @notice Applies to launches from now on. Existing pools keep theirs.
+    function setProtocolShare(uint16 bps) external onlyOwner {
+        _setProtocolShare(bps);
+    }
+
+    /// @notice The most quote a new curve may raise. Existing pools are unaffected.
+    function setMaxRaise(uint256 maxRaise_) external onlyOwner {
+        _setMaxRaise(maxRaise_);
+    }
+
+    /// @notice The CCIP admin that tokens launched from now on are given.
+    function setCrossChain(address crossChain_) external onlyOwner {
+        crossChain = crossChain_;
+        emit CrossChainSet(crossChain_);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Views                                                              */
+    /* ------------------------------------------------------------------ */
+
+    function getPool(address token) external view returns (Pool memory) {
+        return _pools[token];
+    }
+
+    function getCurve(address token)
+        external
+        view
+        returns (uint160 sqrtStartPriceX96, Segment[16] memory curve)
+    {
+        return (_pools[token].sqrtStartPriceX96, _curves[token]);
+    }
+
+    function tokenCount() external view returns (uint256) {
+        return tokens.length;
+    }
+
+    /// @notice The trading fee right now, in parts per million.
+    function currentFeePpm(address token) external view returns (uint256) {
+        Pool storage p = _pools[token];
+        if (p.creator == address(0)) revert UnknownPool();
+        return _feePpm(p);
+    }
+
+    /// @notice What `buy` would do right now, without doing it.
+    function quoteBuy(address token, uint256 quoteIn)
+        external
+        view
+        returns (uint256 baseOut, uint256 quotePaid, uint256 fee, uint160 sqrtAfter)
+    {
+        Pool storage p = _live(token);
+        return _quoteBuy(token, p, quoteIn);
+    }
+
+    /// @notice What `buyExactOut` would cost right now, without doing it.
+    /// @return quoteIn Quote the buy takes, fee included.
+    function quoteBuyExactOut(address token, uint256 baseOut)
+        external
+        view
+        returns (uint256 quoteIn, uint256 fee, uint160 sqrtAfter)
+    {
+        if (baseOut == 0) revert ZeroAmount();
+        Pool storage p = _live(token);
+        uint256 net;
+        (net, fee, sqrtAfter) = _quoteBuyExactOut(token, p, baseOut);
+        quoteIn = net + fee;
+    }
+
+    /// @notice What `sell` would do right now, without doing it.
+    function quoteSell(address token, uint256 baseIn)
+        external
+        view
+        returns (uint256 quoteOut, uint256 fee, uint160 sqrtAfter)
+    {
+        Pool storage p = _live(token);
+        uint256 gross;
+        (gross, sqrtAfter) = _walkDown(token, p.sqrtPriceX96, p.sqrtStartPriceX96, baseIn);
+        if (gross > p.quoteReserve) gross = p.quoteReserve;
+        fee = Math.mulDiv(gross, _feePpm(p), FEE_DENOMINATOR, Math.Rounding.Ceil);
+        quoteOut = gross - fee;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Internals                                                          */
+    /* ------------------------------------------------------------------ */
+
+    /// @param payer Who put `quoteIn` in, and gets back what a partial fill did not use.
+    function _buy(
+        address token,
+        Pool storage p,
+        uint256 quoteIn,
+        uint256 minBaseOut,
+        address recipient,
+        address payer
+    )
+        internal
+        returns (uint256 baseOut, uint256 quotePaid)
+    {
+        uint256 fee;
+        uint160 sqrtAfter;
+        (baseOut, quotePaid, fee, sqrtAfter) = _quoteBuy(token, p, quoteIn);
+        if (baseOut == 0) revert ZeroAmount();
+        if (baseOut < minBaseOut) revert Slippage(baseOut, minBaseOut);
+
+        p.sqrtPriceX96 = sqrtAfter;
+        p.baseReserve -= baseOut;
+        p.quoteReserve += quotePaid - fee;
+        _accrue(p, fee);
+
+        uint160 top = _curves[token][SEGMENTS - 1].sqrtPriceX96;
+        bool completed = sqrtAfter >= top;
+        if (completed) p.complete = true;
+
+        IERC20(token).safeTransfer(recipient, baseOut);
+        if (quoteIn > quotePaid) _pay(p.quote, payer, quoteIn - quotePaid);
+
+        emit Trade(token, recipient, true, baseOut, quotePaid, fee, sqrtAfter, p.quoteReserve);
+        if (completed) emit CurveCompleted(token, p.quoteReserve);
+    }
+
+    function _quoteBuy(address token, Pool storage p, uint256 quoteIn)
+        internal
+        view
+        returns (uint256 baseOut, uint256 quotePaid, uint256 fee, uint160 sqrtAfter)
+    {
+        if (quoteIn == 0) revert ZeroAmount();
+        uint256 feePpm = _feePpm(p);
+        fee = Math.mulDiv(quoteIn, feePpm, FEE_DENOMINATOR, Math.Rounding.Ceil);
+        uint256 curveIn = quoteIn - fee;
+
+        uint256 used;
+        (baseOut, used, sqrtAfter) = _walkUp(token, p.sqrtPriceX96, p.sqrtStartPriceX96, curveIn);
+        if (used < curveIn) {
+            // Partial fill at the top: charge the fee on what was actually used.
+            fee = Math.mulDiv(used, feePpm, FEE_DENOMINATOR - feePpm, Math.Rounding.Ceil);
+        }
+        if (baseOut > p.baseReserve) baseOut = p.baseReserve;
+        quotePaid = used + fee;
+    }
+
+    /// @dev The quote an exact-out buy of `baseOut` needs: net to the curve,
+    /// and the fee on top, charged at the same rate as an exact-in buy.
+    function _quoteBuyExactOut(address token, Pool storage p, uint256 baseOut)
+        internal
+        view
+        returns (uint256 net, uint256 fee, uint160 sqrtAfter)
+    {
+        if (baseOut > p.baseReserve) revert InsufficientLiquidity();
+        (net, sqrtAfter) = _walkUpForBase(token, p.sqrtPriceX96, p.sqrtStartPriceX96, baseOut);
+        uint256 feePpm = _feePpm(p);
+        // gross * (1 - fee) = net, rounded up: the same fee an exact-in buy of
+        // `net + fee` would be charged, never less.
+        fee = Math.mulDiv(net, feePpm, FEE_DENOMINATOR - feePpm, Math.Rounding.Ceil);
+    }
+
+    /// @dev Walk the price up through the ranges until `amount` of base has
+    /// left the curve. The quote is rounded up in every range and the price
+    /// lands on the rounded-up side: the buyer pays for the movement, never
+    /// the pool. Reverts rather than stopping short at the top.
+    function _walkUpForBase(address token, uint160 sqrtP, uint160 sqrtStart, uint256 amount)
+        internal
+        view
+        returns (uint256 quoteIn, uint160)
+    {
+        Segment[16] storage curve = _curves[token];
+        uint256 remaining = amount;
+        for (uint256 i; i < SEGMENTS && remaining > 0; ++i) {
+            Segment memory seg = curve[i];
+            uint160 lower = i == 0 ? sqrtStart : curve[i - 1].sqrtPriceX96;
+            if (sqrtP >= seg.sqrtPriceX96) continue;
+            if (sqrtP < lower) sqrtP = lower;
+
+            // What the range gives up to its top, counted the way an exact-in
+            // buy counts it (rounded down).
+            uint256 toTop = CurveMath.baseDelta(sqrtP, seg.sqrtPriceX96, seg.liquidity, false);
+            if (remaining >= toTop) {
+                quoteIn += CurveMath.quoteDelta(sqrtP, seg.sqrtPriceX96, seg.liquidity, true);
+                remaining -= toTop;
+                sqrtP = seg.sqrtPriceX96;
+            } else {
+                uint160 next = CurveMath.nextSqrtPriceFromBaseOut(sqrtP, seg.liquidity, remaining);
+                if (next > seg.sqrtPriceX96) next = seg.sqrtPriceX96;
+                quoteIn += CurveMath.quoteDelta(sqrtP, next, seg.liquidity, true);
+                remaining = 0;
+                sqrtP = next;
+            }
+        }
+        if (remaining > 0) revert InsufficientLiquidity();
+        return (quoteIn, sqrtP);
+    }
+
+    /// @dev Walk the price up through the ranges, spending `amount` of quote.
+    function _walkUp(address token, uint160 sqrtP, uint160 sqrtStart, uint256 amount)
+        internal
+        view
+        returns (uint256 baseOut, uint256 used, uint160)
+    {
+        Segment[16] storage curve = _curves[token];
+        uint256 remaining = amount;
+        for (uint256 i; i < SEGMENTS && remaining > 0; ++i) {
+            Segment memory seg = curve[i];
+            uint160 lower = i == 0 ? sqrtStart : curve[i - 1].sqrtPriceX96;
+            if (sqrtP >= seg.sqrtPriceX96) continue;
+            if (sqrtP < lower) sqrtP = lower;
+
+            uint256 toTop = CurveMath.quoteDelta(sqrtP, seg.sqrtPriceX96, seg.liquidity, true);
+            if (remaining >= toTop) {
+                baseOut += CurveMath.baseDelta(sqrtP, seg.sqrtPriceX96, seg.liquidity, false);
+                remaining -= toTop;
+                sqrtP = seg.sqrtPriceX96;
+            } else {
+                uint160 next = CurveMath.nextSqrtPriceFromQuoteIn(sqrtP, seg.liquidity, remaining);
+                if (next > seg.sqrtPriceX96) next = seg.sqrtPriceX96;
+                baseOut += CurveMath.baseDelta(sqrtP, next, seg.liquidity, false);
+                remaining = 0;
+                sqrtP = next;
+            }
+        }
+        used = amount - remaining;
+        return (baseOut, used, sqrtP);
+    }
+
+    /// @dev Walk the price down through the ranges, absorbing `amount` of base.
+    /// Reverts if the curve cannot take it all — selling below the start price
+    /// would pay out quote nobody put in.
+    function _walkDown(address token, uint160 sqrtP, uint160 sqrtStart, uint256 amount)
+        internal
+        view
+        returns (uint256 quoteOut, uint160)
+    {
+        if (amount == 0) revert ZeroAmount();
+        Segment[16] storage curve = _curves[token];
+        uint256 remaining = amount;
+        for (uint256 j = SEGMENTS; j > 0 && remaining > 0; --j) {
+            uint256 i = j - 1;
+            uint160 lower = i == 0 ? sqrtStart : curve[i - 1].sqrtPriceX96;
+            if (sqrtP <= lower) continue;
+            uint128 liquidity = curve[i].liquidity;
+
+            uint256 toBottom = CurveMath.baseDelta(lower, sqrtP, liquidity, true);
+            if (remaining >= toBottom) {
+                quoteOut += CurveMath.quoteDelta(lower, sqrtP, liquidity, false);
+                remaining -= toBottom;
+                sqrtP = lower;
+            } else {
+                uint160 next = CurveMath.nextSqrtPriceFromBaseIn(sqrtP, liquidity, remaining);
+                if (next < lower) next = lower;
+                quoteOut += CurveMath.quoteDelta(next, sqrtP, liquidity, false);
+                remaining = 0;
+                sqrtP = next;
+            }
+        }
+        if (remaining > 0) revert InsufficientLiquidity();
+        return (quoteOut, sqrtP);
+    }
+
+    /// @dev fee(n) = start * (1 - decay)^n over sixty periods, floored at end.
+    function _feePpm(Pool storage p) internal view returns (uint256) {
+        uint256 start = uint256(p.startFeeBps) * 100;
+        uint256 end = uint256(p.endFeeBps) * 100;
+        if (start == end || p.feeDecaySeconds == 0) return end;
+        uint256 periodLength = p.feeDecaySeconds / FEE_PERIODS;
+        if (periodLength == 0) periodLength = 1;
+        uint256 period = (block.timestamp - p.launchedAt) / periodLength;
+        if (period >= FEE_PERIODS) return end;
+        uint256 fee = Math.mulDiv(start, _rpow(WAD - p.feeDecayWad, period), WAD);
+        return fee < end ? end : fee;
+    }
+
+    function _rpow(uint256 x, uint256 n) internal pure returns (uint256 z) {
+        z = WAD;
+        while (n > 0) {
+            // A bit test, not a comparison of amounts.
+            // slither-disable-next-line incorrect-equality
+            if (n & 1 == 1) z = Math.mulDiv(z, x, WAD);
+            x = Math.mulDiv(x, x, WAD);
+            n >>= 1;
+        }
+    }
+
+    function _accrue(Pool storage p, uint256 fee) internal {
+        uint256 protocol = (fee * p.protocolShareBps) / 10_000;
+        protocolFees[p.quote] += protocol;
+        p.creatorFees += fee - protocol;
+    }
+
+    function _collect(address quote, uint256 amount) internal {
+        if (amount == 0) revert ZeroAmount();
+        IERC20(quote).safeTransferFrom(msg.sender, address(this), amount);
+    }
+
+    function _pay(address quote, address to, uint256 amount) internal {
+        if (amount == 0) return;
+        IERC20(quote).safeTransfer(to, amount);
+    }
+
+    function _live(address token) internal view returns (Pool storage p) {
+        p = _pools[token];
+        if (p.creator == address(0)) revert UnknownPool();
+        if (p.complete) revert CurveComplete();
+    }
+
+    function _salt(address creator) internal view returns (bytes32) {
+        return keccak256(abi.encode(creator, launchCount[creator]));
+    }
+
+    function _checkMetadata(LaunchParams calldata params) internal pure {
+        uint256 nameLength = bytes(params.name).length;
+        uint256 symbolLength = bytes(params.symbol).length;
+        if (nameLength == 0 || nameLength > 64) revert BadMetadata();
+        if (symbolLength == 0 || symbolLength > 16) revert BadMetadata();
+        if (bytes(params.uri).length > 256) revert BadMetadata();
+    }
+
+    function _checkFees(LaunchParams calldata params) internal pure {
+        if (params.startFeeBps > MAX_FEE_BPS) revert BadFees();
+        if (params.endFeeBps < MIN_FEE_BPS) revert BadFees();
+        if (params.endFeeBps > params.startFeeBps) revert BadFees();
+        if (params.feeDecayWad >= WAD) revert BadFees();
+    }
+
+    /// @dev Validates the ranges and returns the supply they sell and the quote they raise.
+    function _checkCurve(LaunchParams calldata params)
+        internal
+        pure
+        returns (uint256 curveBase, uint256 threshold)
+    {
+        uint160 lower = params.sqrtStartPriceX96;
+        if (lower < MIN_SQRT_PRICE) revert BadCurve();
+        for (uint256 i; i < SEGMENTS; ++i) {
+            Segment calldata seg = params.curve[i];
+            if (seg.sqrtPriceX96 <= lower || seg.liquidity == 0) revert BadCurve();
+            curveBase += CurveMath.baseDelta(lower, seg.sqrtPriceX96, seg.liquidity, true);
+            threshold += CurveMath.quoteDelta(lower, seg.sqrtPriceX96, seg.liquidity, true);
+            lower = seg.sqrtPriceX96;
+        }
+        if (threshold == 0 || curveBase == 0) revert BadCurve();
+    }
+
+    function _setMaxRaise(uint256 maxRaise_) internal {
+        if (maxRaise_ == 0 || maxRaise_ > MAX_RAISE_LIMIT) revert BadValue();
+        maxRaise = maxRaise_;
+        emit MaxRaiseSet(maxRaise_);
+    }
+
+    function _setProtocolShare(uint16 bps) internal {
+        if (bps > MAX_PROTOCOL_SHARE_BPS) revert BadFees();
+        protocolShareBps = bps;
+        emit ProtocolShareSet(bps);
+    }
+}

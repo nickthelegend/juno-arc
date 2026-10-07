@@ -1,0 +1,60 @@
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+out = "out"
+libs = ["lib", "node_modules"]
+
+# No global `solc` pin: Juno's own sources say `pragma solidity 0.8.30`, while
+# the Uniswap v2 factory and router are never compiled here — the deploy script
+# and tests load Uniswap's *published* build artifacts from
+# node_modules/@uniswap/v2-{core,periphery}/build byte for byte, and Chainlink's
+# CCIP 2.0 token pools / factory / registries from
+# node_modules/@chainlink/contracts-ccip/bytecode.
+auto_detect_solc = true
+evm_version = "cancun"
+optimizer = true
+optimizer_runs = 200
+via_ir = true
+
+# Byte-for-byte reproducible verification on Arc's Blockscout explorers.
+bytecode_hash = "none"
+use_literal_content = true
+
+auto_detect_remappings = false
+remappings = [
+  "forge-std/=lib/forge-std/src/",
+  "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+  # Chainlink CCIP 2.0 (what Arc runs: TokenPoolFactory 2.0.0, OnRamp 2.0.0), Data Feeds and Chainlink Local
+  "@chainlink/contracts-ccip/=node_modules/@chainlink/contracts-ccip/",
+  "@chainlink/contracts/=node_modules/@chainlink/contracts/",
+  "@chainlink/local/=node_modules/@chainlink/local/",
+  "@openzeppelin/contracts@5.3.0/=node_modules/@openzeppelin/contracts-5.3.0/",
+  "@openzeppelin/contracts@4.8.3/=node_modules/@openzeppelin/contracts-4.8.3/",
+  "@openzeppelin/contracts@5.0.2/=node_modules/@openzeppelin/contracts-5.0.2/",
+  "@openzeppelin/contracts@4.7.3/=node_modules/@openzeppelin/contracts-4.7.3/",
+]
+
+fs_permissions = [
+  # deployments/arc-<network>.json at the repo root
+  { access = "read-write", path = "../deployments" },
+  # Uniswap v2's published artifacts and Chainlink's published CCIP bytecode
+  { access = "read", path = "./node_modules/@uniswap" },
+  { access = "read", path = "./node_modules/@chainlink/contracts-ccip/bytecode" },
+  # Circle's FiatToken v2.2 runtime code, etched at Arc's USDC address by the unit tests
+  { access = "read", path = "./test/utils/bytecode" },
+  { access = "read", path = "./out" },
+]
+
+[profile.default.fuzz]
+runs = 512
+
+[lint]
+lint_on_build = false
+
+# Arc. Run fork suites with Circle's Arc Foundry (`forge test --network arc`), which
+# executes Arc's native-USDC precompile; plain forge can fork Arc but cannot move USDC.
+[rpc_endpoints]
+arc_testnet = "https://rpc.testnet.arc.io"
+arc = "https://rpc.mainnet.arc.io"
+fork = "http://127.0.0.1:8910"
