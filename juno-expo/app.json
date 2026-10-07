@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Juno on Arc",
+    "slug": "juno-arc",
+    "version": "1.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.launch.junoarc"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "app.launch.junoarc",
+      "versionCode": 110
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "name": "Juno on Arc",
+      "shortName": "Juno",
+      "description": "Every post is a market: photos and reels launch their own USDC bonding curves on Arc."
+    },
+    "plugins": [
+      "expo-router",
+      "expo-video",
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Juno uses your photos and videos so you can launch them as a post or a reel."
+        }
+      ],
+      "./plugins/withQuotedBundleScript",
+      "./plugins/withLocalCleartext"
+    ],
+    "scheme": "junoarc",
+    "backgroundColor": "#D3E3CB",
+    "description": "Every post is a market: photos and reels launch their own USDC bonding curves on Arc."
+  }
+}
