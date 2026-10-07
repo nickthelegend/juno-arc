@@ -412,6 +412,10 @@ contract JunoLaunchpad is Ownable2Step, ReentrancyGuardTransient {
     /// the authorization is only good for this exact trade. Anyone may submit
     /// it — Juno's relayer pays the (USDC) gas. The tokens and any refund from
     /// a partial fill at the top go to the buyer.
+    // USDC's receiveWithAuthorization is the only call before the pool's state
+    // changes; USDC (Circle's FiatToken) has no hooks and every entry point here
+    // is nonReentrant.
+    // slither-disable-next-line reentrancy-no-eth,reentrancy-benign
     function buyWithAuthorization(
         address token,
         address buyer,

@@ -88,6 +88,9 @@ contract JunoCrossChain {
     /// @param poolInitCode Chainlink's BurnMintTokenPool 2.0.0 creation code (checked by hash).
     /// @param remotes Chains to wire now (may be empty; add them later with `applyChainUpdates`).
     /// Every entry must name the remote pool and token addresses explicitly.
+    // The pool's address comes back from Chainlink's own TokenPoolFactory, so
+    // it can only be recorded after that call; the coin can be enabled once.
+    // slither-disable-next-line reentrancy-no-eth,reentrancy-events
     function enable(address token, bytes calldata poolInitCode, CCIPTypes.RemoteTokenPoolInfo[] calldata remotes)
         external
         onlyCreator(token)

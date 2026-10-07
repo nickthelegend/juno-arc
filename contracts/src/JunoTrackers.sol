@@ -127,6 +127,8 @@ contract JunoTrackers is Ownable2Step {
     function price(bytes32 feedId) public view returns (uint256 usdE18, uint256 updatedAt) {
         Feed memory f = feeds[feedId];
         if (f.aggregator == address(0)) revert UnknownFeed();
+        // startedAt is not needed: answer, updatedAt and the round ids are all checked.
+        // slither-disable-next-line unused-return
         (uint80 roundId, int256 answer,, uint256 updated, uint80 answeredInRound) =
             IAggregatorV3(f.aggregator).latestRoundData();
         if (answer <= 0 || updated == 0 || answeredInRound < roundId) revert BadAnswer();
@@ -142,6 +144,8 @@ contract JunoTrackers is Ownable2Step {
     function tokenPriceUsdE18(address token) public view returns (uint256) {
         JunoLaunchpad.Pool memory p = launchpad.getPool(token);
         if (p.graduated) {
+            // The reserves are all a price needs; the last-update timestamp is not.
+            // slither-disable-next-line unused-return
             (uint112 r0, uint112 r1,) = IUniswapV2Pair(p.venue).getReserves();
             (uint256 base, uint256 quote) =
                 IUniswapV2Pair(p.venue).token0() == token ? (uint256(r0), uint256(r1)) : (uint256(r1), uint256(r0));
