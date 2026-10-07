@@ -2,6 +2,7 @@
 pragma solidity 0.8.30;
 
 import {JunoToken} from "./JunoToken.sol";
+import {JunoLaunchpad} from "./JunoLaunchpad.sol";
 import {
     CCIPTypes,
     ICCIPTokenPoolFactory,
@@ -189,11 +190,10 @@ contract JunoCrossChain {
     }
 
     function _checkCreator(address token) internal view {
-        if (token.code.length == 0) revert NotJunoToken();
-        // A token from somewhere else could claim any creator; only the launchpad's are served.
-        (bool ok, bytes memory data) = token.staticcall(abi.encodeWithSignature("launchpad()"));
-        if (!ok || data.length != 32 || abi.decode(data, (address)) != launchpad) revert NotJunoToken();
-        if (msg.sender != JunoToken(token).creator()) revert NotCreator();
+        // Only coins this launchpad launched are served, and only to the wallet that posted them.
+        address creator = JunoLaunchpad(launchpad).getPool(token).creator;
+        if (creator == address(0)) revert NotJunoToken();
+        if (msg.sender != creator) revert NotCreator();
     }
 
     function _checkLimit(CCIPTypes.RateLimiterConfig calldata c) internal pure {
