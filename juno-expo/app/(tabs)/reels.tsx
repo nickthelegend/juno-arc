@@ -146,7 +146,7 @@ export default function ReelsScreen() {
         setPage({ width: event.nativeEvent.layout.width, height: event.nativeEvent.layout.height })
       }>
       {focused ? <StatusBar style="light" /> : null}
-      {reels.loading || reels.data === null || pageH === 0 ? (
+      {(reels.loading || reels.data === null || pageH === 0) && !reels.error ? (
         <NightState busy title="Loading reels" />
       ) : reels.error ? (
         <NightState

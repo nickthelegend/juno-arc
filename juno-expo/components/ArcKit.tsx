@@ -108,6 +108,12 @@ export function PegChip({ style, dark = false }: { style?: StyleProp<ViewStyle>;
   );
 }
 
+/** An error message as the end of a sentence: one full stop, never "?." */
+export function reason(text: string | null | undefined, fallback = "no answer"): string {
+  const body = (text ?? "").trim() || fallback;
+  return /[.!?]$/.test(body) ? body : `${body}.`;
+}
+
 /** "0.42 s" from milliseconds: seconds once it is over a tenth, milliseconds under. */
 export function seconds(ms: number): string {
   if (ms < 100) return `${Math.max(1, Math.round(ms))} ms`;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
-import { ArcCard, OutLink, StatusLine, arcStyles, useArcConfig } from "./ArcKit";
+import { ArcCard, OutLink, StatusLine, arcStyles, reason, useArcConfig } from "./ArcKit";
 import { Tappable } from "./Press";
 import { Button } from "./kit";
 import { CCIP_EXPLORER, juno, type CcipBucket, type CcipLane, type CcipSendBuild, type Coin } from "../lib/api";
@@ -59,7 +59,7 @@ export function CrossChainCard({ coin }: { coin: Coin }) {
       {view.loading ? (
         <StatusLine>Reading its CCIP pool…</StatusLine>
       ) : view.error || !data ? (
-        <StatusLine tone="neg">CCIP status could not be read: {view.error ?? "no answer"}.</StatusLine>
+        <StatusLine tone="neg">CCIP status could not be read: {reason(view.error)}</StatusLine>
       ) : !data.enabled ? (
         <View style={{ gap: 10 }}>
           <StatusLine>Not cross-chain yet.</StatusLine>

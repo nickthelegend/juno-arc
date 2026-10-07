@@ -120,7 +120,13 @@ export default function TradeScreen() {
             </Footnote>
           ) : null}
 
-          {markets.loading || markets.data === null ? (
+          {markets.error ? (
+            <Placeholder
+              title="Could not load the market"
+              detail={markets.error}
+              action={<Button label="Try again" onPress={markets.refresh} />}
+            />
+          ) : markets.loading || markets.data === null ? (
             <Ledger>
               {[0, 1, 2].map((i) => (
                 <Entry key={i} $first={i === 0}>
@@ -135,12 +141,6 @@ export default function TradeScreen() {
                 </Entry>
               ))}
             </Ledger>
-          ) : markets.error ? (
-            <Placeholder
-              title="Could not load the market"
-              detail={markets.error}
-              action={<Button label="Try again" onPress={markets.refresh} />}
-            />
           ) : list.length === 0 ? (
             <Placeholder
               title={sort === "trackers" ? "No trackers yet" : "No posts yet"}

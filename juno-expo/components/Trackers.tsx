@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import { StatusLine } from "./ArcKit";
+import { StatusLine, reason } from "./ArcKit";
 import { Tappable } from "./Press";
 import { Skeleton } from "./kit";
 import { juno, type TrackerFeed } from "../lib/api";
@@ -70,7 +70,7 @@ export function FeedBoard({ onLaunch }: { onLaunch: (feed: TrackerFeed) => void 
   if (feeds.error || !feeds.data) {
     return (
       <View style={styles.board}>
-        <StatusLine tone="neg">Chainlink feeds could not be read: {feeds.error ?? "no answer"}.</StatusLine>
+        <StatusLine tone="neg">Chainlink feeds could not be read: {reason(feeds.error)}</StatusLine>
       </View>
     );
   }

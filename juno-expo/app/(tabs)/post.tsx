@@ -498,7 +498,7 @@ export default function PostScreen() {
               {feeds.loading ? (
                 <Text style={styles.sectionLede}>Reading Chainlink feeds…</Text>
               ) : feeds.error ? (
-                <Text style={[styles.sectionLede, { color: theme.colors.neg }]}>Chainlink feeds could not be read: {feeds.error}</Text>
+                <Text style={[styles.sectionLede, { color: theme.colors.neg }]}>Chainlink feeds could not be read: {feeds.error.replace(/[.!?]?$/, ".")}</Text>
               ) : (
                 <View style={styles.chips} role="radiogroup" aria-label="Chainlink feed">
                   {(feeds.data?.feeds ?? []).filter((f) => f.id !== "USDC/USD").map((f) => {

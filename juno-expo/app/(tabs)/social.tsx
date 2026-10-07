@@ -170,7 +170,7 @@ export default function SocialScreen() {
         ) : null}
       </View>
 
-      {markets.loading || markets.data === null ? (
+      {(markets.loading || markets.data === null) && !markets.error ? (
         <ScrollView contentContainerStyle={{ paddingBottom: 130 }}>
           <View style={styles.rings}>
             {[0, 1, 2, 3].map((i) => (

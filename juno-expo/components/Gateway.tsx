@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
-import { ArcCard, OutLink, StatusLine, arcStyles, useArcConfig } from "./ArcKit";
+import { ArcCard, OutLink, StatusLine, arcStyles, reason, useArcConfig } from "./ArcKit";
 import { Tappable } from "./Press";
 import { Button } from "./kit";
 import { juno, type GatewayBalances } from "../lib/api";
@@ -141,8 +141,8 @@ export function GatewayPanel({
         </View>
         {balances.error || data?.available === false || data?.error ? (
           <StatusLine tone="neg">
-            {data?.error ?? balances.error ?? "Circle's Gateway API did not answer."} Balances are read from Circle&rsquo;s
-            Gateway API.
+            {reason(data?.error ?? balances.error, "Circle's Gateway API did not answer")} Balances are read from
+            Circle&rsquo;s Gateway API.
           </StatusLine>
         ) : sources.length === 0 && !balances.loading ? (
           <StatusLine>Nothing deposited yet on any chain.</StatusLine>

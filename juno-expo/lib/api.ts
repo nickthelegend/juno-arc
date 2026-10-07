@@ -203,7 +203,7 @@ export function networkLabel(network?: string | null): string {
       ? isMainnet(config ?? { network: network ?? undefined })
         ? "Arc mainnet"
         : "Arc testnet"
-      : "—";
+      : "Arc";
   // A local fork has the testnet's chain id and state, but it is not the
   // network, and a label that said so would pass one off as the other.
   return config?.localFork ? `${name} (local fork)` : name;

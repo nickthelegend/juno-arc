@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Linking, Modal, Platform, TextInput } from "react-native";
+import { Linking, Modal, Platform, ScrollView, TextInput } from "react-native";
 import Svg, { Circle, Path } from "react-native-svg";
 import styled from "styled-components/native";
 
@@ -663,6 +663,7 @@ export function TradeSheet({
           </Row>
         </Row>
 
+        <ScrollView style={{ flexShrink: 1 }} contentContainerStyle={{ gap: theme.space(3) }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         {done ? (
           <Done>
             <DoneTitle>Done</DoneTitle>
@@ -1040,6 +1041,7 @@ export function TradeSheet({
             </Pad>
           </>
         )}
+        </ScrollView>
       </Sheet>
     </Modal>
   );
@@ -1166,6 +1168,7 @@ const Sheet = styled.View`
   /* A Modal renders over the whole window on web, not inside the app's
      phone-width frame — so the sheet holds the same width itself. */
   max-width: 480px;
+  max-height: 100%;
   margin-horizontal: auto;
   background-color: ${(p) => p.theme.colors.surface};
   border-top-left-radius: ${(p) => p.theme.radius.xl}px;
@@ -1338,7 +1341,7 @@ const Pad = styled.View`
 
 const Key = styled.Pressable`
   width: 33.33%;
-  padding-vertical: ${(p) => p.theme.space(3)}px;
+  padding-vertical: ${(p) => p.theme.space(2.5)}px;
   align-items: center;
 `;
 
