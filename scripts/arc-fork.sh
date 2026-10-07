@@ -14,8 +14,8 @@
 #     USDC as the ERC-20 at 0x3600…0000).
 # Then point the app at it: JUNO_DEPLOYMENT_FILE=.fork/arc-fork.json ARC_RPC_URL=http://127.0.0.1:8910 npm run dev
 #
-# The fork's RPC does not execute Arc's CallFrom precompile, so Memo-wrapped calls are probed and skipped there
-# (the app falls back to a plain call); `forge test --network arc` does execute it (test/fork/ArcTestnetFork.t.sol).
+# Arc Foundry's anvil executes Arc's CallFrom precompile, so Memo-wrapped trades run for real on the fork; the
+# server still probes Memo once and falls back to a plain call on a node that doesn't.
 set -e
 cd "$(dirname "$0")/.."
 ROOT=$(pwd)
