@@ -1,6 +1,6 @@
 /**
  * Writes contracts/test/fixtures/PresetFixtures.sol: every curve preset, built
- * by the app's own builder (`lib/juno/curves.ts`), for both quote tokens —
+ * by the app's own builder (`lib/juno/curves.ts`), quoted in USDC —
  * together with the totals the TypeScript port of CurveMath says the
  * launchpad will compute for it.
  *
