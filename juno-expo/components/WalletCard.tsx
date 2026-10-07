@@ -64,7 +64,11 @@ export function WalletCard({ address }: { address: string }) {
     setMessage(null);
     try {
       const result = await juno.faucet(address);
-      setMessage({ tone: "pos", text: `$${result.amount} of testnet USDC received — final on Arc already.`, url: result.explorerUrl });
+      setMessage({
+        tone: "pos",
+        text: `$${result.amount} of testnet USDC received — final on Arc already.`,
+        url: juno.explorable() ? result.explorerUrl : undefined,
+      });
       usdc.refresh();
     } catch (error) {
       const text = (error instanceof Error ? error.message : "The faucet did not answer.").trim().replace(/[.!]?$/, ".");

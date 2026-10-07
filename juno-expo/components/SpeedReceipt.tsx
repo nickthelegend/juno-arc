@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { OutLink, seconds } from "./ArcKit";
@@ -40,8 +41,22 @@ export function SpeedReceipt({
 }) {
   const cost = useApi(() => juno.txCost(txHash), [txHash]);
   const fork = juno.loadedConfig()?.localFork ?? false;
+  // The cost is read from the receipt the server just recorded; a read that
+  // lands a moment too early is asked again a few times, quietly.
+  const tries = useRef(0);
+  const { poll } = cost;
+  useEffect(() => {
+    if (cost.data || cost.loading || tries.current >= 4) return;
+    const timer = setTimeout(() => {
+      tries.current += 1;
+      poll();
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [cost.data, cost.loading, cost.error, poll]);
   const fee = txFee(cost.data);
-  const link = explorerUrl ?? (juno.explorable() ? juno.explorer("tx", txHash) : null);
+  const ethereum = (cost.data?.ethereum ?? null) as { feeUsd: number | null; blockSeconds: number } | null;
+  // A local fork's transactions exist on no public explorer: no link there.
+  const link = juno.explorable() ? (explorerUrl ?? juno.explorer("tx", txHash)) : null;
 
   return (
     <View style={styles.wrap}>
@@ -107,6 +122,11 @@ export function SpeedReceipt({
               ? `${fee.gasUsed.toLocaleString("en-US")} gas${fee.gasPriceGwei !== null ? ` at ${gwei(fee.gasPriceGwei)} gwei` : ""}. Arc charges gas in USDC — no second token to hold.`
               : "Arc charges gas in USDC — the same balance you trade with."}
         </Text>
+        {!gasless && fee && ethereum?.feeUsd ? (
+          <Text style={styles.costCaption} testID="speed-ethereum">
+            The same gas on Ethereum mainnet right now: {usd(ethereum.feeUsd)}, with {ethereum.blockSeconds} s blocks.
+          </Text>
+        ) : null}
       </View>
 
       {link ? <OutLink label="View on Arc's explorer" url={link} /> : null}

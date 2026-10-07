@@ -183,7 +183,7 @@ export function WithdrawFees({ creator, coins, onDone }: { creator: string; coin
               ? `Circle attested it — USDC mints on ${destination?.name ?? "the destination"}.`
               : "waiting for Circle's attestation…"}
           </StatusLine>
-          {burn.explorerUrl || juno.explorable() ? (
+          {juno.explorable() ? (
             <OutLink label="The burn on Arc's explorer" url={burn.explorerUrl ?? juno.explorer("tx", burn.hash)} />
           ) : null}
         </View>

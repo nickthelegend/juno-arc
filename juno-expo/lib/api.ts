@@ -241,7 +241,7 @@ export type QuoteToken = {
 export type CircleChain = { domain: number; name: string };
 
 /** A CCIP lane from Arc, by its chain selector (a uint64 as a decimal string). */
-export type CcipLane = { selector: string; name: string };
+export type CcipLane = { selector: string; name: string; /** False for a non-EVM destination (Solana), which needs its own receiver. */ evm?: boolean };
 
 /**
  * The Arc stack as this server has it wired: what each piece is, and whether

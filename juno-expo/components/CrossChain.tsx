@@ -78,7 +78,14 @@ export function CrossChainCard({ coin }: { coin: Coin }) {
           )}
         </View>
       ) : (
-        <Enabled coin={coin} view={data} lanes={data.lanes.length ? data.lanes : (config?.arc?.ccip?.lanes ?? [])} onSent={view.refresh} />
+        <Enabled
+          coin={coin}
+          view={data}
+          // EVM lanes only: a Solana destination needs a Solana receiver this
+          // card does not ask for.
+          lanes={(data.lanes.length ? data.lanes : (config?.arc?.ccip?.lanes ?? [])).filter((lane) => lane.evm !== false)}
+          onSent={view.refresh}
+        />
       )}
 
       {message ? <StatusLine tone={message.tone}>{message.text}</StatusLine> : null}
@@ -227,7 +234,7 @@ function Enabled({
           ) : (
             <StatusLine>The receipt carried no CCIP message id.</StatusLine>
           )}
-          {sent.explorerUrl ? <OutLink label="View on Arc's explorer" url={sent.explorerUrl} /> : null}
+          {sent.explorerUrl && juno.explorable() ? <OutLink label="View on Arc's explorer" url={sent.explorerUrl} /> : null}
         </View>
       ) : null}
     </View>

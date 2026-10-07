@@ -479,8 +479,9 @@ export function TradeSheet({
          * paying the USDC gas. Tokens and any refund go to this wallet.
          */
         setProgress("Signing the authorisation…");
-        const started = performance.now();
         const intent = await juno.buyIntent({ token: coin.address, owner: address, amountIn: value });
+        // Signing on this device only, not the round trip that built the authorisation.
+        const started = performance.now();
         const signature = await wallet.signTypedData(intent.typedData);
         setSignedInMs(Math.round(performance.now() - started));
         setProgress("Juno's relayer is submitting it…");

@@ -205,7 +205,7 @@ export function GatewayPanel({
           <StatusLine tone={message.tone} testID="gateway-message">
             {message.text}
           </StatusLine>
-          {message.url ? <OutLink label="View on Arc's explorer" url={message.url} /> : null}
+          {message.url && juno.explorable() ? <OutLink label="View on Arc's explorer" url={message.url} /> : null}
         </View>
       ) : null}
 
