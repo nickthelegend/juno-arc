@@ -21,7 +21,7 @@ import {
   type TransactionReceipt,
 } from "viem";
 
-import { recordConfirmation } from "./speed-log";
+import { recordConfirmation, rememberTiming } from "./speed-log";
 import { junoCrossChainAbi, junoLaunchpadAbi, junoSwapRouterAbi, junoTokenAbi, junoTrackersAbi } from "./abi";
 import { CallerError } from "./api";
 import { ccipMessageIdsIn } from "./ccip-events";
@@ -827,6 +827,7 @@ export async function submitSigned(params: { signed: Hex }): Promise<SubmitResul
   }
 
   recordConfirmation(confirmMs, Number(receipt.blockNumber));
+  rememberTiming(hash, confirmMs);
   return describeReceipt(receipt, from, confirmMs);
 }
 
@@ -847,6 +848,7 @@ export async function settleSent(hash: Hex, from: Address, startedAt = performan
     throw new CallerError(`${reason ?? "The transaction reverted."} It is on-chain as ${hash}.`, 422);
   }
   recordConfirmation(confirmMs, Number(receipt.blockNumber));
+  rememberTiming(hash, confirmMs);
   return describeReceipt(receipt, from, confirmMs);
 }
 

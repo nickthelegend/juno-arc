@@ -1,10 +1,7 @@
 import { isHash, type Hash } from "viem";
 
 import { CallerError, junoJson, junoOptions, junoRead } from "@/lib/juno/api";
-import { fetchFeed } from "@/lib/juno/chainlink";
-import { publicClient } from "@/lib/juno/client";
-import { localFork } from "@/lib/juno/network";
-import { arcFee, ethereumFee, ethereumGasPrice } from "@/lib/juno/tx-cost";
+import { readTxCost } from "@/lib/juno/tx-cost-read";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -22,24 +19,8 @@ export async function GET(request: Request) {
   return junoRead(async () => {
     const hash = new URL(request.url).searchParams.get("hash") ?? "";
     if (!isHash(hash)) throw new CallerError("hash is not a transaction hash");
-    const client = publicClient();
-    const [transaction, receipt] = await Promise.all([
-      client.getTransaction({ hash: hash as Hash }).catch(() => null),
-      client.getTransactionReceipt({ hash: hash as Hash }).catch(() => null),
-    ]);
-    if (!transaction || !receipt) throw new CallerError("No confirmed transaction with that hash", 404);
-
-    const [gasPrice, eth] = await Promise.all([ethereumGasPrice(), fetchFeed("ETH/USD").catch(() => null)]);
-    const arc = arcFee({ gasUsed: receipt.gasUsed, gasLimit: transaction.gas, effectiveGasPrice: receipt.effectiveGasPrice });
-    const ethereum = gasPrice
-      ? {
-          ...ethereumFee({ gasUsed: receipt.gasUsed, gasPriceWei: gasPrice.wei, ethUsd: eth && !eth.stale ? eth.priceUsd : null }),
-          gasPriceSource: gasPrice.source,
-          ethUsdSource: "Chainlink ETH/USD on Arc mainnet",
-          ethUsdAgeSeconds: eth?.ageSeconds ?? null,
-        }
-      : null;
-
-    return junoJson({ hash, blockNumber: Number(receipt.blockNumber), localFork: localFork(), arc, ethereum });
+    const cost = await readTxCost(hash as Hash);
+    if (!cost) throw new CallerError("No confirmed transaction with that hash", 404);
+    return junoJson(cost);
   });
 }

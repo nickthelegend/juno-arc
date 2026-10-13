@@ -24,6 +24,26 @@ export function recordConfirmation(ms: number, block: number, at = Date.now()): 
   if (entries.length > KEEP) entries.splice(0, entries.length - KEEP);
 }
 
+/**
+ * The time of each recent transaction by hash, so a receipt card made a
+ * moment later can state the figure the server measured. Same lifetime as
+ * the log above: this process, the last few hundred. A transaction this
+ * process did not time has no entry, and the card leaves the figure out.
+ */
+const TIMED_KEEP = 500;
+const timed = new Map<string, number>();
+
+export function rememberTiming(hash: string, ms: number): void {
+  if (!Number.isFinite(ms) || ms < 0) return;
+  timed.delete(hash.toLowerCase());
+  timed.set(hash.toLowerCase(), Math.round(ms));
+  if (timed.size > TIMED_KEEP) timed.delete(timed.keys().next().value as string);
+}
+
+export function timingOf(hash: string): number | null {
+  return timed.get(hash.toLowerCase()) ?? null;
+}
+
 export type ConfirmationSummary = { lastMs: number; lastAt: string; medianMs: number; samples: number } | null;
 
 export function recentConfirmations(): ConfirmationSummary {
@@ -39,4 +59,5 @@ export function recentConfirmations(): ConfirmationSummary {
 /** For tests. */
 export function clearConfirmations(): void {
   log().length = 0;
+  timed.clear();
 }
