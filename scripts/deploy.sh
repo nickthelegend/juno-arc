@@ -28,7 +28,7 @@ esac
 FORGE=${FORGE:-forge}
 CAST=${CAST:-cast}
 OUT=${JUNO_DEPLOYMENT_OUT:-$ROOT/deployments/arc-$NETWORK.json}
-[ "$($CAST chain-id --rpc-url "$RPC")" = "$CHAIN" ] || { echo "$RPC is not chain $CHAIN"; exit 1; }
+[ "$("$CAST" chain-id --rpc-url "$RPC")" = "$CHAIN" ] || { echo "$RPC is not chain $CHAIN"; exit 1; }
 [ -d contracts/node_modules/@chainlink/contracts-ccip ] || (cd contracts && npm ci --no-audit --no-fund)
 [ -f contracts/lib/forge-std/src/Script.sol ] || git submodule update --init --recursive
 
@@ -40,9 +40,9 @@ DEPLOYER_ENV=${DEPLOYER_ENV:-$ROOT/../.deployer/deployer.env}
 [ -f "$DEPLOYER_ENV" ] || { echo "No deployer key file at $DEPLOYER_ENV (set DEPLOYER_ENV)."; exit 1; }
 set -a; . "$DEPLOYER_ENV"; set +a
 [ -n "$DEPLOYER_PRIVATE_KEY" ] || { echo "$DEPLOYER_ENV doesn't define DEPLOYER_PRIVATE_KEY"; exit 1; }
-DEPLOYER=$($CAST wallet address --private-key "$DEPLOYER_PRIVATE_KEY")
-BAL=$($CAST balance "$DEPLOYER" --rpc-url "$RPC")
-echo "deployer $DEPLOYER on $NETWORK: $($CAST from-wei "$BAL") USDC (native, 18 decimals)"
+DEPLOYER=$("$CAST" wallet address --private-key "$DEPLOYER_PRIVATE_KEY")
+BAL=$("$CAST" balance "$DEPLOYER" --rpc-url "$RPC")
+echo "deployer $DEPLOYER on $NETWORK: $("$CAST" from-wei "$BAL") USDC (native, 18 decimals)"
 
 export DEPLOYER_PRIVATE_KEY JUNO_DEPLOYMENT_OUT="$OUT"
 mkdir -p deployments
