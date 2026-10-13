@@ -2,6 +2,7 @@ import "server-only";
 
 import { and, desc, eq, inArray, ne } from "drizzle-orm";
 
+import { CallerError } from "./api";
 import { getDb } from "@/lib/db";
 import { junoFollows, junoSwaps } from "@/lib/db/schema";
 import { hydratePools } from "./chain";
@@ -26,9 +27,10 @@ async function alertHits() {
   return collection;
 }
 
-/** A source that fails leaves its items out; the inbox still opens. */
-async function safely(read: () => Promise<InboxItem[]>): Promise<InboxItem[]> {
-  return read().catch(() => []);
+/** Missing activity is unavailable, never a successful empty inbox. */
+async function safely<T>(read: () => Promise<T>): Promise<T> {
+  try { return await read(); }
+  catch { throw new CallerError("Notification data is unavailable. Try again.", 503); }
 }
 
 /** Every Juno coin on Arc is quoted in USDC. */
@@ -39,7 +41,7 @@ function quoteSymbol(_row: JunoPoolRow): string {
 export async function loadInbox(walletInput: string): Promise<Inbox> {
   const wallet = assertAddress(walletInput);
   const network = networkKey();
-  const mine = await listPoolsByCreator(wallet).catch(() => [] as JunoPoolRow[]);
+  const mine = await safely(() => listPoolsByCreator(wallet));
   const byToken = new Map(mine.map((row) => [row.token, row]));
   const tokens = [...byToken.keys()];
 
@@ -168,9 +170,7 @@ export async function loadInbox(walletInput: string): Promise<Inbox> {
   });
 
   const [seen, ...sources] = await Promise.all([
-    reads()
-      .then((collection) => collection.findOne({ network, wallet }))
-      .catch(() => null),
+    safely(() => reads().then((collection) => collection.findOne({ network, wallet }))),
     trades,
     follows,
     comments,

@@ -27,10 +27,9 @@ const CORS_HEADERS: Record<string, string> = {
 };
 
 export function junoJson(body: unknown, init: ResponseInit = {}): Response {
-  return Response.json(body, {
-    ...init,
-    headers: { ...CORS_HEADERS, ...(init.headers ?? {}) },
-  });
+  const headers = new Headers(CORS_HEADERS);
+  new Headers(init.headers).forEach((value, name) => headers.set(name, value));
+  return Response.json(body, { ...init, headers });
 }
 
 export function junoError(message: string, status = 400): Response {

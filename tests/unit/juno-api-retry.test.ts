@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { isRpcBusy, junoRead, retryWhenBusy } from "@/lib/juno/api";
+import { isRpcBusy, junoJson, junoRead, retryWhenBusy } from "@/lib/juno/api";
 
 describe("retryWhenBusy", () => {
   it("waits out an RPC refusal and returns the answer", async () => {
@@ -35,5 +35,17 @@ describe("junoRead", () => {
   it("classifies refusals, not faults", () => {
     expect(isRpcBusy(new Error("Connection rate limits exceeded"))).toBe(true);
     expect(isRpcBusy(new Error("duplicate key value violates unique constraint"))).toBe(false);
+  });
+});
+
+
+describe("junoJson headers", () => {
+  it("preserves Headers and tuple entries alongside mobile CORS defaults", () => {
+    for (const headers of [new Headers({ "Retry-After": "3" }), [["Retry-After", "3"]] as [string, string][]]) {
+      const response = junoJson({ error: "busy" }, { status: 503, headers });
+      expect(response.headers.get("retry-after")).toBe("3");
+      expect(response.headers.get("access-control-allow-origin")).toBe("*");
+      expect(response.headers.get("content-type")).toContain("application/json");
+    }
   });
 });
