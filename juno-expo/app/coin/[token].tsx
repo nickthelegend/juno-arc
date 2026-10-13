@@ -21,6 +21,7 @@ import {
 } from "../../components/Save";
 import { PegChip } from "../../components/ArcKit";
 import { CrossChainCard } from "../../components/CrossChain";
+import { SponsorBadge } from "../../components/Sponsor";
 import { TradeSheet } from "../../components/TradeSheet";
 import { WithdrawFees } from "../../components/WithdrawFees";
 import {
@@ -473,7 +474,11 @@ function CoinDetail({ token }: { token: string }) {
               {coin.curve.graduated ? (
                 <Col gap={6} style={{ marginTop: 16 }}>
                   <Row gap={8}>
-                    <Pill label="Graduated" tone="pos" />
+                    <SponsorBadge
+                      sponsor="uniswap"
+                      claim="Graduated to Uniswap v2"
+                      href={coin.pair && juno.explorable() ? juno.explorer("address", coin.pair) : null}
+                    />
                     <Caption style={{ flex: 1 }}>
                       {pairTrading
                         ? "Trades on its Uniswap v2 TOKEN/USDC pair now, right here: buys and sells go through Juno's router. The liquidity is locked for good."

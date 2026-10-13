@@ -1,24 +1,28 @@
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 
 import { Bell } from "../../components/Bell";
 import { CoinArt } from "../../components/art";
+import { CoachMarks, COACH_STEPS } from "../../components/CoachMarks";
 import { CommentsSheet } from "../../components/CommentsSheet";
 import { FeedCard, type Buyers } from "../../components/FeedCard";
 import { Button, Placeholder, RETRY_HINT, Skeleton } from "../../components/kit";
+import { SearchGlyph } from "../../components/icons";
 import { JunoMark } from "../../components/logo";
 import { Tappable } from "../../components/Press";
 import { QuickTrade } from "../../components/QuickTrade";
+import { useCoach } from "../../lib/coach";
 import { useRefreshOnFocus } from "../../lib/focus";
 import { juno, type Coin } from "../../lib/api";
-import { invalidateMarkets, loadMarkets } from "../../lib/markets";
+import { invalidateMarkets, loadMarkets, tradesInApp } from "../../lib/markets";
 import { useFeedRevision } from "../../lib/refresh";
 import { onAnyFollow, shareCoin, useViewerOnce } from "../../lib/social";
 import { useApi } from "../../lib/useApi";
 import { LiveTape } from "../../components/LiveTape";
+import { RAILS_MIN_WIDTH } from "../../components/DesktopRails";
 import { useWallet } from "../../lib/wallet";
 import { useTabBarHeight } from "../../lib/tabbar";
 import { theme } from "../../theme";
@@ -49,6 +53,8 @@ export default function SocialScreen() {
   const wallet = useWallet();
   const revision = useFeedRevision();
   const tabBar = useTabBarHeight();
+  const coach = useCoach(COACH_STEPS);
+  const { width: windowWidth } = useWindowDimensions();
   const [scope, setScope] = useState<Scope>("everyone");
 
   const once = useViewerOnce();
@@ -105,6 +111,9 @@ export default function SocialScreen() {
     });
   }, [markets.data?.posts, scope, follows.data, changed]);
 
+  /** The post the first tip rings: the first one with a Buy. */
+  const firstBuyable = useMemo(() => posts.findIndex(tradesInApp), [posts]);
+
   const reels = useMemo(
     () => (markets.data?.posts ?? []).filter((coin) => coin.format === "reel" && coin.media.kind === "video"),
     [markets.data?.posts],
@@ -148,6 +157,9 @@ export default function SocialScreen() {
         <JunoMark size={28} color={theme.colors.text} />
         <Text style={styles.wordmark}>juno</Text>
         <View style={{ flex: 1 }} />
+        <Pressable onPress={() => router.push("/search" as never)} accessibilityRole="button" accessibilityLabel="Search" style={styles.searchTap}>
+          <SearchGlyph size={22} />
+        </Pressable>
         {wallet.address ? <Bell wallet={wallet.address} /> : null}
         {/* Whose posts, not what kind. Absent without a wallet, because there
             is no following list to have. */}
@@ -242,7 +254,8 @@ export default function SocialScreen() {
 
           {/* Trades as they land on Arc, final on arrival. Renders nothing until the server
               has seen one, so a quiet chain costs no space. */}
-          {scope === "everyone" ? <LiveTape coins={markets.data?.posts} /> : null}
+          {/* On a wide window the left rail already carries it. */}
+          {scope === "everyone" && !(Platform.OS === "web" && windowWidth >= RAILS_MIN_WIDTH) ? <LiveTape coins={markets.data?.posts} /> : null}
 
           {(markets.data?.missing ?? 0) > 0 ? (
             <Text style={styles.footnote}>
@@ -276,10 +289,11 @@ export default function SocialScreen() {
               />
             )
           ) : (
-            posts.map((coin) => (
+            posts.map((coin, index) => (
               <FeedCard
                 key={coin.address}
                 coin={coin}
+                coached={coach.step === 0 && index === firstBuyable}
                 caption={captions.get(coin.address) ?? coin.description ?? null}
                 // Unknown while the record loads — "No buyers yet" would be a
                 // claim made before reading.
@@ -300,6 +314,11 @@ export default function SocialScreen() {
           )}
         </ScrollView>
       )}
+
+      {/* First visit: three tips, once per device. Only over a loaded feed. */}
+      {coach.step !== null && posts.length > 0 && !trade ? (
+        <CoachMarks step={coach.step} onNext={coach.next} onSkip={coach.finish} top={64} bottom={tabBar.height + 8} />
+      ) : null}
 
       {toast ? (
         <View style={[styles.toast, { pointerEvents: "none" }]}>
@@ -369,6 +388,7 @@ function ReelRing({ coin, onPress }: { coin: Coin; onPress: () => void }) {
 
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: theme.colors.surfaceAlt },
+  searchTap: { padding: 6 },
   header: {
     flexDirection: "row",
     alignItems: "center",

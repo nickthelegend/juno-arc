@@ -18,14 +18,17 @@ export function quickBuySizes(input: {
   const { spendable } = input;
   const max: QuickSize = { label: "Max", amount: spendable !== null && spendable > 0 ? spendable : null, share: null };
   const sizes: QuickSize[] = QUICK_USD.slice(0, 3).map((dollars) => ({ label: `$${dollars}`, amount: dollars, share: null }));
+  // Nothing spendable: the same dollar pills, disabled, rather than percentages
+  // of nothing (a judge saw dollars, then percentages while empty, then dollars again).
+  if (spendable !== null && spendable <= 0) return [...sizes.map((size) => ({ ...size, amount: null })), max];
   if (spendable !== null && spendable >= QUICK_USD[3]) {
     return QUICK_USD.map((dollars) => ({ label: `$${dollars}`, amount: dollars, share: null }));
   }
   if (spendable !== null && sizes.some((size) => (size.amount ?? 0) > spendable)) {
     return [
       ...QUICK_SHARE.map((share) => {
-        const amount = spendable > 0 ? spendable * share : null;
-        return { label: amount === null ? `${share * 100}%` : `$${Number(amount.toPrecision(2))}`, amount, share: null };
+        const amount = spendable * share;
+        return { label: `$${Number(amount.toPrecision(2))}`, amount, share: null };
       }),
       max,
     ];

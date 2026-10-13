@@ -843,6 +843,20 @@ export type JunoStats = {
   at: string;
 };
 
+/** `GET /api/juno/heartbeat`: Arc's block cadence, measured, beside Juno's own measured confirmations. */
+export type Heartbeat = {
+  network: string;
+  latestBlock: number;
+  /** Mean block interval over the window; null when the window could not be read. */
+  blockMs: number | null;
+  window: number;
+  finality: string;
+  /** Measured on a local fork: the fork's cadence, not Arc's. */
+  localFork: boolean;
+  at: string;
+  confirmations: { lastMs: number; lastAt: string; medianMs: number; samples: number } | null;
+};
+
 /**
  * `GET /api/juno/tx/cost?hash=`: what a confirmed transaction cost in gas,
  * which on Arc is paid in USDC. Typed loosely, because the figures live under
@@ -1150,6 +1164,8 @@ export const juno = {
 
   /** The landing's live figures. Each part is null when its read failed. */
   stats: () => api.get<JunoStats>("/api/juno/stats"),
+  /** Arc's block cadence and the server's measured confirmations. */
+  heartbeat: () => api.get<Heartbeat>("/api/juno/heartbeat"),
 
   /** What a confirmed transaction cost in gas, paid in USDC on Arc. */
   txCost: (hash: string) => api.get<TxCost>(`/api/juno/tx/cost?hash=${hash}`),

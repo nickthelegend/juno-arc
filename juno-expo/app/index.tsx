@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
 
 import { OnboardingArt } from "../components/art";
+import { Heartbeat } from "../components/Heartbeat";
 import { Body, Button, Caption, Display } from "../components/kit";
 import { juno, networkLabel, onTestnet } from "../lib/api";
 import { useApi } from "../lib/useApi";
@@ -73,8 +74,8 @@ export default function Onboarding() {
               <Figure
                 testID="stat-trades"
                 value={String(live.trades24h)}
-                // Fills Juno recorded on curves and Uniswap pairs.
-                label={`curve & pair trades, 24h${live.traders24h ? ` · ${live.traders24h} wallets` : ""}`}
+                // Every curve and Uniswap v2 pair trade Juno recorded.
+                label={`trades, 24h${live.traders24h ? ` · ${live.traders24h} wallets` : ""}`}
               />
             ) : null}
             {live.confirmation ? (
@@ -84,7 +85,7 @@ export default function Onboarding() {
                 label={
                   live.confirmation.samples === 1
                     ? "to finality, the last trade"
-                    : `to finality, median of the last ${live.confirmation.samples} trades`
+                    : "to finality (median)"
                 }
               />
             ) : null}
@@ -92,6 +93,7 @@ export default function Onboarding() {
               <Figure testID="stat-block" value={`#${live.block.number.toLocaleString("en-US")}`} label="latest block" />
             ) : null}
           </Grid>
+          <Heartbeat compact />
         </Live>
       ) : null}
 

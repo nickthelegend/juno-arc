@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
-import { Platform } from "react-native";
+import { Platform, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
 
@@ -8,6 +8,7 @@ import { AreaChart, RANGES, withinRange, type Range } from "../../components/Are
 import { CoinArt, Identicon } from "../../components/art";
 import { CreatorProfile } from "../../components/CreatorProfile";
 import { Tappable } from "../../components/Press";
+import { WalletPreview } from "../../components/WalletPreview";
 import { GatewayCard } from "../../components/Gateway";
 import { TradeList } from "../../components/TradeList";
 import { WalletCard } from "../../components/WalletCard";
@@ -39,7 +40,6 @@ const TABS = [
  */
 export default function ProfileScreen() {
   const wallet = useWallet();
-  const router = useRouter();
 
   if (!wallet.ready) {
     return (
@@ -52,22 +52,12 @@ export default function ProfileScreen() {
   }
 
   if (!wallet.address) {
+    // What a profile is and what starting costs, with the account one tap away.
     return (
       <Page edges={["top"]}>
-        <Placeholder
-          title="No wallet yet"
-          detail="Create one to trade and to launch your own coins. No sign-up: a key on this device, holding USDC on Arc — the only token you need, gas included."
-          action={
-            // Not `.then(portfolio.refresh)`: that refresh was captured before
-            // the wallet existed, re-ran the read with no address, and its
-            // null landed last — "Holdings could not be read" on a wallet
-            // created a second ago. The address change re-reads on its own.
-            <Col gap={10} style={{ alignItems: "center" }}>
-              <Button label="Create wallet" onPress={() => void wallet.connect().catch(() => undefined)} />
-              <Button label="What runs on Arc" variant="quiet" onPress={() => router.push("/arc" as never)} />
-            </Col>
-          }
-        />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <WalletPreview />
+        </ScrollView>
       </Page>
     );
   }

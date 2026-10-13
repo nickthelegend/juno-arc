@@ -27,7 +27,7 @@ describe("quickBuySizes", () => {
 
   it("disables everything when nothing is spendable, rather than offering a size", () => {
     const sizes = quickBuySizes({ spendable: -0.1 });
-    expect(sizes.map((s) => s.label)).toEqual(["25%", "50%", "75%", "Max"]);
+    expect(sizes.map((s) => s.label)).toEqual(["$1", "$5", "$10", "Max"]);
     expect(sizes.every((s) => s.amount === null)).toBe(true);
   });
 
