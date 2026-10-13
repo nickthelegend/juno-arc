@@ -2,6 +2,7 @@
 import { junoJson, junoOptions } from "@/lib/juno/api";
 import { rateLimit } from "@/lib/rate-limit";
 import { rememberContent } from "@/lib/juno/ipfs-cache";
+import { localStorageMode, publicOrigin, storeLocal } from "@/lib/juno/local-media";
 import { pinFile } from "@/lib/juno/pinata";
 import { videoPoster } from "@/lib/juno/poster";
 import sharp from "sharp";
@@ -12,13 +13,12 @@ export const OPTIONS = junoOptions;
 
 /** Anything larger is a problem for the pinning step, not a real upload. */
 const MAX_BYTES = 25 * 1024 * 1024;
-const ALLOWED = /^(image|video)\//;
+/** Raster images and video only: an SVG is a document that can carry script, and this route serves what it stores. */
+const ALLOWED = /^(image\/(jpeg|png|gif|webp|avif|heic|heif)|video\/)/;
 
 export async function POST(request: Request) {
-  if (!process.env.PINATA_JWT) {
-    return junoJson({ error: "Uploads are not configured" }, { status: 503 });
-  }
-  // Pins on Juno's Pinata key, for anyone who asks: bounded per address.
+  // With a Pinata key, pins on Juno's account; without one, demo storage on this server's disk
+  // (lib/juno/local-media.ts). Either way, for anyone who asks: bounded per address.
   const limited = rateLimit(request, "upload");
   if (limited) return limited;
 
@@ -42,15 +42,20 @@ export async function POST(request: Request) {
     return junoJson({ error: "No file" }, { status: 400 });
   }
   if (!ALLOWED.test(file.type)) {
-    return junoJson({ error: "Only images and video" }, { status: 415 });
+    return junoJson({ error: "Only photos (JPEG, PNG, GIF, WebP, AVIF, HEIC) and video" }, { status: 415 });
   }
   if (file.size > MAX_BYTES) {
     return junoJson({ error: "File is over 25MB" }, { status: 413 });
   }
 
   try {
-    const pinned = await pinFile(file);
     const bytes = Buffer.from(await file.arrayBuffer());
+    const local = localStorageMode();
+    const origin = publicOrigin(request);
+    const store = (data: Uint8Array, type: string, name: string, f?: File) =>
+      local ? storeLocal(data, type, origin) : pinFile(f ?? new File([new Uint8Array(data)], name, { type }), name);
+    const pinned = await store(bytes, file.type, file.name || "upload", file);
+    const storage = local ? "local" : "ipfs";
     // The feed asks for this within seconds, before public gateways have it.
     rememberContent(pinned.cid, bytes, file.type);
 
@@ -64,14 +69,12 @@ export async function POST(request: Request) {
      */
     if (file.type.startsWith("video/")) {
       const poster = await videoPoster(bytes);
-      const pinnedPoster = await pinFile(
-        new File([new Uint8Array(poster.jpeg)], "poster.jpg", { type: "image/jpeg" }),
-        `${file.name || "reel"}-poster`,
-      );
+      const pinnedPoster = await store(poster.jpeg, "image/jpeg", `${file.name || "reel"}-poster`);
       rememberContent(pinnedPoster.cid, poster.jpeg, "image/jpeg");
       return junoJson(
         {
           ...pinned,
+          storage,
           mimeType: file.type,
           posterUri: pinnedPoster.uri,
           posterUrl: pinnedPoster.url,
@@ -89,7 +92,7 @@ export async function POST(request: Request) {
       .metadata()
       .catch(() => ({ width: undefined, height: undefined }));
     return junoJson(
-      { ...pinned, mimeType: file.type, width: meta.width ?? null, height: meta.height ?? null },
+      { ...pinned, storage, mimeType: file.type, width: meta.width ?? null, height: meta.height ?? null },
       { status: 201 },
     );
   } catch (error) {

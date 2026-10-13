@@ -89,7 +89,7 @@ export function SpeedReceipt({
         <View style={styles.compareCell}>
           <Text style={styles.compareLabel}>{gasless ? "Gas, to you" : "Paid here"}</Text>
           <Text testID="speed-fee" style={styles.compareValue}>
-            {gasless ? "$0" : fee ? usd(fee.feeUsdc) : "≈ $0.001"}
+            {gasless ? "$0" : fee ? usd(fee.feeUsdc) : "≈ $0.004"}
           </Text>
           <Text style={styles.compareCaption}>{gasless ? "paid by Juno's relayer" : "in USDC, the only token held"}</Text>
         </View>

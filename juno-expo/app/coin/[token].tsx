@@ -46,6 +46,7 @@ import { sameAddress, toAddress } from "../../lib/address";
 import {
   juno,
   networkLabel,
+  onTestnet,
   type Network,
   type NavReference,
   type Plan,
@@ -1152,7 +1153,7 @@ function NavBand({ nav }: { nav: NavReference }) {
             })}, the curve's price implies ${money(nav.impliedUsd!, "USD", { compact: false })} per ${base} — ${
               nav.withinBand ? "inside" : "outside"
             } its ${nav.bandBps / 100}% band.`}{" "}
-        {`Chainlink ${nav.feed} on Arc mainnet, updated ${updated} ago.`}
+        {`Chainlink ${nav.feed} on Arc mainnet, updated ${updated} ago.${onTestnet() ? " Display-only on testnet: the price is Arc mainnet's; nothing here is marked on chain." : ""}`}
       </Caption>
 
       {/* The same comparison computed on chain by JunoTrackers.mark, when the

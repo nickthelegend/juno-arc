@@ -51,3 +51,4 @@ npm-debug.log*
 
 /juno-expo/dist-fork
 /juno-expo/dist-local
+/juno-expo/dist-testnet

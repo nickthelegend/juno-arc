@@ -248,7 +248,7 @@ export default function SocialScreen() {
           <Pressable onPress={() => router.push("/arc" as never)} accessibilityRole="link" style={styles.arcLine}>
             <View style={styles.arcDot} />
             <Text style={styles.arcText} numberOfLines={2}>
-              Buy as you scroll: each buy is final on Arc before you reach the next post. Gas ≈ $0.001, in USDC.
+              Buy as you scroll: each buy is final on Arc in about a second. Gas ≈ $0.004, in USDC.
             </Text>
           </Pressable>
 

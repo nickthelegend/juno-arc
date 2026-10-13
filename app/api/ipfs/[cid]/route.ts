@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { readLocal } from "@/lib/juno/local-media";
 import { CID_V0, CID_V1, MAX_CACHED_BYTES, NOT_CONTENT, ipfsGateways as gateways, recallContent, rememberContent } from "@/lib/juno/ipfs-cache";
 
 /**
@@ -71,6 +72,10 @@ export async function GET(
   const range = request.headers.get("range");
   const held = recallContent(cid);
   if (held) return fromMemory(held, range);
+
+  // Demo storage (no Pinata key): content this server wrote to its own disk.
+  const onDisk = await readLocal(cid);
+  if (onDisk) return fromMemory(onDisk, range);
 
   for (const gateway of gateways()) {
     try {

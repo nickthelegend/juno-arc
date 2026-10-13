@@ -106,10 +106,10 @@ export type TokenMetadataInput = {
   attributes?: Array<{ trait_type: string; value: string }>;
 };
 
-export async function pinTokenMetadata(input: TokenMetadataInput): Promise<PinResult> {
+export function buildTokenMetadata(input: TokenMetadataInput) {
   const category = input.mediaMimeType?.startsWith("video") ? "video" : "image";
 
-  const metadata = {
+  return {
     name: input.name,
     symbol: input.symbol,
     description: input.description ?? "",
@@ -123,6 +123,8 @@ export async function pinTokenMetadata(input: TokenMetadataInput): Promise<PinRe
         : [],
     },
   };
+}
 
-  return pinJson(metadata, `juno-${input.symbol}-metadata`);
+export async function pinTokenMetadata(input: TokenMetadataInput): Promise<PinResult> {
+  return pinJson(buildTokenMetadata(input), `juno-${input.symbol}-metadata`);
 }

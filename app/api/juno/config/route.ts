@@ -2,6 +2,7 @@ import { junoJson, junoOptions } from "@/lib/juno/api";
 import { ccipLanes, cctpDestinations, gatewaySources } from "@/lib/juno/arc";
 import { ARC_MAINNET_FEEDS } from "@/lib/juno/chainlink";
 import { usdcQuote } from "@/lib/juno/launchpad";
+import { localStorageMode } from "@/lib/juno/local-media";
 import { memoAddress, memoLive } from "@/lib/juno/memo";
 import {
   ARC_CCTP_DOMAIN,
@@ -61,6 +62,9 @@ export async function GET() {
     deployBlock: Number(d.deployBlock),
     quoteTokens: [usdc],
     faucet: net === "testnet",
+    // "ipfs": photos and metadata are pinned to IPFS on Pinata. "local": no Pinata key is set, so this server
+    // keeps them on its own disk under their IPFS content address (demo storage; not pinned to the network).
+    storage: localStorageMode() ? "local" : "ipfs",
     v2Trading: d.swapRouter !== null,
     venues: [{ id: "uniswap-v2", name: "Uniswap v2", quotes: [usdc.address] }],
     arc: {

@@ -111,7 +111,7 @@ export function WalletCard({ address }: { address: string }) {
 
       {empty ? (
         <Text style={styles.hint}>
-          Every buy and launch pays gas in USDC (about $0.001 a trade). Fund this wallet to start.
+          Every buy and launch pays gas in USDC (about $0.004 a trade). Fund this wallet to start.
         </Text>
       ) : null}
 

@@ -148,7 +148,7 @@ the coin is tracked on chain (else null). `coin.reference` is
   "deployBlock": 0, "quoteTokens": [{ "address": "0x3600…", "symbol": "USDC", "decimals": 6, "native": false }],
   "faucet": true, "v2Trading": true, "venues": [{ "id": "uniswap-v2", "name": "Uniswap v2", "quotes": ["0x3600…"] }],
   "arc": {
-    "finality": "sub-second, deterministic", "gasToken": "USDC",
+    "finality": "deterministic, ~0.5 s blocks", "gasToken": "USDC",
     "memo": { "address": "0x5294…", "live": true },
     "gateway": { "available": true, "wallet": "0x…", "minter": "0x…", "domain": 26, "sources": [{ "domain": 6, "name": "Base Sepolia" }] },
     "cctp": { "domain": 26, "tokenMessenger": "0x…", "destinations": [{ "domain": 6, "name": "Base Sepolia" }] },

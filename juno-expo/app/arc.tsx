@@ -14,13 +14,15 @@ type Piece = {
   what: string;
   inJuno: string;
   where: string;
+  /** What has actually been exercised on Arc testnet (docs/E2E-TESTNET.md); shown on testnet only. */
+  proof: { kind: "tx" | "fork" | "display"; text: string };
   /** Live on this server, unavailable, or not reported. */
   status: (config: ChainConfig | null) => { live: boolean | null; detail?: string };
 };
 
 /**
  * The Arc stack, on one screen: each piece, what it does in Juno, where to
- * find it in the app, and whether this server has it live — read from
+ * find it in the app, and whether this server has it configured — read from
  * `GET config`, so a piece that is not wired here says so rather than being
  * listed as if it were.
  */
@@ -29,23 +31,26 @@ const PIECES: Piece[] = [
     name: "USDC as gas",
     what: "Arc's native gas token is USDC.",
     inJuno:
-      "Your wallet holds one token. Every price, fee, balance and gas cost is in dollars — a trade's gas is about a tenth of a cent.",
+      "Your wallet holds one token. Every price, fee, balance and gas cost is in dollars — a buy's gas is under half a cent.",
     where: "Everywhere: the trade sheet, your wallet, every receipt.",
+    proof: { kind: "tx", text: "Testnet launch, buys and sell paid gas in USDC; a buy cost about $0.004." },
     status: (c) => ({ live: c ? true : null, detail: c?.usdc ? `USDC ${short(c.usdc)}` : undefined }),
   },
   {
-    name: "Sub-second finality",
-    what: "Deterministic finality in under a second, no reorgs.",
+    name: "Deterministic finality",
+    what: "Deterministic finality: a transaction is final in the block that includes it (about every half second), no reorgs.",
     inJuno:
-      "A buy is final before you scroll to the next post. The receipt leads with the measured time from submit to final.",
+      "A buy is final in about a second. The receipt leads with the measured time from submit to receipt, taken by Juno\u2019s server.",
     where: "Trade receipt · landing figures",
-    status: (c) => ({ live: c ? true : null, detail: c?.arc?.finality }),
+    proof: { kind: "tx", text: "Blocks about every 0.5 s on testnet; measured 1.1–1.3 s from submit to receipt through Juno\u2019s server." },
+    status: (c) => ({ live: c ? true : null, detail: c ? "deterministic, ~0.5 s blocks" : undefined }),
   },
   {
     name: "Memo",
     what: "Arc's Memo contract makes a call as your wallet and logs a reference beside it.",
     inJuno: "Each curve buy and sell is tagged with its post's id, so trades are findable by post on chain.",
     where: "Trade receipt: “Tagged with this post via Arc Memo”",
+    proof: { kind: "tx", text: "Testnet launch, buy, sell and relayed buy were Memo-tagged." },
     status: (c) =>
       c?.arc?.memo
         ? { live: c.arc.memo.live, detail: c.arc.memo.live ? short(c.arc.memo.address) : "not executed by this RPC — plain calls" }
@@ -56,6 +61,7 @@ const PIECES: Piece[] = [
     what: "USDC's receiveWithAuthorization: a signature moves the money, someone else pays the gas.",
     inJuno: "“Pay with signature — no gas”: you sign, Juno's relayer submits the buy and pays the USDC gas.",
     where: "Trade sheet",
+    proof: { kind: "tx", text: "One relayed buy on testnet: the buyer paid exactly the trade, no gas." },
     status: (c) =>
       c?.arc?.relayer
         ? { live: c.arc.relayer.available, detail: c.arc.relayer.available ? "relayer funded" : "no relayer on this server" }
@@ -63,9 +69,10 @@ const PIECES: Piece[] = [
   },
   {
     name: "Circle Gateway",
-    what: "A unified USDC balance across chains, spendable on Arc in seconds.",
+    what: "A unified USDC balance across chains, Circle attests a burn intent and Juno\u2019s relayer mints the USDC on Arc.",
     inJuno: "Deposit once on Base or Ethereum, spend it here; top up a buy from Gateway when Arc USDC is short.",
     where: "Profile → wallet · trade sheet “Top up from Gateway”",
+    proof: { kind: "tx", text: "Deposit from Arc exercised on testnet. Attestation and mint from another chain: not run on testnet." },
     status: (c) =>
       c?.arc?.gateway
         ? {
@@ -79,6 +86,7 @@ const PIECES: Piece[] = [
     what: "Native USDC burned on one chain, minted on another.",
     inJuno: "Creators withdraw trading fees straight to Base, Ethereum, Arbitrum, Solana… as native USDC.",
     where: "Creator earnings · coin page “Withdraw fees to…”",
+    proof: { kind: "tx", text: "A real burn through TokenMessengerV2 on testnet; the mint on the other chain was not completed." },
     status: (c) =>
       c?.arc?.cctp
         ? { live: true, detail: `domain ${c.arc.cctp.domain} · ${c.arc.cctp.destinations?.length ?? 0} destinations` }
@@ -90,6 +98,7 @@ const PIECES: Piece[] = [
     inJuno:
       "A graduated coin's creator makes it cross-chain in one transaction; holders send it to Base Sepolia or Ethereum Sepolia, fee in USDC. Arc's supply can never exceed the launch supply.",
     where: "Graduated coin page → Cross-chain",
+    proof: { kind: "fork", text: "Contracts are deployed on testnet; enabling and sending a coin is proven on a fork of Arc testnet, not run live (a coin must graduate first)." },
     status: (c) =>
       c?.arc?.ccip
         ? { live: true, detail: `${c.arc.ccip.lanes?.length ?? 0} lanes · router ${short(c.arc.ccip.router)}` }
@@ -101,6 +110,7 @@ const PIECES: Piece[] = [
     inJuno:
       "Trackers follow a feed: the coin page shows NAV, what the curve implies, the premium and the band. USDC's own peg is shown beside prices.",
     where: "Trade → Trackers · tracker coin pages · the peg chip",
+    proof: { kind: "display", text: "Feeds exist on Arc mainnet only: on testnet, prices are mainnet reads for display and nothing is marked on chain." },
     status: (c) =>
       c?.arc?.feeds
         ? { live: c.arc.feeds.count > 0, detail: `${c.arc.feeds.count} feeds on Arc ${c.arc.feeds.network}` }
@@ -138,7 +148,7 @@ export default function ArcScreen() {
           <Text style={styles.heroTitle}>What runs on Arc.</Text>
           <Text style={styles.heroBody}>
             Juno is a social app where every post is a market. Arc is Circle&rsquo;s chain for stablecoin finance: here is
-            each piece of it Juno uses, what it does for you, and whether this server has it live.
+            each piece of it Juno uses, what it does for you, what has been exercised on testnet, and whether this server has it configured.
           </Text>
           <PegChip dark style={{ marginTop: 4 }} />
         </View>
@@ -162,7 +172,7 @@ export default function ArcScreen() {
                       status.live === true ? styles.badgeLiveText : status.live === false ? styles.badgeOffText : null,
                     ]}
                   >
-                    {status.live === true ? "LIVE" : status.live === false ? "UNAVAILABLE" : "NOT REPORTED"}
+                    {status.live === true ? "CONFIGURED" : status.live === false ? "UNAVAILABLE" : "NOT REPORTED"}
                   </Text>
                 </View>
               </View>
@@ -172,6 +182,14 @@ export default function ArcScreen() {
                 {piece.where}
                 {status.detail ? ` · ${status.detail}` : ""}
               </Text>
+              {config && config.network === "testnet" ? (
+                <Text style={styles.proof} testID="arc-proof">
+                  <Text style={styles.proofTag}>
+                    {piece.proof.kind === "tx" ? "RAN ON TESTNET" : piece.proof.kind === "fork" ? "FORK-PROVEN" : "DISPLAY-ONLY"}
+                  </Text>
+                  {`  ${piece.proof.text}`}
+                </Text>
+              ) : null}
             </View>
           );
         })}
@@ -218,6 +236,8 @@ const styles = StyleSheet.create({
   badge: { paddingHorizontal: 7, paddingVertical: 3, borderRadius: 7, backgroundColor: theme.colors.surfaceAlt },
   badgeLive: { backgroundColor: theme.colors.limeSoft },
   badgeOff: { backgroundColor: theme.colors.negSoft },
+  proof: { fontSize: theme.type.micro.size, color: theme.colors.muted, lineHeight: 16, marginTop: 2 },
+  proofTag: { fontWeight: "900", letterSpacing: 0.4, color: theme.colors.text },
   badgeText: { fontSize: 9, fontWeight: "900", letterSpacing: 0.5, color: theme.colors.muted },
   badgeLiveText: { color: theme.colors.onLime },
   badgeOffText: { color: theme.colors.neg },

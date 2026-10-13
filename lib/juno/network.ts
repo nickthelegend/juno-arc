@@ -43,7 +43,7 @@ export function networkKey(): string {
  * is produced, so a receipt in hand is a final transaction — there is no
  * "confirmations" count to wait out and no reorg to hedge against.
  */
-export const ARC_FINALITY = "sub-second, deterministic";
+export const ARC_FINALITY = "deterministic, ~0.5 s blocks";
 
 /** Explorers (Blockscout): `/tx/`, `/address/`, `/token/`. */
 const EXPLORER: Record<Network, string> = {

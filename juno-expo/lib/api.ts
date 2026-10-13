@@ -268,6 +268,8 @@ export type ChainConfig = {
    * confirmation time is the fork's. Absent on an older server.
    */
   localFork?: boolean;
+  /** "local": no Pinata key on the server, so uploads are kept on its own disk (demo storage), not pinned to IPFS. */
+  storage?: "ipfs" | "local";
   launchpad?: string | null;
   /** The explorer's base URL. Links are `${explorer}/tx/${hash}` and so on. */
   explorer: string;
@@ -1295,6 +1297,7 @@ export const juno = {
         | {
             uri: string;
             url: string;
+            storage?: "ipfs" | "local";
             mimeType: string;
             posterUri?: string;
             posterUrl?: string;
@@ -1338,7 +1341,7 @@ export const juno = {
     curvePreset: string;
     imageUrl?: string;
     mimeType?: string;
-  }) => api.post<{ uri: string }>("/api/juno/metadata", input),
+  }) => api.post<{ uri: string; storage?: "ipfs" | "local" }>("/api/juno/metadata", input),
 
   buildSwap: (
     input: {

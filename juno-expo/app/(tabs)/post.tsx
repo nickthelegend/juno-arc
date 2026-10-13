@@ -291,10 +291,15 @@ export default function PostScreen() {
         },
       );
 
-      note({ label: kind === "reel" ? "Video pinned to IPFS" : "Photo pinned to IPFS", receipt: uploaded.uri });
-      if (uploaded.posterUri) note({ label: "Poster frame pinned", receipt: uploaded.posterUri });
+      // Without a Pinata key the server keeps the file itself (demo storage): same content address, not on the IPFS network.
+      const kept = uploaded.storage === "local";
+      note({
+        label: `${kind === "reel" ? "Video" : "Photo"} ${kept ? "stored on this server (demo storage, not pinned to IPFS)" : "pinned to IPFS"}`,
+        receipt: uploaded.uri,
+      });
+      if (uploaded.posterUri) note({ label: kept ? "Poster frame stored on this server" : "Poster frame pinned", receipt: uploaded.posterUri });
 
-      setStatus("Pinning the token metadata…");
+      setStatus(kept ? "Storing the token metadata…" : "Pinning the token metadata…");
       const metadata = await juno.pinMetadata({
         name: name.trim(),
         symbol: symbol.trim().toUpperCase(),
@@ -305,7 +310,7 @@ export default function PostScreen() {
         mimeType: uploaded.posterUrl ? "image/jpeg" : uploaded.mimeType,
       });
 
-      note({ label: "Token metadata pinned", receipt: metadata.uri });
+      note({ label: kept ? "Token metadata stored on this server" : "Token metadata pinned", receipt: metadata.uri });
 
       setStatus("Building the launch…");
       const built = await juno.buildLaunch({
@@ -409,6 +414,12 @@ export default function PostScreen() {
           </Text>
 
           <MediaPicker kind={kind} media={media} onPick={pick} disabled={busy} />
+          {juno.loadedConfig()?.storage === "local" ? (
+            <Text style={styles.storageNote}>
+              Demo storage: this server keeps your {kind === "reel" ? "video" : "photo"} on its own disk under its IPFS
+              content address. It is not pinned to the IPFS network. The market itself is a real contract on Arc.
+            </Text>
+          ) : null}
 
           <Card style={styles.form}>
             <Field label="Name">
@@ -594,7 +605,7 @@ export default function PostScreen() {
           {!busy && !unlisted && missing ? <Text style={styles.missing}>{missing}</Text> : null}
           {busy && status ? <Text style={styles.missing}>{status}</Text> : null}
           <Text style={styles.footnote}>
-            {`One transaction${firstBuy > 0 ? " (after a USDC approval for the first buy)" : ""}: it deploys the token, opens its USDC curve, and reserves the Uniswap v2 TOKEN/USDC pair the curve graduates into — locked until then. Gas is paid in USDC and is final on Arc in under a second.`}
+            {`One transaction${firstBuy > 0 ? " (after a USDC approval for the first buy)" : ""}: it deploys the token, opens its USDC curve, and reserves the Uniswap v2 TOKEN/USDC pair the curve graduates into — locked until then. Gas is paid in USDC and is final on Arc in about a second.`}
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -761,6 +772,7 @@ const styles = StyleSheet.create({
   logTime: { color: "#9FB09A", fontSize: 12, fontFamily: MONO },
   title: { fontSize: theme.type.screen.size, fontWeight: "800", color: theme.colors.ink },
   lede: { fontSize: theme.type.body.size, color: theme.colors.muted, lineHeight: 21 },
+  storageNote: { fontSize: theme.type.micro.size, color: theme.colors.muted, lineHeight: 16 },
   form: { gap: 16 },
   fieldLabel: { fontSize: theme.type.label.size, fontWeight: "500", color: theme.colors.muted },
   fieldHint: { fontSize: theme.type.micro.size, fontWeight: "500", color: theme.colors.neg },

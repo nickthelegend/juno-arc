@@ -46,9 +46,9 @@ import { theme } from "../theme";
  * ## Arc
  *
  * Everything is in dollars: curves are quoted in USDC, and gas is paid in the
- * same USDC (about a tenth of a cent). A receipt on Arc is final, so the sheet
+ * same USDC (measured on testnet: about $0.004 for a buy). A receipt on Arc is final, so the sheet
  * goes straight from "Confirming" to a receipt that leads with the measured
- * time — the buy is final before you scroll to the next post. With Juno's
+ * time — about a second end to end. With Juno's
  * relayer configured, a buy can be paid with a signature instead of gas
  * (EIP-3009 `receiveWithAuthorization`, relayed as `buyWithAuthorization`), and
  * a wallet short of USDC on Arc can top up from Circle Gateway in place.
@@ -67,7 +67,7 @@ const QUICK_TOKENS = [100_000, 1_000_000, 10_000_000, 50_000_000];
  * USDC kept back for gas off the top of a Max buy.
  *
  * Arc charges gas in USDC, from the same balance the buy spends: a curve buy
- * costs about a tenth of a cent, and an approval plus a buy about twice that.
+ * costs about $0.004, and an approval plus a buy about twice that.
  * A cent covers either with room; holding back less is how a Max buy ends up
  * unable to pay for itself.
  */
@@ -325,7 +325,7 @@ export function TradeSheet({
         text:
           spending > 0
             ? `Leave about $${GAS_RESERVE_USDC} of USDC for gas.`
-            : `You need a little USDC for gas (about $0.001).${testnet ? " Get testnet USDC below." : ""}`,
+            : `You need a little USDC for gas (about $0.005).${testnet ? " Get testnet USDC below." : ""}`,
         short: GAS_RESERVE_USDC,
       };
     }
@@ -1026,8 +1026,8 @@ export function TradeSheet({
             {!blocker && !error && stage === "entry" ? (
               <HintText testID="finality-note">
                 {useGasless
-                  ? "No gas: the relayer pays it. Final on Arc in under a second."
-                  : `Gas ≈ $0.001, paid in USDC. Final on Arc in under a second — before you scroll to the next post.`}
+                  ? "No gas: the relayer pays it. Final on Arc in about a second."
+                  : `Gas ≈ $0.004, paid in USDC. Final on Arc in about a second.`}
               </HintText>
             ) : null}
             {blocker ? (

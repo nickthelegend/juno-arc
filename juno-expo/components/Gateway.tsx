@@ -44,7 +44,7 @@ export function GatewayCard({ address }: { address: string }) {
   return (
     <ArcCard title="Unified USDC balance" tag="CIRCLE GATEWAY" testID="gateway-card">
       <Text style={arcStyles.body}>
-        USDC you deposit into Circle Gateway on any chain is one balance. Spend it here and it lands on Arc in seconds,
+        USDC you deposit into Circle Gateway on any chain is one balance. Spend it here and Circle attests it and Juno mints it on Arc,
         ready to buy into a post.
       </Text>
       <GatewayPanel address={address} balances={balances} />
@@ -228,7 +228,7 @@ export function GatewayTopUp({ address, short, onLanded }: { address: string; sh
       <Tappable onPress={() => setOpen(true)} to={0.97} accessibilityRole="button" accessibilityLabel="Top up from Circle Gateway">
         <View style={styles.topUp} testID="gateway-topup">
           <Text style={styles.topUpText}>Top up from Gateway</Text>
-          <Text style={styles.topUpCaption}>Bring USDC from Base, Ethereum… to Arc in seconds (Circle Gateway)</Text>
+          <Text style={styles.topUpCaption}>Bring USDC from Base, Ethereum… to Arc (Circle Gateway)</Text>
         </View>
       </Tappable>
     );

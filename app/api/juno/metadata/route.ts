@@ -1,7 +1,8 @@
 import { junoJson, junoOptions } from "@/lib/juno/api";
 import { rateLimit } from "@/lib/rate-limit";
 import { CURVE_PRESETS } from "@/lib/juno/curves";
-import { pinTokenMetadata } from "@/lib/juno/pinata";
+import { localStorageMode, publicOrigin, storeLocal } from "@/lib/juno/local-media";
+import { buildTokenMetadata, pinTokenMetadata } from "@/lib/juno/pinata";
 import type { CurvePresetId } from "@/lib/juno/types";
 
 export const runtime = "nodejs";
@@ -20,10 +21,7 @@ export const OPTIONS = junoOptions;
  * everywhere without special-casing.
  */
 export async function POST(request: Request) {
-  if (!process.env.PINATA_JWT) {
-    return junoJson({ error: "Metadata pinning is not configured" }, { status: 503 });
-  }
-  // Pins on Juno's Pinata key, for anyone who asks: bounded per address.
+  // Pinata when configured, else demo storage on this server's disk (lib/juno/local-media.ts).
   const limited = rateLimit(request, "metadata");
   if (limited) return limited;
 
@@ -57,7 +55,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const pinned = await pinTokenMetadata({
+    const input = {
       name,
       symbol,
       description: str("description"),
@@ -65,8 +63,14 @@ export async function POST(request: Request) {
       mediaMimeType: str("mimeType") || undefined,
       externalUrl: str("externalUrl") || undefined,
       attributes,
-    });
-    return junoJson(pinned, { status: 201 });
+    };
+    if (localStorageMode()) {
+      const json = Buffer.from(JSON.stringify(buildTokenMetadata(input)));
+      const stored = await storeLocal(json, "application/json", publicOrigin(request));
+      return junoJson({ ...stored, storage: "local" }, { status: 201 });
+    }
+    const pinned = await pinTokenMetadata(input);
+    return junoJson({ ...pinned, storage: "ipfs" }, { status: 201 });
   } catch (error) {
     return junoJson(
       { error: error instanceof Error ? error.message : "Pin failed" },

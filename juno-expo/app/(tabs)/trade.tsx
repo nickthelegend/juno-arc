@@ -13,7 +13,7 @@ import { Tappable } from "../../components/Press";
 import { QuickTrade } from "../../components/QuickTrade";
 import { FeedBoard, age, feedPrice } from "../../components/Trackers";
 import { useRefreshOnFocus } from "../../lib/focus";
-import { juno, type Coin, type Trader } from "../../lib/api";
+import { juno, onTestnet, type Coin, type Trader } from "../../lib/api";
 import { useLinkedState } from "../../lib/linked";
 import { count, invalidateMarkets, loadMarkets, progressLabel, tradesInApp } from "../../lib/markets";
 import { money, useApi } from "../../lib/useApi";
@@ -99,9 +99,9 @@ export default function TradeScreen() {
           {sort === "trackers" ? (
             <>
               <Intro
-                pill="Chainlink on Arc mainnet"
+                pill={onTestnet() ? "Display-only on testnet · mainnet prices" : "Chainlink on Arc mainnet"}
                 title="Track anything with a feed."
-                body="Bitcoin, Ether, gold, the euro: each tracker is a USDC bonding curve on Arc marked against a Chainlink Data Feed, with its premium and band shown live."
+                body="Bitcoin, Ether, gold, the euro: each tracker is a USDC bonding curve on Arc marked against a Chainlink Data Feed, with its premium and band shown against the live feed price."
               />
               <FeedBoard onLaunch={(feed) => router.push(`/post?tracker=${encodeURIComponent(feed.id)}` as never)} />
             </>
@@ -109,7 +109,7 @@ export default function TradeScreen() {
             <Intro
               pill="Launched on Arc"
               title="Every post is a market."
-              body="Posts and reels launched as coins, priced in USDC. Early buyers ride the curve; creators earn the fees; every buy is final before you scroll on."
+              body="Posts and reels launched as coins, priced in USDC. Early buyers ride the curve; creators earn the fees; every buy is final on Arc in about a second."
             />
           )}
 

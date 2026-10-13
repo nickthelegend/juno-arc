@@ -1,11 +1,11 @@
 # Juno on Arc — the deep dive
 
-**A social app where every post is a live market, settled in USDC on Arc.**
+**A social app where every post is a market, settled in USDC on Arc.**
 
 Publishing a photo or a reel launches a token for it, sold on a sixteen-range
 bonding curve quoted in USDC by Juno's own launchpad contract. People buy into
-the post as they scroll; every buy is final in under a second and costs a
-fraction of a cent of USDC gas. The creator earns the trading fees and can
+the post as they scroll; every buy is final in about a second (blocks land every ~0.5 s; measured 1.1–1.3 s
+from submit to receipt through Juno's server on testnet) and costs about half a cent of USDC gas. The creator earns the trading fees and can
 withdraw them to Base, Ethereum or Solana in one call through Circle CCTP. When
 the curve fills, its reserves graduate into a Uniswap v2 TOKEN/USDC pair with
 the liquidity locked for good — and the coin can then become a Chainlink CCIP

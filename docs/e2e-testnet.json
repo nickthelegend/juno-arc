@@ -1,0 +1,134 @@
+{
+  "network": "arc-testnet",
+  "chainId": 5042002,
+  "at": "2026-10-13T18:37:23.826Z",
+  "api": "local",
+  "launchpad": "0xcE806E4bf02ef60bd960D25a170E97BEc9870141",
+  "results": [
+    {
+      "step": "fund 0x133447… 0.30 USDC",
+      "hash": "0xeec4d78e8f847a933d65faf341a2aea0230441d6daafa3f623be4daf33aa6a83",
+      "confirmMs": null,
+      "block": null,
+      "explorer": "https://explorer.testnet.arc.io/tx/0xeec4d78e8f847a933d65faf341a2aea0230441d6daafa3f623be4daf33aa6a83",
+      "note": ""
+    },
+    {
+      "step": "fund 0xc8f4B1… 0.20 USDC",
+      "hash": "0x36cf3550ca8f20608014cc8a40dfa12f9eced35ceaaeac48822e013cd303fad1",
+      "confirmMs": null,
+      "block": null,
+      "explorer": "https://explorer.testnet.arc.io/tx/0x36cf3550ca8f20608014cc8a40dfa12f9eced35ceaaeac48822e013cd303fad1",
+      "note": ""
+    },
+    {
+      "step": "fund 0x89f4B6… 0.15 USDC",
+      "hash": "0x9a909ad394ad2ee6cf3011bf20f35e7e93cdba85937437a91ca57bb17dbef123",
+      "confirmMs": null,
+      "block": null,
+      "explorer": "https://explorer.testnet.arc.io/tx/0x9a909ad394ad2ee6cf3011bf20f35e7e93cdba85937437a91ca57bb17dbef123",
+      "note": ""
+    },
+    {
+      "step": "approve USDC",
+      "hash": "0xb7a55523312c9a1b6f3f428ade03f76498e915b81e79d09d67534ca9274b7652",
+      "confirmMs": 1126,
+      "block": 67032194,
+      "explorer": "https://explorer.testnet.arc.io/tx/0xb7a55523312c9a1b6f3f428ade03f76498e915b81e79d09d67534ca9274b7652",
+      "note": ""
+    },
+    {
+      "step": "launch (JunoLaunchpad.create + first buy)",
+      "hash": "0xa304ba01528ce0962cf52c0aa771904a0f0bac08584e9c48d3c27c7bdb24904e",
+      "confirmMs": 1325,
+      "block": 67032196,
+      "explorer": "https://explorer.testnet.arc.io/tx/0xa304ba01528ce0962cf52c0aa771904a0f0bac08584e9c48d3c27c7bdb24904e",
+      "note": "memo \"juno launch $JTN8113 0.1 USDC\""
+    },
+    {
+      "step": "coin",
+      "token": "0x8A9f1266C4D0EF2337848107FbEd736AC9e25Cb4",
+      "explorer": "https://explorer.testnet.arc.io/token/0x8A9f1266C4D0EF2337848107FbEd736AC9e25Cb4",
+      "symbol": "JTN8113"
+    },
+    {
+      "step": "approve USDC",
+      "hash": "0xb13861662cc5a317a9df23b36b118103cbc46025911a08cda9d73be2a2871bc6",
+      "confirmMs": 1116,
+      "block": 67032205,
+      "explorer": "https://explorer.testnet.arc.io/tx/0xb13861662cc5a317a9df23b36b118103cbc46025911a08cda9d73be2a2871bc6",
+      "note": ""
+    },
+    {
+      "step": "buy (memo)",
+      "hash": "0x07fba5374ffdffc9d60dc26965f74bd2528a1aad872eae5045b5d3b2d7f1af14",
+      "confirmMs": 1270,
+      "block": 67032207,
+      "explorer": "https://explorer.testnet.arc.io/tx/0x07fba5374ffdffc9d60dc26965f74bd2528a1aad872eae5045b5d3b2d7f1af14",
+      "note": "memo \"juno buy $JTN8113 0.1 USDC\""
+    },
+    {
+      "step": "gasless buy (relayed, memo)",
+      "hash": "0x9809b28d49fb1d24cf573229c113d35cbcdad0eb140c244be28f4db30e75d004",
+      "confirmMs": 1129,
+      "block": 67032212,
+      "explorer": "https://explorer.testnet.arc.io/tx/0x9809b28d49fb1d24cf573229c113d35cbcdad0eb140c244be28f4db30e75d004",
+      "note": "relayer 0xd7f27d70…"
+    },
+    {
+      "step": "sell (memo)",
+      "hash": "0x74360374bc154cb624675d70ba3191a05d927e19d2a6b0c945eab13c1a18e6a2",
+      "confirmMs": 1130,
+      "block": 67032219,
+      "explorer": "https://explorer.testnet.arc.io/tx/0x74360374bc154cb624675d70ba3191a05d927e19d2a6b0c945eab13c1a18e6a2",
+      "note": "0.0414 USDC out"
+    },
+    {
+      "step": "claimCreatorFees",
+      "hash": "0xe953eb33943af8b2780a166006085ce4864768a71a2530f26871b0396cd0ea50",
+      "confirmMs": 1121,
+      "block": 67032223,
+      "explorer": "https://explorer.testnet.arc.io/tx/0xe953eb33943af8b2780a166006085ce4864768a71a2530f26871b0396cd0ea50",
+      "note": ""
+    },
+    {
+      "step": "claimCreatorFeesCrossChain (CCTP depositForBurn)",
+      "hash": "0x50bce220df1e32b6433b5cbd857b6fa2338d8ae111d80565da7d73f7046572da",
+      "confirmMs": 1146,
+      "block": 67032235,
+      "explorer": "https://explorer.testnet.arc.io/tx/0x50bce220df1e32b6433b5cbd857b6fa2338d8ae111d80565da7d73f7046572da",
+      "note": "burned 0.003472 USDC"
+    },
+    {
+      "step": "cctp-iris-status",
+      "status": "complete",
+      "note": null,
+      "attested": true,
+      "destination": "Base Sepolia"
+    },
+    {
+      "step": "approve GatewayWallet",
+      "hash": "0x236ca567f3b9a7ba5c70d9fd53dd226d19214abf48e479e6be62414481df6afb",
+      "confirmMs": 1963,
+      "block": 67032251,
+      "explorer": "https://explorer.testnet.arc.io/tx/0x236ca567f3b9a7ba5c70d9fd53dd226d19214abf48e479e6be62414481df6afb",
+      "note": ""
+    },
+    {
+      "step": "GatewayWallet.deposit",
+      "hash": "0xb74d4649cc9177e4b2c1df89f7d3670c1301c4d728682db55ff94eeadfd32231",
+      "confirmMs": 1273,
+      "block": 67032255,
+      "explorer": "https://explorer.testnet.arc.io/tx/0xb74d4649cc9177e4b2c1df89f7d3670c1301c4d728682db55ff94eeadfd32231",
+      "note": ""
+    },
+    {
+      "step": "gateway-balance",
+      "usdc": 0.02
+    },
+    {
+      "step": "sweep",
+      "returnedUsdc": 0.3023537
+    }
+  ]
+}

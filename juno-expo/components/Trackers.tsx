@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { StatusLine, reason } from "./ArcKit";
 import { Tappable } from "./Press";
 import { Skeleton } from "./kit";
-import { juno, type TrackerFeed } from "../lib/api";
+import { juno, onTestnet, type TrackerFeed } from "../lib/api";
 import { useApi } from "../lib/useApi";
 import { theme } from "../theme";
 
@@ -77,7 +77,7 @@ export function FeedBoard({ onLaunch }: { onLaunch: (feed: TrackerFeed) => void 
   return (
     <View style={styles.board} testID="feed-board">
       <View style={styles.boardHead}>
-        <Text style={styles.boardTitle}>Chainlink on Arc {feeds.data.network === "testnet" ? "testnet" : "mainnet"}</Text>
+        <Text style={styles.boardTitle}>Chainlink prices from Arc mainnet</Text>
         <Text style={styles.boardMeta}>{feeds.data.feeds.length} feeds · live</Text>
       </View>
       {feeds.data.feeds.map((feed, index) => {
@@ -115,6 +115,9 @@ export function FeedBoard({ onLaunch }: { onLaunch: (feed: TrackerFeed) => void 
       <Text style={styles.foot}>
         Read from Chainlink&rsquo;s AggregatorV3 feeds on Arc mainnet (8 decimals, 24 h heartbeat). Tap one to launch a
         tracker on it.
+        {onTestnet()
+          ? " Display-only on testnet: Arc testnet has no Chainlink feeds, so a tracker launched here keeps its feed and ratio in Juno\u2019s database and is not marked on chain. The marks on chain need mainnet."
+          : ""}
       </Text>
     </View>
   );
