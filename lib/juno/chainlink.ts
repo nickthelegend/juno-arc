@@ -112,6 +112,7 @@ export function readingFrom(
 
 let mainnet: PublicClient | null = null;
 function mainnetClient(): PublicClient {
+  if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:|\/|$)/.test(mainnetRpcEndpoint())) throw Error("Reference feeds require a local Arc mainnet fork; unavailable on hosted testnet");
   mainnet ??= createPublicClient({
     chain: arcMainnetChain,
     transport: http(mainnetRpcEndpoint(), { retryCount: 0, timeout: 15_000 }),

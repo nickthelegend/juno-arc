@@ -41,6 +41,7 @@ export default function RootLayout() {
         <WalletProvider>
         <PortalHost>
           <StatusBar style="dark" />
+          {process.env.EXPO_PUBLIC_HOSTED_NOTICE ? <Text accessibilityRole="alert" style={{ backgroundColor: "#fff0cd", color: "#493b19", padding: 12, fontSize: 12, lineHeight: 17 }}>{process.env.EXPO_PUBLIC_HOSTED_NOTICE}</Text> : null}
           {config.data?.network === "testnet" && pathname !== "/" ? (
             <Text style={{ backgroundColor: theme.colors.surfaceAlt, color: theme.colors.muted, textAlign: "center", paddingVertical: 7, fontSize: 12 }}>
               {config.data.localFork ? "Local Arc fork · demo balances" : "Arc testnet · test USDC, no real money"}

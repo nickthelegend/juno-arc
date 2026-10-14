@@ -1,0 +1,12 @@
+{
+  "framework": null,
+  "buildCommand": "npm run export:web",
+  "installCommand": "npm ci",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/((?!_expo/|assets/|favicon.ico).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

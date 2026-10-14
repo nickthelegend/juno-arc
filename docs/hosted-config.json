@@ -1,0 +1,27 @@
+{
+  "base": "https://juno-arc.vercel.app",
+  "routes": [
+    "/",
+    "/social",
+    "/trade",
+    "/profile",
+    "/reels",
+    "/post",
+    "/arc",
+    "/inbox",
+    "/search",
+    "/coin/0xdf53f14639839A8E5EFaEA0b430C7A60492D0463"
+  ],
+  "api": [
+    "https://juno-arc-api.vercel.app/api/juno/config",
+    "https://juno-arc-api.vercel.app/api/juno/coins"
+  ],
+  "contract": "0xcE806E4bf02ef60bd960D25a170E97BEc9870141",
+  "waitMs": 9000,
+  "firstStep": {
+    "route": "/",
+    "name": "Get Started",
+    "expect": "Arc testnet",
+    "url": "/social"
+  }
+}

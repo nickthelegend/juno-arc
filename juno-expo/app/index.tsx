@@ -56,7 +56,7 @@ export default function Onboarding() {
           Post a photo or a reel and it launches its own bonding curve on Arc,
           priced in USDC. Buy into the posts you believe in — final in about a
           second — and creators earn the trading fees. Trackers follow
-          Bitcoin, gold and the euro through Chainlink{onTestnet() ? " (mainnet prices, display-only on testnet)" : ""}.
+          Bitcoin, gold and the euro through Chainlink{onTestnet() ? " (reference prices require a local mainnet fork)" : ""}.
         </Body>
       </Copy>
 

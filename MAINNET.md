@@ -69,7 +69,7 @@ as part of a test.**
 
 ## 5. Hosting (lead)
 
-API: Vercel Next.js functions, using existing managed Postgres/Mongo credentials. Frontend: Vercel Expo web export.
+API: Vercel Next.js functions, using existing managed Mongo credentials in `arc_juno_testnet`. A small PGlite SQL snapshot is atomically persisted in Atlas when `DATABASE_URL` is absent; managed Postgres remains supported. Frontend: Vercel Expo web export.
 Do not provision Railway or paid resources. For a local demonstration, run databases/API on demand with the browser runner.
 Mainnet remains a separate, explicitly authorized rollout; this pass used testnet only. Environment:
 
@@ -88,7 +88,7 @@ Mainnet remains a separate, explicitly authorized rollout; this pass used testne
 | `FAUCET_AMOUNT_USDC` | leave unset on mainnet (the faucet is testnet-only) |
 | `CIRCLE_GATEWAY_API_URL`, `CIRCLE_IRIS_API_URL` | optional overrides; mainnet defaults are Circle's production APIs |
 
-Then `npm run db:migrate`. Web app: `cd juno-expo && EXPO_PUBLIC_API_URL=https://<api> npx expo export --platform web`,
+With Postgres, run `npm run db:migrate`. The Atlas SQL adapter applies the checked-in migration when creating its first snapshot. Web app: `cd juno-expo && EXPO_PUBLIC_API_URL=https://<api> npx expo export --platform web`,
 deploy `juno-expo/dist` to Vercel as a static site (SPA fallback to `index.html`). No
 keeper or cron is required: graduation is one permissionless transaction —
 the coin page shows a **Graduate** button to anyone once a curve is full

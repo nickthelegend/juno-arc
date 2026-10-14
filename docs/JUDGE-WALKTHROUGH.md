@@ -1,3 +1,5 @@
+Hosted Arc testnet: https://juno-arc.vercel.app · [Vercel checks and storage limitation](HOSTED.md).
+
 # Judge walkthrough (Arc testnet, about 5 minutes)
 
 Live contracts: Arc testnet. The former hosting was removed; public Vercel hosting is pending.

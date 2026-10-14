@@ -1,3 +1,5 @@
+Hosted Arc testnet: https://juno-arc.vercel.app · [Vercel checks and storage limitation](docs/HOSTED.md).
+
 # Juno on Arc — DoraHacks submission
 
 Live contracts: Arc testnet. The former hosting was removed; public Vercel hosting is pending.

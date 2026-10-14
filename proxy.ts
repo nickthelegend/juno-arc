@@ -12,7 +12,7 @@ import { NextResponse, type NextRequest } from "next/server";
 function appRedirect(req: NextRequest): NextResponse | null {
   const app = process.env.JUNO_APP_URL?.replace(/\/$/, "");
   const { pathname } = req.nextUrl;
-  if (!app || pathname.startsWith("/api/")) return null;
+  if (!app || (pathname.startsWith("/api/") || pathname.startsWith("/demo/"))) return null;
 
   const coin = /^\/coin\/(0x[0-9a-fA-F]{40})$/.exec(pathname);
   const creator = /^\/(?:creator|trader)\/(0x[0-9a-fA-F]{40})$/.exec(pathname);

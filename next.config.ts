@@ -15,10 +15,11 @@ const nextConfig: NextConfig = {
     "fluent-ffmpeg",
     "pg",
     "mongodb",
+    "@electric-sql/pglite",
   ],
   outputFileTracingIncludes: {
     // The deployment records `lib/juno/network.ts` reads at runtime.
-    "/**": ["./deployments/*.json"],
+    "/**": ["./deployments/*.json", "./drizzle/*.sql", "./node_modules/@electric-sql/pglite/dist/**"],
     "/api/juno/upload": [
       "./node_modules/@img/**",
       "./node_modules/sharp/**",

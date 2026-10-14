@@ -33,6 +33,7 @@
     "demo:local": "bash scripts/local-demo.sh"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.5.9",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@ffprobe-installer/ffprobe": "^2.1.2",
     "decimal.js": "^10.6.0",

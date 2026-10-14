@@ -22,13 +22,14 @@ function client(): MongoClient {
   // Reused across hot reloads; a new client per request exhausts the pool.
   globalThis.__junoMongo ??= new MongoClient(process.env.MONGODB_URI, {
     maxPoolSize: 5,
+    serverSelectionTimeoutMS: 8000,
   });
   return globalThis.__junoMongo;
 }
 
 export async function db(): Promise<Db> {
   const c = client();
-  await c.connect();
+  try { await c.connect(); } catch { globalThis.__junoMongo = undefined; await c.close(); throw new Error("Atlas storage unavailable"); }
   return c.db(process.env.MONGODB_DB || "juno");
 }
 
