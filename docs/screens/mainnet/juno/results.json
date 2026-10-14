@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-14T16:04:54.109Z",
+  "at": "2026-10-14T16:20:34.055Z",
   "base": "https://juno-arc.vercel.app",
   "readOnly": true,
   "consoleErrors": [
@@ -7,13 +7,6 @@
     "Failed to load resource: the server responded with a status of 500 ()",
     "Failed to load resource: the server responded with a status of 500 ()",
     "Failed to load resource: the server responded with a status of 500 ()",
-    "Failed to load resource: the server responded with a status of 503 ()",
-    "Failed to load resource: the server responded with a status of 500 ()",
-    "Failed to load resource: the server responded with a status of 500 ()",
-    "Failed to load resource: the server responded with a status of 500 ()",
-    "Failed to load resource: the server responded with a status of 500 ()",
-    "Failed to load resource: the server responded with a status of 500 ()",
-    "Failed to load resource: the server responded with a status of 500 ()",
     "Failed to load resource: the server responded with a status of 500 ()",
     "Failed to load resource: the server responded with a status of 500 ()",
     "Failed to load resource: the server responded with a status of 503 ()",
@@ -24,7 +17,16 @@
     "Failed to load resource: the server responded with a status of 500 ()",
     "Failed to load resource: the server responded with a status of 500 ()",
     "Failed to load resource: the server responded with a status of 500 ()",
-    "Failed to load resource: the server responded with a status of 503 ()"
+    "Failed to load resource: the server responded with a status of 503 ()",
+    "Failed to load resource: the server responded with a status of 500 ()",
+    "Failed to load resource: the server responded with a status of 500 ()",
+    "Failed to load resource: the server responded with a status of 500 ()",
+    "Failed to load resource: the server responded with a status of 500 ()",
+    "Failed to load resource: the server responded with a status of 500 ()",
+    "Failed to load resource: the server responded with a status of 500 ()",
+    "Failed to load resource: the server responded with a status of 500 ()",
+    "Failed to load resource: the server responded with a status of 503 ()",
+    "Failed to load resource: the server responded with a status of 500 ()"
   ],
   "results": [
     {
