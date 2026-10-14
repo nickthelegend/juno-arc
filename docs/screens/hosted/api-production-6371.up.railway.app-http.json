@@ -1,13 +1,172 @@
 [
   {
-    "route": "/api/juno/comments?token=0xC003A6aE83e76922D6470a9f2822750980407Cab",
-    "error": "HTTP Error 400: Bad Request"
-  },
-  {
-    "route": "/api/juno/likes?token=0xC003A6aE83e76922D6470a9f2822750980407Cab",
+    "route": "/api/juno/config",
     "status": 200,
     "body": {
-      "counts": {}
+      "network": "testnet",
+      "networkKey": "arc-testnet",
+      "chainId": 5042002,
+      "rpcUrl": "https://rpc.testnet.arc.io",
+      "localFork": false,
+      "explorer": "https://explorer.testnet.arc.io",
+      "usdc": "0x3600000000000000000000000000000000000000",
+      "launchpad": "0xcE806E4bf02ef60bd960D25a170E97BEc9870141",
+      "contracts": {
+        "launchpad": "0xcE806E4bf02ef60bd960D25a170E97BEc9870141",
+        "swapRouter": "0x5F368a741F490F365fB9b72a1707bee7a03AD851",
+        "crossChain": "0x8aA2fD0F5f928D7b0ee8F32a616e968689212Bc3",
+        "trackers": "0x804C0f6F302a71cF36346a2F6936E034ea95EaAD",
+        "graduator": "0xd7Bf04137472BC9Bb6D76af795DC05c6696E1356",
+        "uniswapV2Factory": "0xDe99BF4827C7c7860DE8e5b9e204B4f94dD1cFFC",
+        "uniswapV2Router02": "0x9A110BeEe29e24C40CB993154286613D827f1a86"
+      },
+      "deployBlock": 67016599,
+      "quoteTokens": [
+        {
+          "address": "0x3600000000000000000000000000000000000000",
+          "symbol": "USDC",
+          "decimals": 6,
+          "native": false
+        }
+      ],
+      "faucet": true,
+      "storage": "local",
+      "v2Trading": true,
+      "venues": [
+        {
+          "id": "uniswap-v2",
+          "name": "Uniswap v2",
+          "quotes": [
+            "0x3600000000000000000000000000000000000000"
+          ]
+        }
+      ],
+      "arc": {
+        "finality": "deterministic, ~0.5 s blocks",
+        "gasToken": "USDC",
+        "memo": {
+          "address": "0x5294E9927c3306DcBaDb03fe70b92e01cCede505",
+          "live": true
+        },
+        "gateway": {
+          "available": true,
+          "wallet": "0x0077777d7EBA4688BDeF3E311b846F25870A19B9",
+          "minter": "0x0022222ABE238Cc2C7Bb1f21003F0a260052475B",
+          "domain": 26,
+          "sources": [
+            {
+              "domain": 6,
+              "name": "Base Sepolia"
+            },
+            {
+              "domain": 0,
+              "name": "Ethereum Sepolia"
+            },
+            {
+              "domain": 3,
+              "name": "Arbitrum Sepolia"
+            },
+            {
+              "domain": 1,
+              "name": "Avalanche Fuji"
+            },
+            {
+              "domain": 2,
+              "name": "OP Sepolia"
+            },
+            {
+              "domain": 7,
+              "name": "Polygon Amoy"
+            },
+            {
+              "domain": 26,
+              "name": "Arc Testnet"
+            }
+          ]
+        },
+        "cctp": {
+          "domain": 26,
+          "tokenMessenger": "0x8FE6B999Dc680CcFDD5Bf7EB0974218be2542DAA",
+          "destinations": [
+            {
+              "domain": 6,
+              "name": "Base Sepolia"
+            },
+            {
+              "domain": 0,
+              "name": "Ethereum Sepolia"
+            },
+            {
+              "domain": 3,
+              "name": "Arbitrum Sepolia"
+            },
+            {
+              "domain": 2,
+              "name": "OP Sepolia"
+            },
+            {
+              "domain": 1,
+              "name": "Avalanche Fuji"
+            },
+            {
+              "domain": 7,
+              "name": "Polygon Amoy"
+            },
+            {
+              "domain": 10,
+              "name": "Unichain Sepolia"
+            },
+            {
+              "domain": 11,
+              "name": "Linea Sepolia"
+            },
+            {
+              "domain": 13,
+              "name": "Sonic Testnet"
+            },
+            {
+              "domain": 14,
+              "name": "World Chain Sepolia"
+            },
+            {
+              "domain": 5,
+              "name": "Solana Devnet"
+            }
+          ]
+        },
+        "ccip": {
+          "router": "0xdE4E7FED43FAC37EB21aA0643d9852f75332eab8",
+          "chainSelector": "3034092155422581607",
+          "crossChain": "0x8aA2fD0F5f928D7b0ee8F32a616e968689212Bc3",
+          "lanes": [
+            {
+              "selector": "10344971235874465080",
+              "name": "Base Sepolia"
+            },
+            {
+              "selector": "16015286601757825753",
+              "name": "Ethereum Sepolia"
+            },
+            {
+              "selector": "16281711391670634445",
+              "name": "Polygon Amoy"
+            },
+            {
+              "selector": "16423721717087811551",
+              "name": "Solana Devnet"
+            }
+          ],
+          "explorer": "https://ccip.chain.link"
+        },
+        "feeds": {
+          "network": "mainnet",
+          "count": 10
+        },
+        "relayer": {
+          "available": true,
+          "address": "0xd7f27d708aFEAA70421e9387e8ce7C4e19Cd2C62"
+        }
+      }
     }
   },
   {
@@ -41,6 +200,103 @@
           "createdAt": "2026-10-14T09:38:45.399Z"
         }
       ]
+    }
+  },
+  {
+    "route": "/api/juno/stats",
+    "status": 200,
+    "body": {
+      "network": "arc-testnet",
+      "localFork": false,
+      "coins": 1,
+      "trades24h": 1,
+      "traders24h": 1,
+      "block": {
+        "number": 67139217,
+        "timestamp": 1791970788
+      },
+      "confirmation": {
+        "lastMs": 774,
+        "lastAt": "2026-10-14T09:38:44.986Z",
+        "medianMs": 735,
+        "samples": 2
+      },
+      "pictures": {
+        "held": 1,
+        "total": 1
+      },
+      "at": "2026-10-14T09:39:49.195Z"
+    }
+  },
+  {
+    "route": "/api/juno/feed",
+    "status": 200,
+    "body": {
+      "network": "arc-testnet",
+      "items": [
+        {
+          "kind": "trade",
+          "id": "0xcca72929df1c01b0d7fe465db4cc734af77796a95e481f57d093bc6c033f4098:23",
+          "timestamp": "2026-10-14T09:38:44.000Z",
+          "side": "buy",
+          "amount": 9099.647442066549,
+          "valueUsd": 0.01,
+          "price": 1.0989436748693398e-06,
+          "priceNow": 1.0000774897633056e-06,
+          "currency": "USD",
+          "txHash": "0xcca72929df1c01b0d7fe465db4cc734af77796a95e481f57d093bc6c033f4098",
+          "note": null,
+          "actor": {
+            "wallet": "0x0648aDF1967692A0c991d7715b0b588452321FBd",
+            "handle": "0x06\u20261FBd",
+            "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20gradientTransform%3D%22rotate(96%20.5%20.5)%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22hsl(25%2072%25%2058%25)%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22hsl(86%2068%25%2030%25)%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22url(%23g)%22%2F%3E%3Ccircle%20cx%3D%2233%22%20cy%3D%2222%22%20r%3D%2217%22%20fill%3D%22hsl(86%2080%25%2072%25)%22%20opacity%3D%220.45%22%2F%3E%3C%2Fsvg%3E"
+          },
+          "coin": {
+            "address": "0xC003A6aE83e76922D6470a9f2822750980407Cab",
+            "name": "Hosted Arc proof",
+            "symbol": "HOSTARC",
+            "mediaUrl": "/api/ipfs/bafkreifbjepkmkqewkkgagvuihoah4j24smspk6xobfnzfrexudpjpewrm",
+            "mediaKind": "image",
+            "posterUrl": null
+          }
+        }
+      ],
+      "scope": "everyone",
+      "followingCount": null,
+      "tradesPartial": true
+    }
+  },
+  {
+    "route": "/api/juno/heartbeat",
+    "status": 200,
+    "body": {
+      "network": "arc-testnet",
+      "latestBlock": 67139217,
+      "blockMs": 500,
+      "window": 50,
+      "finality": "deterministic, ~0.5 s blocks",
+      "localFork": false,
+      "at": "2026-10-14T09:39:49.593Z",
+      "confirmations": {
+        "lastMs": 774,
+        "lastAt": "2026-10-14T09:38:44.986Z",
+        "medianMs": 735,
+        "samples": 2
+      }
+    }
+  },
+  {
+    "route": "/api/juno/comments?coin=0xC003A6aE83e76922D6470a9f2822750980407Cab",
+    "status": 200,
+    "body": {
+      "comments": []
+    }
+  },
+  {
+    "route": "/api/juno/likes?token=0xC003A6aE83e76922D6470a9f2822750980407Cab",
+    "status": 200,
+    "body": {
+      "counts": {}
     }
   }
 ]
