@@ -1,0 +1,46 @@
+[
+  {
+    "route": "/api/juno/comments?token=0xC003A6aE83e76922D6470a9f2822750980407Cab",
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "route": "/api/juno/likes?token=0xC003A6aE83e76922D6470a9f2822750980407Cab",
+    "status": 200,
+    "body": {
+      "counts": {}
+    }
+  },
+  {
+    "route": "/api/juno/pools",
+    "status": 200,
+    "body": {
+      "network": "arc-testnet",
+      "pools": [
+        {
+          "token": "0xC003A6aE83e76922D6470a9f2822750980407Cab",
+          "launchpad": "0xcE806E4bf02ef60bd960D25a170E97BEc9870141",
+          "pair": "0x48bda9BE520B85B6b8A700230c534B457B97484F",
+          "quoteToken": "0x3600000000000000000000000000000000000000",
+          "creatorWallet": "0x0648aDF1967692A0c991d7715b0b588452321FBd",
+          "network": "arc-testnet",
+          "name": "Hosted Arc proof",
+          "symbol": "HOSTARC",
+          "description": "A real launch through the publicly hosted API on Arc testnet. Test tokens, no real-money claim.",
+          "format": "post",
+          "curvePreset": "content",
+          "mediaUrl": "https://api-production-6371.up.railway.app/api/ipfs/bafkreifbjepkmkqewkkgagvuihoah4j24smspk6xobfnzfrexudpjpewrm",
+          "posterUrl": null,
+          "mediaMime": "image/png",
+          "mediaWidth": 1024,
+          "mediaHeight": 1024,
+          "navFeedId": null,
+          "navUnitsPerToken": null,
+          "createTx": "0xcca72929df1c01b0d7fe465db4cc734af77796a95e481f57d093bc6c033f4098",
+          "createBlock": 67139090,
+          "listed": true,
+          "createdAt": "2026-10-14T09:38:45.399Z"
+        }
+      ]
+    }
+  }
+]

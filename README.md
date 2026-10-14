@@ -1,5 +1,8 @@
 # Juno on Arc — every post is a market
 
+Live: https://app-production-1427a.up.railway.app (Arc testnet)
+
+
 **Post a photo or a reel and it launches its own token on a USDC bonding curve
 on Arc.** People buy into the post as they scroll — each buy final in about a
 second (Arc blocks land every ~0.5 s), gas about half a cent of USDC — the creator earns the trading fees

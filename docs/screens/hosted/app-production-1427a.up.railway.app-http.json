@@ -1,0 +1,46 @@
+[
+  {
+    "route": "/",
+    "status": 200
+  },
+  {
+    "route": "/social",
+    "status": 200
+  },
+  {
+    "route": "/trade",
+    "status": 200
+  },
+  {
+    "route": "/post",
+    "status": 200
+  },
+  {
+    "route": "/reels",
+    "status": 200
+  },
+  {
+    "route": "/profile",
+    "status": 200
+  },
+  {
+    "route": "/search",
+    "status": 200
+  },
+  {
+    "route": "/inbox",
+    "status": 200
+  },
+  {
+    "route": "/arc",
+    "status": 200
+  },
+  {
+    "route": "/health",
+    "status": 200,
+    "body": {
+      "ok": true,
+      "service": "juno-web"
+    }
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "checks": [
+    {
+      "route": "/trade",
+      "snapshot": "- generic: Live on Arc\n- generic: Trade\n- tablist:\n  - tab \"Trackers\" [selected]:\n    - generic: Trackers\n  - tab \"Posts\":\n    - generic: Posts\n  - tab \"Traders\":\n    - generic: Traders\n- generic: Display-only on testnet · mainnet prices\n- generic: Track anything with a feed.\n- generic: \"Bitcoin, Ether, gold, the euro: each tracker is a USDC bonding curve on Arc marked against a Chainlink Data Fee"
+    },
+    {
+      "route": "/post",
+      "snapshot": "- generic: Post a photo\n- generic: Publishing opens a real bonding curve on Arc, priced in USDC. The post is the market.\n- button \"+ Add a photo Square works best. Up to 25MB.\":\n  - generic: +\n  - generic: Add a photo\n  - generic: Square works best. Up to 25MB.\n- generic: Name\n- textbox \"Night Market\"\n- generic: Ticker\n- textbox \"NIGHT\"\n- generic: Caption\n- textbox \"Say what this is\"\n- generic: Cu"
+    },
+    {
+      "route": "/reels",
+      "snapshot": "- progressbar:\n- generic: Loading reels\n- generic: Reels\n- generic: Every reel is a coin\n- button \"Turn sound on\":\n- tablist:\n  - tab \"Social\":\n  - tab \"Trade\":\n  - button \"Create — a photo or a reel\":\n  - tab \"Reels\" [selected]:\n  - tab \"Profile\":"
+    },
+    {
+      "route": "/profile",
+      "snapshot": "- generic: Your profile\n- generic: Post a photo. It becomes a coin. You earn its trading fees.\n- generic: \"1\"\n- generic: Every post is a market\n- generic: A photo or a reel launches its own bonding curve on Arc, in one transaction.\n- generic: \"2\"\n- generic: Creators earn the fees\n- generic: Your coins' trading fees are yours to claim. Your profile adds them up, from the chain.\n- generic: \"3\"\n- gen"
+    },
+    {
+      "route": "/search",
+      "snapshot": "- textbox \"Search coins and creators\" [active]\n- button \"Cancel\":\n  - generic: Cancel\n- generic: Reading the markets…"
+    },
+    {
+      "route": "/inbox",
+      "snapshot": "- button \"Back\":\n- generic: Notifications\n- generic: No wallet yet\n- generic: Notifications are about your coins, your followers and your alerts. Create a wallet to have some.\n- button \"Create wallet\":\n  - generic: Create wallet"
+    },
+    {
+      "route": "/arc",
+      "snapshot": "- button \"Back\":\n- generic: Juno on Arc\n- generic: Arc\n- generic: What runs on Arc.\n- generic: \"Juno is a social app where every post is a market. Arc is Circle’s chain for stablecoin finance: here is each piece of it Juno uses, what it does for you, what has been exercised on testnet, and whether this server has it configured.\"\n- generic: \"01\"\n- generic: USDC as gas\n- generic: NOT REPORTED\n- gene"
+    },
+    {
+      "route": "/coin/0xC003A6aE83e76922D6470a9f2822750980407Cab",
+      "snapshot": "- button \"Back\":"
+    }
+  ],
+  "errors": []
+}

@@ -1,5 +1,8 @@
 # Judge walkthrough (Arc testnet, about 5 minutes)
 
+Live: https://app-production-1427a.up.railway.app (Arc testnet)
+
+
 Everything below runs against the **deployed Arc testnet contracts** (`deployments/arc-testnet.json`), not a fork. Status of each piece is
 labelled in the app (Profile → "What runs on Arc") and in [E2E-TESTNET.md](E2E-TESTNET.md).
 

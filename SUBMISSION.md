@@ -1,5 +1,8 @@
 # Juno on Arc — DoraHacks submission
 
+Live: https://app-production-1427a.up.railway.app (Arc testnet)
+
+
 ## Description (≤150 words)
 
 Juno is a social app where every post is a market. Posting a photo or reel
