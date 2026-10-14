@@ -1,6 +1,7 @@
 # Juno on Arc — every post is a market
 
-Live: https://app-production-1427a.up.railway.app (Arc testnet)
+Live contracts: Arc testnet. The former hosting was removed; public Vercel hosting is pending.
+Browser reproduction and current evidence: [docs/JUDGE-REPORT.md](docs/JUDGE-REPORT.md).
 
 
 **Post a photo or a reel and it launches its own token on a USDC bonding curve
@@ -57,8 +58,9 @@ Chain 5042002, deployer `0x0648…1FBd`; the record is [`deployments/arc-testnet
 A launch, buys, a relayed gasless buy, a sell, fee claims, a CCTP burn and a Gateway deposit were run on it with real
 transactions: [docs/E2E-TESTNET.md](docs/E2E-TESTNET.md) (links to every transaction). The judge's report and the claim-by-claim
 audit are in [docs/JUDGE-REPORT.md](docs/JUDGE-REPORT.md); a cold-open guide is [docs/JUDGE-WALKTHROUGH.md](docs/JUDGE-WALKTHROUGH.md).
-Photos and reels need IPFS pinning (`PINATA_JWT`); without a key the server keeps uploads on its own disk under their IPFS
-content address (demo storage, not pinned to the network) and the launch screen says so.
+Photos and reels are limited to 4MB. With `PINATA_JWT`, uploads are pinned to IPFS. Without it, labelled demo storage
+uses the existing Mongo database on Vercel (`JUNO_MEDIA_BACKEND=mongo` locally), or local disk.
+Demo metadata uses a resolvable content-addressed HTTP(S) URL. Set `JUNO_API_URL` to the public API origin before hosted launches.
 
 ## How it works
 
@@ -129,7 +131,7 @@ ARC_RPC_URL=https://rpc.testnet.arc.io node scripts/e2e-testnet.mjs   # ~0.4 tes
 | Contracts (unit + Chainlink Local) | `cd contracts && forge test` | 85 passed, 2 skipped (fork-gated; re-run 2026-10-14) |
 | Contracts on Arc forks (testnet + mainnet state) | `FORK_TESTS=1 forge test --network arc --match-path 'test/fork/*'` | 10 passed |
 | Slither | `slither . --filter-paths "lib/\|test/\|script/\|node_modules/" --exclude-dependencies --fail-medium` | no medium/high |
-| Server + app unit | `npx vitest run tests/unit` | 405 passed (2026-10-14) |
+| Server + app unit | `npx vitest run tests/unit` | 407 passed (round 2, 2026-10-14) |
 | Integration (against the fork) | `JUNO_DEPLOYMENT_FILE=.fork/arc-fork.json ARC_RPC_URL=http://127.0.0.1:8910 npx vitest run tests/integration` | 11 passed, 1 skipped |
 | Typecheck / lint / build | `npx tsc --noEmit`, `(cd juno-expo && npx tsc --noEmit)`, `npm run lint`, `npm run build`, `expo export --platform web` | clean / 0 |
 | API end to end on the fork | `node scripts/e2e-fork.mjs` | 12 sections, 20 signed txs, all passed ([docs/E2E-FORK.md](docs/E2E-FORK.md)) |

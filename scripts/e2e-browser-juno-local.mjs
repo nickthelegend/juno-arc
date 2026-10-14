@@ -44,6 +44,13 @@ try{
     const root=resolve('juno-expo/dist');if(!existsSync(root+'/index.html'))throw new Error('Run the Expo web export first');
     server=createServer((q,s)=>{let f=resolve(root,'.'+decodeURIComponent(new URL(q.url,'http://localhost').pathname));if(!f.startsWith(root+sep)||!existsSync(f)||statSync(f).isDirectory())f=root+'/index.html';s.setHeader('Content-Type',({'.html':'text/html','.js':'application/javascript','.png':'image/png','.svg':'image/svg+xml','.ttf':'font/ttf','.css':'text/css'})[extname(f)]||'application/octet-stream');createReadStream(f).pipe(s);});await new Promise(r=>server.listen(8912,'127.0.0.1',r));
   }
-  const test=spawn(process.execPath,['scripts/e2e-browser-juno.mjs',...process.argv.slice(2)],{env:process.env,stdio:'inherit'});children.push(test);
-  process.exitCode=await new Promise(r=>test.on('exit',code=>r(code??1)));
+  if(process.argv.includes('--startup-check')) {
+    for(const url of ['http://127.0.0.1:8911/api/juno/config','http://127.0.0.1:8911/api/juno/pools','http://127.0.0.1:8912/social']) {
+      const response=await fetch(url);if(response.status!==200)throw new Error('Startup check failed: '+url);
+    }
+    console.log('PASS fresh API, database and web startup; stopping owned processes');
+  } else {
+    const test=spawn(process.execPath,['scripts/e2e-browser-juno.mjs',...process.argv.slice(2)],{env:process.env,stdio:'inherit'});children.push(test);
+    process.exitCode=await new Promise(r=>test.on('exit',code=>r(code??1)));
+  }
 }finally{cleanup();}

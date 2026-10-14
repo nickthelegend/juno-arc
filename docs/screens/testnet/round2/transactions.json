@@ -1,0 +1,305 @@
+{
+  "checkedAt": "2026-10-14T13:25:55.503Z",
+  "chainId": 5042002,
+  "wallet": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+  "funding": {
+    "hash": "0x7e70b295f17a96055ead9457082d42ac80203305bf75e8c8d1c0000e33c48a66",
+    "to": "0xd7f27d708aFEAA70421e9387e8ce7C4e19Cd2C62",
+    "amountUSDC": 0.6,
+    "gasUSDC": "0.000525"
+  },
+  "launches": [
+    {
+      "name": "One balance",
+      "symbol": "ONEARC",
+      "token": "0xA96FF0F7fa3fcae838c35bcBc2e15Da6CA63E5f9"
+    },
+    {
+      "name": "Made on Arc",
+      "symbol": "MADEARC",
+      "token": "0xe1c64EDE4557792eDaDaD5E05aBcAC290A760D5E"
+    },
+    {
+      "name": "Own the moment",
+      "symbol": "MOMENTARC",
+      "token": "0xdf53f14639839A8E5EFaEA0b430C7A60492D0463"
+    }
+  ],
+  "reel": {
+    "token": "0x463aD0561C32F9f596dd77125d28EB0c8Efb7c5A",
+    "playable": true
+  },
+  "gaslessBalanceProof": {
+    "before": "0.282062575",
+    "after": "0.272062575",
+    "spentUSDC": 0.01
+  },
+  "receipts": [
+    {
+      "step": "faucet",
+      "hash": "0x4e6dff3d30091f19ceb50c18fe18a398c5bce49a101ab30a4a5928058fcf90a8",
+      "amount": 0.5,
+      "symbol": "USDC",
+      "explorerUrl": "https://explorer.testnet.arc.io/tx/0x4e6dff3d30091f19ceb50c18fe18a398c5bce49a101ab30a4a5928058fcf90a8",
+      "confirmMs": 1157,
+      "externalFaucet": "https://faucet.circle.com",
+      "gasUSDC": "0.000525",
+      "explorer": "https://explorer.testnet.arc.io/tx/0x4e6dff3d30091f19ceb50c18fe18a398c5bce49a101ab30a4a5928058fcf90a8"
+    },
+    {
+      "step": "launch ONEARC",
+      "hash": "0x47378fb335e54ca37ed01bd712819a6ab885a479d38df2f67974e78d916d2fa5",
+      "status": "success",
+      "blockNumber": 67163358,
+      "from": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+      "confirmMs": 1203,
+      "confirmedInMs": 1203,
+      "explorerUrl": "https://explorer.testnet.arc.io/tx/0x47378fb335e54ca37ed01bd712819a6ab885a479d38df2f67974e78d916d2fa5",
+      "trades": 0,
+      "gasUSDC": "0.00139465",
+      "explorer": "https://explorer.testnet.arc.io/tx/0x47378fb335e54ca37ed01bd712819a6ab885a479d38df2f67974e78d916d2fa5"
+    },
+    {
+      "step": "launch ONEARC",
+      "hash": "0x6fe62fe88f4bab8a7f757eb784299165c00aac9d2aa77b737d4f70f49bc626be",
+      "status": "success",
+      "blockNumber": 67163361,
+      "from": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+      "confirmMs": 1375,
+      "confirmedInMs": 1375,
+      "explorerUrl": "https://explorer.testnet.arc.io/tx/0x6fe62fe88f4bab8a7f757eb784299165c00aac9d2aa77b737d4f70f49bc626be",
+      "trades": 1,
+      "memo": {
+        "id": "0x4a9c6441126b86383ea83b0e7d5caaec9f5c2bd6b3a6b50677e6a90f61785f3d",
+        "tagged": true,
+        "line": "juno launch $ONEARC 0.01 USDC",
+        "sender": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+        "target": "0xcE806E4bf02ef60bd960D25a170E97BEc9870141"
+      },
+      "launched": {
+        "token": "0xA96FF0F7fa3fcae838c35bcBc2e15Da6CA63E5f9",
+        "pair": "0x504c3D3a3b5f563E18e86227Ffb205192916530A",
+        "creator": "0xE088d6299CfC362426D643F28102936eC8df3D54"
+      },
+      "trade": {
+        "token": "0xA96FF0F7fa3fcae838c35bcBc2e15Da6CA63E5f9",
+        "side": "buy",
+        "baseAmount": 9099.647442066549,
+        "quoteAmount": 0.01,
+        "fee": 0.0009,
+        "price": 0.0000010000774897633056,
+        "venue": "curve"
+      },
+      "gasUSDC": "0.062464825",
+      "explorer": "https://explorer.testnet.arc.io/tx/0x6fe62fe88f4bab8a7f757eb784299165c00aac9d2aa77b737d4f70f49bc626be"
+    },
+    {
+      "step": "launch MADEARC",
+      "hash": "0x49d9a1c8adb69cfee7712a4a8cfe63f5886907dca827675c8a62a5682368c123",
+      "status": "success",
+      "blockNumber": 67163384,
+      "from": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+      "confirmMs": 1179,
+      "confirmedInMs": 1179,
+      "explorerUrl": "https://explorer.testnet.arc.io/tx/0x49d9a1c8adb69cfee7712a4a8cfe63f5886907dca827675c8a62a5682368c123",
+      "trades": 1,
+      "memo": {
+        "id": "0x973a41a3ab6d3e1eed5ed8b264b9ba55e38688663d45a719df8657bb9c963771",
+        "tagged": true,
+        "line": "juno launch $MADEARC 0.01 USDC",
+        "sender": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+        "target": "0xcE806E4bf02ef60bd960D25a170E97BEc9870141"
+      },
+      "launched": {
+        "token": "0xe1c64EDE4557792eDaDaD5E05aBcAC290A760D5E",
+        "pair": "0x33479269BB1f188591525bA72Fd389652DF68513",
+        "creator": "0xE088d6299CfC362426D643F28102936eC8df3D54"
+      },
+      "trade": {
+        "token": "0xe1c64EDE4557792eDaDaD5E05aBcAC290A760D5E",
+        "side": "buy",
+        "baseAmount": 9099.647442066549,
+        "quoteAmount": 0.01,
+        "fee": 0.0009,
+        "price": 0.0000010000774897633056,
+        "venue": "curve"
+      },
+      "gasUSDC": "0.062037925",
+      "explorer": "https://explorer.testnet.arc.io/tx/0x49d9a1c8adb69cfee7712a4a8cfe63f5886907dca827675c8a62a5682368c123"
+    },
+    {
+      "step": "launch MOMENTARC",
+      "hash": "0xf936541551e8a51fa0229982768cd3e68796010d47be3927ddaa62837b3e458f",
+      "status": "success",
+      "blockNumber": 67163407,
+      "from": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+      "confirmMs": 1173,
+      "confirmedInMs": 1173,
+      "explorerUrl": "https://explorer.testnet.arc.io/tx/0xf936541551e8a51fa0229982768cd3e68796010d47be3927ddaa62837b3e458f",
+      "trades": 1,
+      "memo": {
+        "id": "0xce69f1676058865397c573c12ffc717b779c42852fcc092664aac80fbf48fa87",
+        "tagged": true,
+        "line": "juno launch $MOMENTARC 0.01 USDC",
+        "sender": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+        "target": "0xcE806E4bf02ef60bd960D25a170E97BEc9870141"
+      },
+      "launched": {
+        "token": "0xdf53f14639839A8E5EFaEA0b430C7A60492D0463",
+        "pair": "0x735295554518f3abEa26d876dF8D0db23B85CD9B",
+        "creator": "0xE088d6299CfC362426D643F28102936eC8df3D54"
+      },
+      "trade": {
+        "token": "0xdf53f14639839A8E5EFaEA0b430C7A60492D0463",
+        "side": "buy",
+        "baseAmount": 9099.647442066549,
+        "quoteAmount": 0.01,
+        "fee": 0.0009,
+        "price": 0.0000010000774897633056,
+        "venue": "curve"
+      },
+      "gasUSDC": "0.062040025",
+      "explorer": "https://explorer.testnet.arc.io/tx/0xf936541551e8a51fa0229982768cd3e68796010d47be3927ddaa62837b3e458f"
+    },
+    {
+      "step": "gasless buy",
+      "hash": "0x380dea935ef4c7c3efa734023a22a689ddaeee4287364a6d68d79cfd87bf4b73",
+      "status": "success",
+      "blockNumber": 67163535,
+      "from": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+      "confirmMs": 1164,
+      "confirmedInMs": 1164,
+      "explorerUrl": "https://explorer.testnet.arc.io/tx/0x380dea935ef4c7c3efa734023a22a689ddaeee4287364a6d68d79cfd87bf4b73",
+      "trades": 1,
+      "memo": {
+        "id": "0x4a9c6441126b86383ea83b0e7d5caaec9f5c2bd6b3a6b50677e6a90f61785f3d",
+        "tagged": true,
+        "line": "juno buy $ONEARC 0.01 USDC",
+        "sender": "0xd7f27d708aFEAA70421e9387e8ce7C4e19Cd2C62",
+        "target": "0xcE806E4bf02ef60bd960D25a170E97BEc9870141"
+      },
+      "trade": {
+        "token": "0xA96FF0F7fa3fcae838c35bcBc2e15Da6CA63E5f9",
+        "side": "buy",
+        "baseAmount": 9326.90682901741,
+        "quoteAmount": 0.01,
+        "fee": 0.000672,
+        "price": 0.0000010001569241443613,
+        "venue": "curve"
+      },
+      "gasless": true,
+      "relayer": "0xd7f27d708aFEAA70421e9387e8ce7C4e19Cd2C62",
+      "memoTagged": true,
+      "gasUSDC": "0.004496225",
+      "explorer": "https://explorer.testnet.arc.io/tx/0x380dea935ef4c7c3efa734023a22a689ddaeee4287364a6d68d79cfd87bf4b73"
+    },
+    {
+      "step": "signed buy",
+      "hash": "0xe36c0b434c9618dd8a6e6753ab1f428393048a2da2a3cde3174d6cda9eef6ffa",
+      "status": "success",
+      "blockNumber": 67163553,
+      "from": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+      "confirmMs": 1152,
+      "confirmedInMs": 1152,
+      "explorerUrl": "https://explorer.testnet.arc.io/tx/0xe36c0b434c9618dd8a6e6753ab1f428393048a2da2a3cde3174d6cda9eef6ffa",
+      "trades": 1,
+      "memo": {
+        "id": "0x4a9c6441126b86383ea83b0e7d5caaec9f5c2bd6b3a6b50677e6a90f61785f3d",
+        "tagged": true,
+        "line": "juno buy $ONEARC 0.01 USDC",
+        "sender": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+        "target": "0xcE806E4bf02ef60bd960D25a170E97BEc9870141"
+      },
+      "trade": {
+        "token": "0xA96FF0F7fa3fcae838c35bcBc2e15Da6CA63E5f9",
+        "side": "buy",
+        "baseAmount": 9350.16040910578,
+        "quoteAmount": 0.01,
+        "fee": 0.000648,
+        "price": 0.0000010002365660687664,
+        "venue": "curve"
+      },
+      "gasUSDC": "0.003578175",
+      "explorer": "https://explorer.testnet.arc.io/tx/0xe36c0b434c9618dd8a6e6753ab1f428393048a2da2a3cde3174d6cda9eef6ffa"
+    },
+    {
+      "step": "sell",
+      "hash": "0x5b9f47ea19ed3fc473a1593efc95472149b849ed0937cfce9a23bea08b2a1de8",
+      "status": "success",
+      "blockNumber": 67163568,
+      "from": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+      "confirmMs": 1158,
+      "confirmedInMs": 1158,
+      "explorerUrl": "https://explorer.testnet.arc.io/tx/0x5b9f47ea19ed3fc473a1593efc95472149b849ed0937cfce9a23bea08b2a1de8",
+      "trades": 1,
+      "memo": {
+        "id": "0x4a9c6441126b86383ea83b0e7d5caaec9f5c2bd6b3a6b50677e6a90f61785f3d",
+        "tagged": true,
+        "line": "juno sell $ONEARC 27,777",
+        "sender": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+        "target": "0xcE806E4bf02ef60bd960D25a170E97BEc9870141"
+      },
+      "trade": {
+        "token": "0xA96FF0F7fa3fcae838c35bcBc2e15Da6CA63E5f9",
+        "side": "sell",
+        "baseAmount": 27776.71468018974,
+        "quoteAmount": 0.026045,
+        "fee": 0.001734,
+        "price": 0.0000010000000000000002,
+        "venue": "curve"
+      },
+      "gasUSDC": "0.00411005",
+      "explorer": "https://explorer.testnet.arc.io/tx/0x5b9f47ea19ed3fc473a1593efc95472149b849ed0937cfce9a23bea08b2a1de8"
+    },
+    {
+      "step": "creator fee claim",
+      "hash": "0xb76baa2850c9480ac30efd9a4f9431f7ba152038b5c74e240a816d7e738e99a7",
+      "status": "success",
+      "blockNumber": 67163578,
+      "from": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+      "confirmMs": 1153,
+      "confirmedInMs": 1153,
+      "explorerUrl": "https://explorer.testnet.arc.io/tx/0xb76baa2850c9480ac30efd9a4f9431f7ba152038b5c74e240a816d7e738e99a7",
+      "trades": 0,
+      "gasUSDC": "0.00199675",
+      "explorer": "https://explorer.testnet.arc.io/tx/0xb76baa2850c9480ac30efd9a4f9431f7ba152038b5c74e240a816d7e738e99a7"
+    },
+    {
+      "step": "launch REELARC",
+      "hash": "0xeb29bc0931e6205ee2dac5d9b55eaa772fcc9d630070fa2824991b74b46373bd",
+      "status": "success",
+      "blockNumber": 67164351,
+      "from": "0xE088d6299CfC362426D643F28102936eC8df3D54",
+      "confirmMs": 1168,
+      "confirmedInMs": 1168,
+      "explorerUrl": "https://explorer.testnet.arc.io/tx/0xeb29bc0931e6205ee2dac5d9b55eaa772fcc9d630070fa2824991b74b46373bd",
+      "trades": 0,
+      "launched": {
+        "token": "0x463aD0561C32F9f596dd77125d28EB0c8Efb7c5A",
+        "pair": "0xB5812ff0E37B80460195C761836D77CA6552D9EA",
+        "creator": "0xE088d6299CfC362426D643F28102936eC8df3D54"
+      },
+      "gasUSDC": "0.058566375",
+      "explorer": "https://explorer.testnet.arc.io/tx/0xeb29bc0931e6205ee2dac5d9b55eaa772fcc9d630070fa2824991b74b46373bd"
+    }
+  ],
+  "reserveFunding": {
+    "hash": "0x71a3129563d3a049818bce85e41c1bc05f2b248f92487659bbaa8452e042db5d",
+    "amountUSDC": 0.2,
+    "gasUSDC": "0.00042"
+  },
+  "sweep": {
+    "hash": "0x5cb8a00d7fd58510e23b13910342f4490ec51b6c6c40b60c5435403a0b78aeba",
+    "to": "0x0648aDF1967692A0c991d7715b0b588452321FBd",
+    "amountUSDC": "0.222496225",
+    "remainingUSDC": "0.000105"
+  },
+  "budget": {
+    "grossFundingUSDC": 0.8,
+    "sweptBackUSDC": "0.222496225",
+    "capUSDC": 1,
+    "fundingGasUSDC": "0.000945",
+    "netDeployerSpendUSDC": "0.578448775",
+    "relayerRemainingUSDC": "0.314134275"
+  }
+}

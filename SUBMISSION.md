@@ -1,6 +1,7 @@
 # Juno on Arc — DoraHacks submission
 
-Live: https://app-production-1427a.up.railway.app (Arc testnet)
+Live contracts: Arc testnet. The former hosting was removed; public Vercel hosting is pending.
+Browser reproduction and current evidence: [docs/JUDGE-REPORT.md](docs/JUDGE-REPORT.md).
 
 
 ## Description (≤150 words)

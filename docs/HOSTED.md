@@ -1,31 +1,29 @@
-# Hosted Arc testnet
+# Hosting handoff — 2026-10-14
 
-Railway project: `juno-arc-testnet` (`eb5ca4d9-9e82-49af-b865-b4180b98d6ee`).
+The earlier Railway deployment was removed by the user. Its old URLs and screenshots are historical, not live evidence.
+No hosting resources were created in the round-2 product pass. Current browser evidence is in
+[round2](screens/testnet/round2/), using the local app/API against live Arc testnet.
 
-| Service | URL / storage | Purpose |
-|---|---|---|
-| app | https://app-production-1427a.up.railway.app | Expo web export served by nginx with SPA routing |
-| api | https://api-production-6371.up.railway.app | Next API and testnet relayer; media volume `/data` |
-| Postgres | private Railway database | Pools, posts and trades; Drizzle migrations on API startup |
-| MongoDB | private Railway database | Comments, likes and names |
+Deploy the Next API and Expo web export to Vercel, using existing managed databases in isolated Arc DBs/schemas.
+Set `NEXT_PUBLIC_ARC_NETWORK=testnet`, the testnet RPC, `DATABASE_URL`, `MONGODB_URI`, `MONGODB_DB`, a dedicated funded
+`JUNO_RELAYER_PRIVATE_KEY`, and a bounded `FAUCET_AMOUNT_USDC`. Never use the deployer key as the relayer.
+Set `JUNO_API_URL` to the API's public origin before launching, and build Expo with `EXPO_PUBLIC_API_URL` pointing there.
 
-The API reads `deployments/arc-testnet.json` on chain 5042002. The Expo build uses
-`EXPO_PUBLIC_API_URL`; public API CORS allows the app. The testnet faucet is capped
-at 0.10 USDC per request, with the existing per-address/day restriction.
-The relayer key comes from the gitignored env file and is only a Railway runtime variable.
-No env files, keys, dependencies, local database state or build output are uploaded.
+Without Pinata, Vercel automatically stores demo media in Mongo's `demo_media` collection. It is labelled app-hosted,
+not pinned to IPFS. Uploads are limited to 4MB. `JUNO_MEDIA_BACKEND=mongo` rehearses this locally; process-restart
+persistence and byte-range video reads passed. The public deployment itself has not been verified in this pass.
 
-No Pinata credential was available: media persists on the API volume and is labelled
-local storage, not pinned IPFS. No indexer is hosted; receipts and RPC supply chain data.
-Graduation and cross-chain sends retain their existing Fork / Not run labels.
-Screenshots, HTTP responses and bounded launch evidence live in `docs/screens/hosted/`.
-Redeploy from the repository root with `railway up --service api|app --detach`;
-`RAILWAY_DOCKERFILE_PATH` selects `Dockerfile` or `docker/app.Dockerfile`.
+After deployment and database migration:
 
-Verified 2026-10-14: app, API, Postgres and MongoDB reached SUCCESS. Migrations applied.
-All nine public navigation routes plus the created coin page returned 200; config,
-pools, stats, feed and heartbeat returned 200. Browser Playwright checks captured no errors.
-Media upload persisted to the volume. A real launch with a 0.01 USDC first buy had an
-estimated maximum including gas of 0.099413467 USDC:
-`0xcca72929df1c01b0d7fe465db4cc734af77796a95e481f57d093bc6c033f4098`.
-Coin: `0xC003A6aE83e76922D6470a9f2822750980407Cab` (HOSTARC), visible in the public feed.
+```sh
+JUNO_API_URL=https://<api-origin> node scripts/seed-testnet-feed.mjs
+JUNO_API_URL=https://<api-origin> JUNO_WEB_URL=https://<app-origin> node scripts/e2e-browser-juno.mjs
+```
+
+The seed restore verifies existing live-testnet creation receipts; it sends no transactions. It makes the media/feed
+available on the new server. Existing locally launched tokens retain their immutable local tokenURI origins; new hosted
+launches use the public origin. The test-pattern reel is deliberately labelled demonstration footage.
+
+No daemon/indexer is required for the tested request/response flows. Reference-feed reads in this pass came through a
+local Arc mainnet fork, while all transactions used testnet. Mainnet deployments and live graduation/CCIP delivery remain untested.
+Production needs shared relayer nonce/faucet-rate controls and stronger social attribution; process-local limits are for testnet demos.

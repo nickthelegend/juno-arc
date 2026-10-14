@@ -1,0 +1,320 @@
+{
+  "checkedAt": "2026-10-14T13:29:37.343Z",
+  "api": "http://127.0.0.1:8911",
+  "web": "http://127.0.0.1:8912",
+  "chainId": 5042002,
+  "results": [
+    {
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nEvery post\nis a market.\nPost a photo or a reel and it launches its own bonding curve on Arc, priced in USDC. Buy into the posts you believe in — final in about a second — and creators earn the trading fees. Trackers follow Bitcoin, gold and the euro through Chainlink (mainnet prices, display-only on testnet).\nLIVE ON ARC\n7\nmarkets live\n17\ntrades, 24h · 8 wallets\n1,168 ms\nto finality, the last trade\n#67,166,178\nlatest block\nARC · LIVE\n520 ms\nper block, over 50\nFinal when produced: a receipt on Arc is deterministic, with no reorgs and no confirmation count.\nGet Started\nWhat runs on Arc"
+    },
+    {
+      "width": 1440,
+      "route": "/social",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "LIVE ON ARC\n7\nmarkets\n17\ntrades, 24h\n1,168 ms\nto final\nBlock #67,166,183\nARC · LIVE\n#67,166,179\n520 ms\nper block, over 50\n1,168 ms\nto final, last trade\nFinal when produced: a receipt on Arc is deterministic, with no reorgs and no confirmation count.\nArc testnet · test USDC, no real money\njuno\n$REELARC\nBuy as you scroll: each buy is final on Arc in about a second. Gas ≈ $0.004, in USDC.\narcproof3d54\n15m · content curve\nFollow\nReel\n$1.00k\nmcap\nBuy\nNo buyers yet — be the first in.\nReel upload proof $REELARC\nOne-second demonstration clip. Real video upload and Arc testnet launch; test tokens have no monetary value.\n0% to graduation\narcproof3d54\n23m · content curve\nFollow\n$1.00k\nmcap\nBuy\nBought by arcproof3d54\nOwn the moment $MOMENTARC\nDemonstration launch on Arc testnet. Real on-chain market; test tokens have no monetary value.\n<0.01% to graduation\narcproof3d54\n24m · content curve\nFollow\n$1.00k\nmcap\nBuy\nBought by arcproof3d54\nMade on Arc $MADEARC\nDemonstration launch on Arc testnet. Real on-chain market; test tokens have no monetary value.\n<0.01% to graduation\narcproof3d54\n24m · content curve\nFollow\n$1.00k\nmcap\n1\nBuy\nBought by arcproof3d54\nOne balance $ONEARC\nArc testnet demonstration: this post links to ONEARC, a real image launch. The browser bought with a gasless signature, bought normally, sold and claimed creator fees. Test tokens have no monetary value.\n<0.01% to graduation\n0x1334…9375\n19h · content curve\nFollow\n$1.00k\nmcap\nBuy\nBought by 0xc8f4…33F8 and 2 others\nJuno testnet sunset $JTN8113\nPosted by scripts/e2e-testnet.mjs on Arc testnet.\n<0.01% to graduation\n0xe215…0Fa3\n19h · content curve\nFollow\n$1.00k\nmcap\nBuy\nNo buyers yet — be the first in.\nUI test post $UITEST\n0% to graduation\n0xE3db…bdC2\n19h · content curve\nFollow\n$1.00k\nmcap\nBuy\nBought by 0x7F25…fD8f and 2 others\nJuno testnet sunset $JTN8302\nPosted by scripts/e2e-testnet.mjs on Arc testnet.\n<0.01% to graduation\nMOST TRADED · 24H\n1\n$JTN8113\n5 trades · $0.3416\n2\n$JTN8302\n5 trades · $0.3416\n3\n$ONEARC\n4 trades · $0.0560\n4\n$MOMENTARC\n1 trade · $0.0100\n5\n$MADEARC\n1 trade · $0.0100\nJUST LAUNCHED\n$REELARC\n$1.00k mcap\n$MOMENTARC\n$1.00k mcap\n$MADEARC\n$1.00k mcap\n$ONEARC\n$1.00k mcap"
+    },
+    {
+      "width": 1440,
+      "route": "/trade",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "LIVE ON ARC\n7\nmarkets\n17\ntrades, 24h\n1,168 ms\nto final\nBlock #67,166,188\nARC · LIVE\n#67,166,192\n500 ms\nper block, over 50\n1,168 ms\nto final, last trade\nFinal when produced: a receipt on Arc is deterministic, with no reorgs and no confirmation count.\nArc testnet · test USDC, no real money\nTrade\nUSDC $1.000 · Chainlink\nTrackers\nPosts\nTraders\nLaunched on Arc\nEvery post is a market.\nPosts and reels launched as coins, priced in USDC. Early buyers ride the curve; creators earn the fees; every buy is final on Arc in about a second.\nReel upload proof\nby arcproof3d54 · reel\nREEL\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$REELARC content\n0%\nTrade\nOwn the moment\nby arcproof3d54 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$MOMENTARC content\n<0.01%\nTrade\nMade on Arc\nby arcproof3d54 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$MADEARC content\n<0.01%\nTrade\nOne balance\nby arcproof3d54 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n1\nReplies\n$ONEARC content\n<0.01%\nTrade\nJuno testnet sunset\nby 0x1334…9375 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$JTN8113 content\n<0.01%\nTrade\nUI test post\nby 0xe215…0Fa3 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$UITEST content\n0%\nTrade\nJuno testnet sunset\nby 0xE3db…bdC2 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$JTN8302 content\n<0.01%\nTrade\nMOST TRADED · 24H\n1\n$JTN8113\n5 trades · $0.3416\n2\n$JTN8302\n5 trades · $0.3416\n3\n$ONEARC\n4 trades · $0.0560\n4\n$MOMENTARC\n1 trade · $0.0100\n5\n$MADEARC\n1 trade · $0.0100\nJUST LAUNCHED\n$REELARC\n$1.00k mcap\n$MOMENTARC\n$1.00k mcap\n$MADEARC\n$1.00k mcap\n$ONEARC\n$1.00k mcap"
+    },
+    {
+      "width": 1440,
+      "route": "/trade?sort=trackers",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "LIVE ON ARC\n7\nmarkets\n17\ntrades, 24h\n1,168 ms\nto final\nBlock #67,166,193\nARC · LIVE\n#67,166,192\n500 ms\nper block, over 50\n1,168 ms\nto final, last trade\nFinal when produced: a receipt on Arc is deterministic, with no reorgs and no confirmation count.\nArc testnet · test USDC, no real money\nTrade\nUSDC $1.000 · Chainlink\nTrackers\nPosts\nTraders\nDisplay-only on testnet · mainnet prices\nTrack anything with a feed.\nCompare a USDC bonding curve with Chainlink prices from Arc mainnet. Testnet trackers show the reference price only; no on-chain NAV marks or price-band enforcement.\nChainlink prices from Arc mainnet\n10 feeds · display-only\nBTC\nBitcoin\nBTC/USD · updated 56m ago\n$82,862\nLIVE\nETH\nEther\nETH/USD · updated 56m ago\n$2,486\nLIVE\nSOL\nSolana\nSOL/USD · updated 54m ago\n$105.72\nLIVE\nLINK\nChainlink\nLINK/USD · updated 57m ago\n$12.78\nLIVE\nPAXG\nGold (PAX Gold)\nPAXG/USD · updated 43m ago\n$4,096\nLIVE\nEUR\nEuro\nEUR/USD · updated 52m ago\n$1.11\nLIVE\nJPY\nJapanese yen\nJPY/USD · updated 54m ago\n$0.006299\nLIVE\nAVAX\nAvalanche\nAVAX/USD · updated 54m ago\n$10.08\nLIVE\nXRP\nXRP\nXRP/USD · updated 56m ago\n$1.36\nLIVE\nBNB\nBNB\nBNB/USD · updated 57m ago\n$737.73\nLIVE\nRead from Chainlink’s AggregatorV3 feeds on Arc mainnet (8 decimals, 24 h heartbeat). Tap one to launch a tracker on it. Display-only on testnet: Arc testnet has no Chainlink feeds, so a tracker launched here keeps its feed and ratio in Juno’s database and is not marked on chain. The marks on chain need mainnet.\nNo trackers yet\nTap a feed above to launch the first one.\nMOST TRADED · 24H\n1\n$JTN8113\n5 trades · $0.3416\n2\n$JTN8302\n5 trades · $0.3416\n3\n$ONEARC\n4 trades · $0.0560\n4\n$MOMENTARC\n1 trade · $0.0100\n5\n$MADEARC\n1 trade · $0.0100\nJUST LAUNCHED\n$REELARC\n$1.00k mcap\n$MOMENTARC\n$1.00k mcap\n$MADEARC\n$1.00k mcap\n$ONEARC\n$1.00k mcap"
+    },
+    {
+      "width": 1440,
+      "route": "/trade?sort=traders",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "LIVE ON ARC\n7\nmarkets\n17\ntrades, 24h\n1,168 ms\nto final\nBlock #67,166,198\nARC · LIVE\n#67,166,192\n500 ms\nper block, over 50\n1,168 ms\nto final, last trade\nFinal when produced: a receipt on Arc is deterministic, with no reorgs and no confirmation count.\nArc testnet · test USDC, no real money\nTrade\nUSDC $1.000 · Chainlink\nTrackers\nPosts\nTraders\nEvery trade on all 7 pools, ranked by profit taken.\n1\n0x89f4…Ad4f\n1 fill · 1 coin\n$0\ntaken\n-$0.0045\nOpen\n$0.0455\nHolding\n—\nWin rate\n2\n0x1334…9375\nCreator\n1 fill · 1 coin · 1 follower\n$0\ntaken\n-$0.0089\nOpen\n$0.0911\nHolding\n—\nWin rate\n3\n0x845c…2FCE\n1 fill · 1 coin\n$0\ntaken\n-$0.0045\nOpen\n$0.0455\nHolding\n—\nWin rate\n4\n0xE3db…bdC2\nCreator\n1 fill · 1 coin\n$0\ntaken\n-$0.0089\nOpen\n$0.0911\nHolding\n—\nWin rate\n5\narcproof3d54\nCreator\n6 fills · 3 coins\n-$0.0040\ntaken\n-$0.0018\nOpen\n$0.0182\nHolding\n0%\nWin rate\n6\n0xc8f4…33F8\n3 fills · 1 coin\n-$0.0084\ntaken\n-$0.0088\nOpen\n$0.0912\nHolding\n0%\nWin rate\n7\n0x7F25…fD8f\n3 fills · 1 coin\n-$0.0084\ntaken\n-$0.0088\nOpen\n$0.0912\nHolding\n0%\nWin rate\nMOST TRADED · 24H\n1\n$JTN8113\n5 trades · $0.3416\n2\n$JTN8302\n5 trades · $0.3416\n3\n$ONEARC\n4 trades · $0.0560\n4\n$MOMENTARC\n1 trade · $0.0100\n5\n$MADEARC\n1 trade · $0.0100\nJUST LAUNCHED\n$REELARC\n$1.00k mcap\n$MOMENTARC\n$1.00k mcap\n$MADEARC\n$1.00k mcap\n$ONEARC\n$1.00k mcap"
+    },
+    {
+      "width": 1440,
+      "route": "/post",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nPost a photo\nPublishing opens a real bonding curve on Arc, priced in USDC. The post is the market.\n+\nAdd a photo\nSquare works best. Up to 4MB.\nDemo storage: Juno hosts your photo at a content-addressed URL; it is not pinned to IPFS. Keep files under 4MB. The market itself is a real contract on Arc.\nCreate wallet to launch\nName\nTicker\nCaption\nCurve\nSixteen liquidity-weighted segments. The weights decide how the price behaves, not just where it starts.\nContent\nSelected\nBack-loaded. Cheap to enter, steepens as attention arrives.\nThin name\nFront-loaded. Deep at the issue price so early size fills.\nIPO book\nDeep at both ends, thin in the middle. Book-building.\nTight NAV\nUniform. A tracker: follows a Chainlink feed like a spread, not a launch.\nYour first buy\nBought in the launch transaction itself, at the opening price, so nobody can get in ahead of you.\nNone\n$0.01\n$0.05\n$0.1\nLaunch post\nAdd a photo to launch\nOne transaction: it deploys the token, opens its USDC curve, and reserves the Uniswap v2 TOKEN/USDC pair the curve graduates into — locked until then. Gas is paid in USDC and is final on Arc in about a second."
+    },
+    {
+      "width": 1440,
+      "route": "/post?format=reel",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nPost a reel\nA vertical video with a real bonding curve behind it on Arc, priced in USDC. It lands in the swipe feed.\n+\nAdd a video\nVertical works best. Up to 4MB.\nDemo storage: Juno hosts your video at a content-addressed URL; it is not pinned to IPFS. Keep files under 4MB. The market itself is a real contract on Arc.\nCreate wallet to launch\nName\nTicker\nCaption\nCurve\nSixteen liquidity-weighted segments. The weights decide how the price behaves, not just where it starts.\nContent\nSelected\nBack-loaded. Cheap to enter, steepens as attention arrives.\nThin name\nFront-loaded. Deep at the issue price so early size fills.\nIPO book\nDeep at both ends, thin in the middle. Book-building.\nTight NAV\nUniform. A tracker: follows a Chainlink feed like a spread, not a launch.\nYour first buy\nBought in the launch transaction itself, at the opening price, so nobody can get in ahead of you.\nNone\n$0.01\n$0.05\n$0.1\nLaunch reel\nAdd a video to launch\nOne transaction: it deploys the token, opens its USDC curve, and reserves the Uniswap v2 TOKEN/USDC pair the curve graduates into — locked until then. Gas is paid in USDC and is final on Arc in about a second."
+    },
+    {
+      "width": 1440,
+      "route": "/post?tracker=BTC%2FUSD",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nPost a photo\nPublishing opens a real bonding curve on Arc, priced in USDC. The post is the market.\n+\nAdd a photo\nSquare works best. Up to 4MB.\nDemo storage: Juno hosts your photo at a content-addressed URL; it is not pinned to IPFS. Keep files under 4MB. The market itself is a real contract on Arc.\nCreate wallet to launch\nName\nTicker\nCaption\nCurve\nSixteen liquidity-weighted segments. The weights decide how the price behaves, not just where it starts.\nContent\nBack-loaded. Cheap to enter, steepens as attention arrives.\nThin name\nFront-loaded. Deep at the issue price so early size fills.\nIPO book\nDeep at both ends, thin in the middle. Book-building.\nTight NAV\nSelected\nUniform. A tracker: follows a Chainlink feed like a spread, not a launch.\nWhat it tracks\nA Chainlink Data Feed on Arc mainnet. The curve opens at the feed's price times what one token stands for, and the coin page shows its NAV, premium and band against the feed. Display-only on testnet: no on-chain NAV marks or price-band enforcement.\nBTC\nETH\nSOL\nLINK\nPAXG\nEUR\nJPY\nAVAX\nXRP\nBNB\nOne token = how many BTC (Chainlink BTC/USD $82,861.78)\nOpens at $9.94e-7 a token — about $994 for the billion-token supply.\nYour first buy\nBought in the launch transaction itself, at the opening price, so nobody can get in ahead of you.\nNone\n$0.01\n$0.05\n$0.1\nLaunch post\nAdd a photo to launch\nOne transaction: it deploys the token, opens its USDC curve, and reserves the Uniswap v2 TOKEN/USDC pair the curve graduates into — locked until then. Gas is paid in USDC and is final on Arc in about a second."
+    },
+    {
+      "width": 1440,
+      "route": "/reels",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nLike\nSay\nShare\narcproof3d54\nFollow\nReel upload proof  One-second demonstration clip. Real video upload and Arc testnet launch; test tokens have no monetary value.\n$REELARC\n$0.0₅100\ncontent curve\n$1.00k mkt cap\n0% to graduation\nSell\nBuy\nReels\nEvery reel is a coin"
+    },
+    {
+      "width": 1440,
+      "route": "/profile",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nYOUR PROFILE\nPost a photo. It becomes a coin. You earn its trading fees.\n1\nEvery post is a market\nA photo or a reel launches its own bonding curve on Arc, in one transaction.\n2\nCreators earn the fees\nYour coins' trading fees are yours to claim. Your profile adds them up, from the chain.\n3\n0.1 USDC to start\nGet testnet USDC while Juno's faucet is funded, or use Circle's faucet from your wallet. A photo launch costs about $0.06 in gas; buys need extra USDC.\n0xE0…3D54\nExample: a creator on Juno · 4 posts\nCreate wallet\nNo sign-up: a key made on this device, holding USDC on Arc.\nWhat runs on Arc"
+    },
+    {
+      "width": 1440,
+      "route": "/arc",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nJuno on Arc\nArc testnet\nWhat runs on Arc.\nJuno is a social app where every post is a market. Arc is Circle’s chain for stablecoin finance: here is each piece of it Juno uses, what it does for you, what has been exercised on testnet, and whether this server has it configured.\nUSDC $1.000 · Chainlink\n01\nUSDC as gas\nCONFIGURED\nArc's native gas token is USDC.\nYour wallet holds one token. Every price, fee, balance and gas cost is in dollars — a buy's gas is under half a cent.\nEverywhere: the trade sheet, your wallet, every receipt. · USDC 0x3600…0000\nRAN ON TESTNET  Testnet launch, buys and sell paid gas in USDC; a buy cost about $0.004.\n02\nDeterministic finality\nCONFIGURED\nDeterministic finality: a transaction is final in the block that includes it (about every half second), no reorgs.\nA buy is final in about a second. The receipt leads with the measured time from submit to receipt, taken by Juno’s server.\nTrade receipt · landing figures · deterministic, ~0.5 s blocks\nRAN ON TESTNET  Blocks about every 0.5 s on testnet; measured 1.1–1.3 s from submit to receipt through Juno’s server.\n03\nMemo\nCONFIGURED\nArc's Memo contract makes a call as your wallet and logs a reference beside it.\nEach curve buy and sell is tagged with its post's id, so trades are findable by post on chain.\nTrade receipt: “Tagged with this post via Arc Memo” · 0x5294…e505\nRAN ON TESTNET  Testnet launch, buy, sell and relayed buy were Memo-tagged.\n04\nGasless buys (EIP-3009)\nCONFIGURED\nUSDC's receiveWithAuthorization: a signature moves the money, someone else pays the gas.\n“Pay with signature — no gas”: you sign, Juno's relayer submits the buy and pays the USDC gas.\nTrade sheet · relayer configured; requires USDC gas\nRAN ON TESTNET  One relayed buy on testnet: the buyer paid exactly the trade, no gas.\n05\nCircle Gateway\nCONFIGURED\nA unified USDC balance across chains, Circle attests a burn intent and Juno’s relayer mints the USDC on Arc.\nDeposit once on Base or Ethereum, spend it here; top up a buy from Gateway when Arc USDC is short.\nProfile → wallet · trade sheet “Top up from Gateway” · 7 source chains\nRAN ON TESTNET  Deposit from Arc exercised on testnet. Attestation and mint from another chain: not run on testnet.\n06\nCircle CCTP V2\nCONFIGURED\nNative USDC burned on one chain, minted on another.\nCreators withdraw trading fees straight to Base, Ethereum, Arbitrum, Solana… as native USDC.\nCreator earnings · coin page “Withdraw fees to…” · domain 26 · 11 destinations\nRAN ON TESTNET  A real burn through TokenMessengerV2 on testnet; the mint on the other chain was not completed.\n07\nChainlink CCIP Cross-Chain Tokens\nCONFIGURED\nA token pool per coin: burned on Arc, minted on the destination, rate-limited per lane.\nA graduated coin's creator makes it cross-chain in one transaction; holders send it to Base Sepolia or Ethereum Sepolia, fee in USDC. Arc's supply can never exceed the launch supply.\nGraduated coin page → Cross-chain · 4 lanes · router 0xdE4E…eab8\nFORK-PROVEN  Contracts are deployed on testnet; enabling and sending a coin is proven on a fork of Arc testnet, not run live (a coin must graduate first).\n08\nChainlink Data Feeds\nCONFIGURED\nDecentralised price feeds — BTC, ETH, SOL, LINK, gold, EUR, JPY… — read from Arc mainnet.\nTrackers follow a feed: the coin page shows NAV, what the curve implies, the premium and the band. USDC's own peg is shown beside prices.\nTrade → Trackers · tracker coin pages · the peg chip · 10 feeds on Arc mainnet\nDISPLAY-ONLY  Feeds exist on Arc mainnet only: on testnet, prices are mainnet reads for display and nothing is marked on chain.\nArc's explorer\nChainlink CCIP Explorer\nArc docs"
+    },
+    {
+      "width": 1440,
+      "route": "/inbox",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nNotifications\nNo wallet yet\nNotifications are about your coins, your followers and your alerts. Create a wallet to have some.\nCreate wallet"
+    },
+    {
+      "width": 1440,
+      "route": "/search",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nCancel\n7 markets. Type a ticker, a name or a handle."
+    },
+    {
+      "width": 1440,
+      "route": "/coin/0x463aD0561C32F9f596dd77125d28EB0c8Efb7c5A",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\n$0.0₅100\n+0.00%\npast day\n1H\n1D\n1W\n1M\nAll\narcproof3d54\n0 holders\nReel upload proof\nOne-second demonstration clip. Real video upload and Arc testnet launch; test tokens have no monetary value.\n$\nREELARC\nCopy address\n$1.00k\nMarket cap\n$0\nTotal volume\n$0\nCreator rewards\nUSDC $1.000 · Chainlink\n$0\n$6.95k\nActivity\nHolders\nComments\nDetails\nNo trades yet.\nBuy"
+    },
+    {
+      "width": 1440,
+      "route": "/trader/0xE088d6299CfC362426D643F28102936eC8df3D54",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\n@arcproof3d54\n4\nPosts\n0\nFollowers\n1\nFollowing\narcproof3d54\nCreator\n0xE088…3D54  ·  launched market cap $4.00k\nArc testnet demonstration creator. These are real launches using test tokens with no monetary value.\nFollow\nBuy $MOMENTARC\n$REELARC\nPosts\nReels\nCoins\nBacked\n▲ +0.0%\n▲ +0.0%\n▲ +0.0%\n▲ +0.0%"
+    },
+    {
+      "width": 1440,
+      "route": "/post/b844897d5eb84eb9a74dc1061088b525",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nPost\narcproof3d54\n18m ago\nArc testnet demonstration: this post links to ONEARC, a real image launch. The browser bought with a gasless signature, bought normally, sold and claimed creator fees. Test tokens have no monetary value.\nOne balance\n$ONEARC\n$1.00k\n+0.00%\n0.00% to graduation\n1 reply\narcproof3d54\n4m\nDemonstration reply: all trades above are real Arc testnet transactions.\nReply"
+    },
+    {
+      "width": 1440,
+      "route": "/post/999999",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nPost\nNo such post\nIt may have been removed, or the link is wrong.\nBack to the feed"
+    },
+    {
+      "width": 1440,
+      "route": "/missing-route",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nNothing here\nThis page does not exist. The feed does.\nGo to the feed"
+    },
+    {
+      "width": 390,
+      "route": "/",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nEvery post\nis a market.\nPost a photo or a reel and it launches its own bonding curve on Arc, priced in USDC. Buy into the posts you believe in — final in about a second — and creators earn the trading fees. Trackers follow Bitcoin, gold and the euro through Chainlink (mainnet prices, display-only on testnet).\nLIVE ON ARC\n7\nmarkets live\n17\ntrades, 24h · 8 wallets\n1,168 ms\nto finality, the last trade\n#67,166,270\nlatest block\nARC · LIVE\n500 ms\nper block, over 50\nFinal when produced: a receipt on Arc is deterministic, with no reorgs and no confirmation count.\nGet Started\nWhat runs on Arc"
+    },
+    {
+      "width": 390,
+      "route": "/social",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\njuno\n$REELARC\nBuy as you scroll: each buy is final on Arc in about a second. Gas ≈ $0.004, in USDC.\narcproof3d54\n16m · content curve\nFollow\nReel\n$1.00k\nmcap\nBuy\nNo buyers yet — be the first in.\nReel upload proof $REELARC\nOne-second demonstration clip. Real video upload and Arc testnet launch; test tokens have no monetary value.\n0% to graduation\narcproof3d54\n24m · content curve\nFollow\n$1.00k\nmcap\nBuy\nBought by arcproof3d54\nOwn the moment $MOMENTARC\nDemonstration launch on Arc testnet. Real on-chain market; test tokens have no monetary value.\n<0.01% to graduation\narcproof3d54\n24m · content curve\nFollow\n$1.00k\nmcap\nBuy\nBought by arcproof3d54\nMade on Arc $MADEARC\nDemonstration launch on Arc testnet. Real on-chain market; test tokens have no monetary value.\n<0.01% to graduation\narcproof3d54\n25m · content curve\nFollow\n$1.00k\nmcap\n1\nBuy\nBought by arcproof3d54\nOne balance $ONEARC\nArc testnet demonstration: this post links to ONEARC, a real image launch. The browser bought with a gasless signature, bought normally, sold and claimed creator fees. Test tokens have no monetary value.\n<0.01% to graduation\n0x1334…9375\n19h · content curve\nFollow\n$1.00k\nmcap\nBuy\nBought by 0xc8f4…33F8 and 2 others\nJuno testnet sunset $JTN8113\nPosted by scripts/e2e-testnet.mjs on Arc testnet.\n<0.01% to graduation\n0xe215…0Fa3\n19h · content curve\nFollow\n$1.00k\nmcap\nBuy\nNo buyers yet — be the first in.\nUI test post $UITEST\n0% to graduation\n0xE3db…bdC2\n19h · content curve\nFollow\n$1.00k\nmcap\nBuy\nBought by 0x7F25…fD8f and 2 others\nJuno testnet sunset $JTN8302\nPosted by scripts/e2e-testnet.mjs on Arc testnet.\n<0.01% to graduation"
+    },
+    {
+      "width": 390,
+      "route": "/trade",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nTrade\nUSDC $1.000 · Chainlink\nTrackers\nPosts\nTraders\nLaunched on Arc\nEvery post is a market.\nPosts and reels launched as coins, priced in USDC. Early buyers ride the curve; creators earn the fees; every buy is final on Arc in about a second.\nReel upload proof\nby arcproof3d54 · reel\nREEL\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$REELARC content\n0%\nTrade\nOwn the moment\nby arcproof3d54 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$MOMENTARC content\n<0.01%\nTrade\nMade on Arc\nby arcproof3d54 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$MADEARC content\n<0.01%\nTrade\nOne balance\nby arcproof3d54 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n1\nReplies\n$ONEARC content\n<0.01%\nTrade\nJuno testnet sunset\nby 0x1334…9375 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$JTN8113 content\n<0.01%\nTrade\nUI test post\nby 0xe215…0Fa3 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$UITEST content\n0%\nTrade\nJuno testnet sunset\nby 0xE3db…bdC2 · post\nPOST\n$1.00k\nMarket cap\n0\nLikes\n0\nReplies\n$JTN8302 content\n<0.01%\nTrade"
+    },
+    {
+      "width": 390,
+      "route": "/trade?sort=trackers",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nTrade\nUSDC $1.000 · Chainlink\nTrackers\nPosts\nTraders\nDisplay-only on testnet · mainnet prices\nTrack anything with a feed.\nCompare a USDC bonding curve with Chainlink prices from Arc mainnet. Testnet trackers show the reference price only; no on-chain NAV marks or price-band enforcement.\nChainlink prices from Arc mainnet\n10 feeds · display-only\nBTC\nBitcoin\nBTC/USD · updated 57m ago\n$82,862\nLIVE\nETH\nEther\nETH/USD · updated 57m ago\n$2,486\nLIVE\nSOL\nSolana\nSOL/USD · updated 55m ago\n$105.72\nLIVE\nLINK\nChainlink\nLINK/USD · updated 58m ago\n$12.78\nLIVE\nPAXG\nGold (PAX Gold)\nPAXG/USD · updated 44m ago\n$4,096\nLIVE\nEUR\nEuro\nEUR/USD · updated 52m ago\n$1.11\nLIVE\nJPY\nJapanese yen\nJPY/USD · updated 54m ago\n$0.006299\nLIVE\nAVAX\nAvalanche\nAVAX/USD · updated 55m ago\n$10.08\nLIVE\nXRP\nXRP\nXRP/USD · updated 57m ago\n$1.36\nLIVE\nBNB\nBNB\nBNB/USD · updated 57m ago\n$737.73\nLIVE\nRead from Chainlink’s AggregatorV3 feeds on Arc mainnet (8 decimals, 24 h heartbeat). Tap one to launch a tracker on it. Display-only on testnet: Arc testnet has no Chainlink feeds, so a tracker launched here keeps its feed and ratio in Juno’s database and is not marked on chain. The marks on chain need mainnet.\nNo trackers yet\nTap a feed above to launch the first one."
+    },
+    {
+      "width": 390,
+      "route": "/trade?sort=traders",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nTrade\nUSDC $1.000 · Chainlink\nTrackers\nPosts\nTraders\nEvery trade on all 7 pools, ranked by profit taken.\n1\n0x89f4…Ad4f\n1 fill · 1 coin\n$0\ntaken\n-$0.0045\nOpen\n$0.0455\nHolding\n—\nWin rate\n2\n0x1334…9375\nCreator\n1 fill · 1 coin · 1 follower\n$0\ntaken\n-$0.0089\nOpen\n$0.0911\nHolding\n—\nWin rate\n3\n0x845c…2FCE\n1 fill · 1 coin\n$0\ntaken\n-$0.0045\nOpen\n$0.0455\nHolding\n—\nWin rate\n4\n0xE3db…bdC2\nCreator\n1 fill · 1 coin\n$0\ntaken\n-$0.0089\nOpen\n$0.0911\nHolding\n—\nWin rate\n5\narcproof3d54\nCreator\n6 fills · 3 coins\n-$0.0040\ntaken\n-$0.0018\nOpen\n$0.0182\nHolding\n0%\nWin rate\n6\n0xc8f4…33F8\n3 fills · 1 coin\n-$0.0084\ntaken\n-$0.0088\nOpen\n$0.0912\nHolding\n0%\nWin rate\n7\n0x7F25…fD8f\n3 fills · 1 coin\n-$0.0084\ntaken\n-$0.0088\nOpen\n$0.0912\nHolding\n0%\nWin rate"
+    },
+    {
+      "width": 390,
+      "route": "/post",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nPost a photo\nPublishing opens a real bonding curve on Arc, priced in USDC. The post is the market.\n+\nAdd a photo\nSquare works best. Up to 4MB.\nDemo storage: Juno hosts your photo at a content-addressed URL; it is not pinned to IPFS. Keep files under 4MB. The market itself is a real contract on Arc.\nCreate wallet to launch\nName\nTicker\nCaption\nCurve\nSixteen liquidity-weighted segments. The weights decide how the price behaves, not just where it starts.\nContent\nSelected\nBack-loaded. Cheap to enter, steepens as attention arrives.\nThin name\nFront-loaded. Deep at the issue price so early size fills.\nIPO book\nDeep at both ends, thin in the middle. Book-building.\nTight NAV\nUniform. A tracker: follows a Chainlink feed like a spread, not a launch.\nYour first buy\nBought in the launch transaction itself, at the opening price, so nobody can get in ahead of you.\nNone\n$0.01\n$0.05\n$0.1\nLaunch post\nAdd a photo to launch\nOne transaction: it deploys the token, opens its USDC curve, and reserves the Uniswap v2 TOKEN/USDC pair the curve graduates into — locked until then. Gas is paid in USDC and is final on Arc in about a second."
+    },
+    {
+      "width": 390,
+      "route": "/post?format=reel",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nPost a reel\nA vertical video with a real bonding curve behind it on Arc, priced in USDC. It lands in the swipe feed.\n+\nAdd a video\nVertical works best. Up to 4MB.\nDemo storage: Juno hosts your video at a content-addressed URL; it is not pinned to IPFS. Keep files under 4MB. The market itself is a real contract on Arc.\nCreate wallet to launch\nName\nTicker\nCaption\nCurve\nSixteen liquidity-weighted segments. The weights decide how the price behaves, not just where it starts.\nContent\nSelected\nBack-loaded. Cheap to enter, steepens as attention arrives.\nThin name\nFront-loaded. Deep at the issue price so early size fills.\nIPO book\nDeep at both ends, thin in the middle. Book-building.\nTight NAV\nUniform. A tracker: follows a Chainlink feed like a spread, not a launch.\nYour first buy\nBought in the launch transaction itself, at the opening price, so nobody can get in ahead of you.\nNone\n$0.01\n$0.05\n$0.1\nLaunch reel\nAdd a video to launch\nOne transaction: it deploys the token, opens its USDC curve, and reserves the Uniswap v2 TOKEN/USDC pair the curve graduates into — locked until then. Gas is paid in USDC and is final on Arc in about a second."
+    },
+    {
+      "width": 390,
+      "route": "/post?tracker=BTC%2FUSD",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nPost a photo\nPublishing opens a real bonding curve on Arc, priced in USDC. The post is the market.\n+\nAdd a photo\nSquare works best. Up to 4MB.\nDemo storage: Juno hosts your photo at a content-addressed URL; it is not pinned to IPFS. Keep files under 4MB. The market itself is a real contract on Arc.\nCreate wallet to launch\nName\nTicker\nCaption\nCurve\nSixteen liquidity-weighted segments. The weights decide how the price behaves, not just where it starts.\nContent\nBack-loaded. Cheap to enter, steepens as attention arrives.\nThin name\nFront-loaded. Deep at the issue price so early size fills.\nIPO book\nDeep at both ends, thin in the middle. Book-building.\nTight NAV\nSelected\nUniform. A tracker: follows a Chainlink feed like a spread, not a launch.\nWhat it tracks\nA Chainlink Data Feed on Arc mainnet. The curve opens at the feed's price times what one token stands for, and the coin page shows its NAV, premium and band against the feed. Display-only on testnet: no on-chain NAV marks or price-band enforcement.\nBTC\nETH\nSOL\nLINK\nPAXG\nEUR\nJPY\nAVAX\nXRP\nBNB\nOne token = how many BTC (Chainlink BTC/USD $82,861.78)\nOpens at $9.94e-7 a token — about $994 for the billion-token supply.\nYour first buy\nBought in the launch transaction itself, at the opening price, so nobody can get in ahead of you.\nNone\n$0.01\n$0.05\n$0.1\nLaunch post\nAdd a photo to launch\nOne transaction: it deploys the token, opens its USDC curve, and reserves the Uniswap v2 TOKEN/USDC pair the curve graduates into — locked until then. Gas is paid in USDC and is final on Arc in about a second."
+    },
+    {
+      "width": 390,
+      "route": "/reels",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nLike\nSay\nShare\narcproof3d54\nFollow\nReel upload proof  One-second demonstration clip. Real video upload and Arc testnet launch; test tokens have no monetary value.\n$REELARC\n$0.0₅100\ncontent curve\n$1.00k mkt cap\n0% to graduation\nSell\nBuy\nReels\nEvery reel is a coin"
+    },
+    {
+      "width": 390,
+      "route": "/profile",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nYOUR PROFILE\nPost a photo. It becomes a coin. You earn its trading fees.\n1\nEvery post is a market\nA photo or a reel launches its own bonding curve on Arc, in one transaction.\n2\nCreators earn the fees\nYour coins' trading fees are yours to claim. Your profile adds them up, from the chain.\n3\n0.1 USDC to start\nGet testnet USDC while Juno's faucet is funded, or use Circle's faucet from your wallet. A photo launch costs about $0.06 in gas; buys need extra USDC.\n0xE0…3D54\nExample: a creator on Juno · 4 posts\nCreate wallet\nNo sign-up: a key made on this device, holding USDC on Arc.\nWhat runs on Arc"
+    },
+    {
+      "width": 390,
+      "route": "/arc",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nJuno on Arc\nArc testnet\nWhat runs on Arc.\nJuno is a social app where every post is a market. Arc is Circle’s chain for stablecoin finance: here is each piece of it Juno uses, what it does for you, what has been exercised on testnet, and whether this server has it configured.\nUSDC $1.000 · Chainlink\n01\nUSDC as gas\nCONFIGURED\nArc's native gas token is USDC.\nYour wallet holds one token. Every price, fee, balance and gas cost is in dollars — a buy's gas is under half a cent.\nEverywhere: the trade sheet, your wallet, every receipt. · USDC 0x3600…0000\nRAN ON TESTNET  Testnet launch, buys and sell paid gas in USDC; a buy cost about $0.004.\n02\nDeterministic finality\nCONFIGURED\nDeterministic finality: a transaction is final in the block that includes it (about every half second), no reorgs.\nA buy is final in about a second. The receipt leads with the measured time from submit to receipt, taken by Juno’s server.\nTrade receipt · landing figures · deterministic, ~0.5 s blocks\nRAN ON TESTNET  Blocks about every 0.5 s on testnet; measured 1.1–1.3 s from submit to receipt through Juno’s server.\n03\nMemo\nCONFIGURED\nArc's Memo contract makes a call as your wallet and logs a reference beside it.\nEach curve buy and sell is tagged with its post's id, so trades are findable by post on chain.\nTrade receipt: “Tagged with this post via Arc Memo” · 0x5294…e505\nRAN ON TESTNET  Testnet launch, buy, sell and relayed buy were Memo-tagged.\n04\nGasless buys (EIP-3009)\nCONFIGURED\nUSDC's receiveWithAuthorization: a signature moves the money, someone else pays the gas.\n“Pay with signature — no gas”: you sign, Juno's relayer submits the buy and pays the USDC gas.\nTrade sheet · relayer configured; requires USDC gas\nRAN ON TESTNET  One relayed buy on testnet: the buyer paid exactly the trade, no gas.\n05\nCircle Gateway\nCONFIGURED\nA unified USDC balance across chains, Circle attests a burn intent and Juno’s relayer mints the USDC on Arc.\nDeposit once on Base or Ethereum, spend it here; top up a buy from Gateway when Arc USDC is short.\nProfile → wallet · trade sheet “Top up from Gateway” · 7 source chains\nRAN ON TESTNET  Deposit from Arc exercised on testnet. Attestation and mint from another chain: not run on testnet.\n06\nCircle CCTP V2\nCONFIGURED\nNative USDC burned on one chain, minted on another.\nCreators withdraw trading fees straight to Base, Ethereum, Arbitrum, Solana… as native USDC.\nCreator earnings · coin page “Withdraw fees to…” · domain 26 · 11 destinations\nRAN ON TESTNET  A real burn through TokenMessengerV2 on testnet; the mint on the other chain was not completed.\n07\nChainlink CCIP Cross-Chain Tokens\nCONFIGURED\nA token pool per coin: burned on Arc, minted on the destination, rate-limited per lane.\nA graduated coin's creator makes it cross-chain in one transaction; holders send it to Base Sepolia or Ethereum Sepolia, fee in USDC. Arc's supply can never exceed the launch supply.\nGraduated coin page → Cross-chain · 4 lanes · router 0xdE4E…eab8\nFORK-PROVEN  Contracts are deployed on testnet; enabling and sending a coin is proven on a fork of Arc testnet, not run live (a coin must graduate first).\n08\nChainlink Data Feeds\nCONFIGURED\nDecentralised price feeds — BTC, ETH, SOL, LINK, gold, EUR, JPY… — read from Arc mainnet.\nTrackers follow a feed: the coin page shows NAV, what the curve implies, the premium and the band. USDC's own peg is shown beside prices.\nTrade → Trackers · tracker coin pages · the peg chip · 10 feeds on Arc mainnet\nDISPLAY-ONLY  Feeds exist on Arc mainnet only: on testnet, prices are mainnet reads for display and nothing is marked on chain.\nArc's explorer\nChainlink CCIP Explorer\nArc docs"
+    },
+    {
+      "width": 390,
+      "route": "/inbox",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nNotifications\nNo wallet yet\nNotifications are about your coins, your followers and your alerts. Create a wallet to have some.\nCreate wallet"
+    },
+    {
+      "width": 390,
+      "route": "/search",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nCancel\n7 markets. Type a ticker, a name or a handle."
+    },
+    {
+      "width": 390,
+      "route": "/coin/0x463aD0561C32F9f596dd77125d28EB0c8Efb7c5A",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\n$0.0₅100\n+0.00%\npast day\n1H\n1D\n1W\n1M\nAll\narcproof3d54\n0 holders\nReel upload proof\nOne-second demonstration clip. Real video upload and Arc testnet launch; test tokens have no monetary value.\n$\nREELARC\nCopy address\n$1.00k\nMarket cap\n$0\nTotal volume\n$0\nCreator rewards\nUSDC $1.000 · Chainlink\n$0\n$6.95k\nActivity\nHolders\nComments\nDetails\nNo trades yet.\nBuy"
+    },
+    {
+      "width": 390,
+      "route": "/trader/0xE088d6299CfC362426D643F28102936eC8df3D54",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\n@arcproof3d54\n4\nPosts\n0\nFollowers\n1\nFollowing\narcproof3d54\nCreator\n0xE088…3D54  ·  launched market cap $4.00k\nArc testnet demonstration creator. These are real launches using test tokens with no monetary value.\nFollow\nBuy $MOMENTARC\n$REELARC\nPosts\nReels\nCoins\nBacked\n▲ +0.0%\n▲ +0.0%\n▲ +0.0%\n▲ +0.0%"
+    },
+    {
+      "width": 390,
+      "route": "/post/b844897d5eb84eb9a74dc1061088b525",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nPost\narcproof3d54\n19m ago\nArc testnet demonstration: this post links to ONEARC, a real image launch. The browser bought with a gasless signature, bought normally, sold and claimed creator fees. Test tokens have no monetary value.\nOne balance\n$ONEARC\n$1.00k\n+0.00%\n0.00% to graduation\n1 reply\narcproof3d54\n5m\nDemonstration reply: all trades above are real Arc testnet transactions.\nReply"
+    },
+    {
+      "width": 390,
+      "route": "/post/999999",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nPost\nNo such post\nIt may have been removed, or the link is wrong.\nBack to the feed"
+    },
+    {
+      "width": 390,
+      "route": "/missing-route",
+      "overflow": false,
+      "brokenImages": [],
+      "errors": [],
+      "text": "Arc testnet · test USDC, no real money\nNothing here\nThis page does not exist. The feed does.\nGo to the feed"
+    },
+    {
+      "width": 1440,
+      "route": "signed-in interactions",
+      "checked": [
+        "coin Activity/Holders/Details/Comments",
+        "profile Posts/Reels/Coins/Backed/Wallet",
+        "wallet sub-tabs",
+        "search result navigation",
+        "Following/For you",
+        "create menu"
+      ]
+    },
+    {
+      "width": 390,
+      "route": "signed-in interactions",
+      "checked": [
+        "coin Activity/Holders/Details/Comments",
+        "profile Posts/Reels/Coins/Backed/Wallet",
+        "wallet sub-tabs",
+        "search result navigation",
+        "Following/For you",
+        "create menu"
+      ]
+    }
+  ]
+}

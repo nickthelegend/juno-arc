@@ -86,6 +86,7 @@ async function runFlow() {
     state.key=await page.evaluate(()=>localStorage.getItem('juno.arc.signer.v1'));
     assert.ok(state.key);state.wallet=privateKeyToAccount(state.key).address;save();
   }
+  if(!state.faucet){const faucet=await get('/api/juno/faucet');assert.ok(faucet.amount>=0.4&&faucet.amount<=0.5,'Fresh four-launch flow needs FAUCET_AMOUNT_USDC=0.5; the local wrapper sets it when starting the API.');}
   await fundRelayer();
   if(!state.faucet) {
     step='faucet';

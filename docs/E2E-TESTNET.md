@@ -1,3 +1,66 @@
+# Round 2 — real browser transactions on Arc testnet (2026-10-14)
+
+Playwright Chromium, a fresh browser-generated device wallet (0xE088d6299CfC362426D643F28102936eC8df3D54), real Arc testnet chain 5042002.
+The app signed the transactions and the API submitted them. No wallet/RPC mocks. Only the mainnet reference-price
+reads used a local Arc Foundry fork. No mainnet broadcasts.
+
+## Re-run
+
+See **LEAD: RUN THESE** in [JUDGE-REPORT.md](JUDGE-REPORT.md). The read-only suite is
+`node scripts/e2e-browser-juno-local.mjs`; live writes require `JUNO_BROWSER_WRITE=1` and `--flow`.
+Use a fresh `JUNO_BROWSER_RUN` name to create another run, and the matching name with
+`scripts/sweep-browser-juno.mjs` afterward. Keys remain gitignored under `.juno/browser-<run>/`.
+A saved completed run resumes without duplicating launches. Screens and receipts: [round2](screens/testnet/round2/).
+
+## Browser flow (Live testnet)
+
+- Create wallet in the composer; receive 0.50 testnet USDC through the real faucet.
+- Upload three PNGs, store metadata, and launch ONEARC, MADEARC and MOMENTARC, each with a 0.01 USDC first buy.
+- Upload the labelled one-second video test pattern, generate a poster, launch REELARC, and play it in Reels.
+- On ONEARC, buy 0.01 USDC gaslessly, buy 0.01 USDC with a signed transaction, sell the entire holding, and claim creator fees.
+- Profile name/bio save, comment, watch, alert create/remove, scheduled-buy create/pause/remove, post reply and following also passed.
+  Scheduled buys remained reminders requiring a signature; no autonomous spend. The linked launch announcement was seeded via the posts API.
+
+| Browser step | Explorer receipt | Submit to receipt (ms) | Gas (USDC) | Status |
+|---|---|---:|---:|---|
+| faucet | [0x4e6dff3d…](https://explorer.testnet.arc.io/tx/0x4e6dff3d30091f19ceb50c18fe18a398c5bce49a101ab30a4a5928058fcf90a8) | 1157 | 0.000525 | success |
+| launch ONEARC | [0x47378fb3…](https://explorer.testnet.arc.io/tx/0x47378fb335e54ca37ed01bd712819a6ab885a479d38df2f67974e78d916d2fa5) | 1203 | 0.00139465 | success |
+| launch ONEARC | [0x6fe62fe8…](https://explorer.testnet.arc.io/tx/0x6fe62fe88f4bab8a7f757eb784299165c00aac9d2aa77b737d4f70f49bc626be) | 1375 | 0.062464825 | success |
+| launch MADEARC | [0x49d9a1c8…](https://explorer.testnet.arc.io/tx/0x49d9a1c8adb69cfee7712a4a8cfe63f5886907dca827675c8a62a5682368c123) | 1179 | 0.062037925 | success |
+| launch MOMENTARC | [0xf9365415…](https://explorer.testnet.arc.io/tx/0xf936541551e8a51fa0229982768cd3e68796010d47be3927ddaa62837b3e458f) | 1173 | 0.062040025 | success |
+| gasless buy | [0x380dea93…](https://explorer.testnet.arc.io/tx/0x380dea935ef4c7c3efa734023a22a689ddaeee4287364a6d68d79cfd87bf4b73) | 1164 | 0.004496225 | success |
+| signed buy | [0xe36c0b43…](https://explorer.testnet.arc.io/tx/0xe36c0b434c9618dd8a6e6753ab1f428393048a2da2a3cde3174d6cda9eef6ffa) | 1152 | 0.003578175 | success |
+| sell | [0x5b9f47ea…](https://explorer.testnet.arc.io/tx/0x5b9f47ea19ed3fc473a1593efc95472149b849ed0937cfce9a23bea08b2a1de8) | 1158 | 0.00411005 | success |
+| creator fee claim | [0xb76baa28…](https://explorer.testnet.arc.io/tx/0xb76baa2850c9480ac30efd9a4f9431f7ba152038b5c74e240a816d7e738e99a7) | 1153 | 0.00199675 | success |
+| launch REELARC | [0xeb29bc09…](https://explorer.testnet.arc.io/tx/0xeb29bc0931e6205ee2dac5d9b55eaa772fcc9d630070fa2824991b74b46373bd) | 1168 | 0.058566375 | success |
+
+Gasless proof: buyer balance **0.282062575 → 0.272062575 USDC**.
+Exactly 0.01 USDC spent; the relayer paid the transaction gas.
+
+## Budget and sweep
+
+- Shared-deployer funding: 0.60 USDC + 0.20 USDC faucet reserve = **0.8 USDC**, plus **0.000945 USDC** gas; below the 1 USDC cap.
+- Browser wallet returned **0.222496225 USDC** to the deployer: [sweep receipt](https://explorer.testnet.arc.io/tx/0x5cb8a00d7fd58510e23b13910342f4490ec51b6c6c40b60c5435403a0b78aeba).
+- Remaining wallet dust: **0.000105 USDC**, below the cost of another transfer; throwaway key is saved.
+- Net deployer debit: **0.578448775 USDC**. Relayer retained **0.314134275 USDC** for cold-judge faucet/gasless use, including its pre-existing balance.
+- Funding receipts: [initial 0.60 USDC](https://explorer.testnet.arc.io/tx/0x7e70b295f17a96055ead9457082d42ac80203305bf75e8c8d1c0000e33c48a66), [0.20 USDC reserve](https://explorer.testnet.arc.io/tx/0x71a3129563d3a049818bce85e41c1bc05f2b248f92487659bbaa8452e042db5d).
+
+## Storage and screens
+
+Demo media uses the existing Mongo database in this rehearsal. Metadata and image URLs returned 200 after a full API
+process restart; the image byte-range request returned 206. On Vercel this backend is automatic. Uploads are limited to 4MB.
+Demo metadata is app-hosted HTTP(S), not an unpinned IPFS claim. These local test launches retain local tokenURI origins;
+a hosted launch must set the public JUNO_API_URL first. No public Vercel deployment was tested in this pass.
+
+All route families at 1440 and 390 px, plus signed-in coin/profile/wallet tabs and search navigation, are recorded in
+[routes.json](screens/testnet/round2/routes.json). Browser screenshots cover the launch, quote/receipt, social and read-only paths.
+Graduation and CCIP delivery: **Fork / Not run live**. CCTP destination mint and Gateway mint: **Not run** in round 2.
+Trackers: **display-only on testnet**; reference prices read via the local mainnet fork.
+
+---
+
+## Archived round-1 evidence
+
 # Juno on Arc testnet: live end-to-end run
 
 Real transactions on **Arc testnet (chain 5042002)**, sent through the Juno API (`scripts/e2e-testnet.mjs`) against

@@ -1,3 +1,89 @@
+# Product quality round 2 — 2026-10-14
+
+## LEAD: RUN THESE
+
+```sh
+npm run build && (cd juno-expo && EXPO_PUBLIC_API_URL=http://127.0.0.1:8911 npm run export:web)
+node scripts/e2e-browser-juno-local.mjs
+# Explicit opt-in for a fresh funded browser run (0.60 USDC, state/keys stay gitignored):
+JUNO_BROWSER_RUN=round3 JUNO_BROWSER_WRITE=1 node scripts/e2e-browser-juno-local.mjs --flow
+JUNO_BROWSER_RUN=round3 JUNO_BROWSER_WRITE=1 node scripts/sweep-browser-juno.mjs
+# Re-list the four existing real launches on a fresh API; no blockchain writes:
+JUNO_API_URL=http://127.0.0.1:8911 node scripts/seed-testnet-feed.mjs
+```
+
+The local runner uses the configured Postgres database and Mongo, starts missing services on 8910–8913,
+and stops only processes it starts. It requires the existing local dependencies/builds and Circle Arc Foundry.
+Do not run it alongside another fork/dev server. Application transactions use **live Arc testnet**; Chainlink
+reference prices in this run were read through a **local Arc mainnet fork**. No mainnet broadcasts.
+
+## Scores / 10
+
+Round-1 awarded 8 in all four criteria. Round-2's *before* reassesses the cold-start product and hosting restrictions.
+
+| Criterion | Round-2 before → after | Reason |
+|---|---|---|
+| Relevance to Arc | 8 → 8 | USDC quotes/gas, Memo and signature buys are product features, exercised live. |
+| Technical credibility | 8 → 9 | Browser-signed launch/buy/sell/claim receipts, exact gasless balance proof, durable media after process restart, portable receipt-verified seeds. |
+| Build quality | 6 → 8 | Fixed cold-start storage visibility, wallet/funding detours, inaccessible fields, testnet sizing, misleading copy and navigation. Every route at 1440/390; public Vercel deployment is still a hosting handoff. |
+| Worth taking further | 7 → 8 | The first session now works and has real content. Mainnet rollout, funding controls and interoperability still need work. |
+| Cold-judge usability (extra) | 5 → 8 | Four new real launches, image/video uploads, clear testnet provenance, prominent gasless choice and one-command checks. A public URL is still needed. |
+
+## Findings and fixes
+
+| Severity | Before | After |
+|---|---|---|
+| P0 | Disk-only demo media is lost or unwritable on Vercel. | Reuses the existing Mongo DB on Vercel, with local opt-in. Uploaded metadata/image survived API process restart; byte ranges returned 206. No paid resources. |
+| P1 | Unpinned `ipfs://` token metadata cannot resolve outside the app. | Demo uploads return their actual content-addressed HTTP(S) URL; Pinata mode retains IPFS. Set the public `JUNO_API_URL` before hosted launches. |
+| P1 | Cold `/post` often omitted the demo-storage notice because config loading did not re-render it. | Reactive config read; notice visible on direct visits, before upload. |
+| P1 | 25MB picker promise exceeds Vercel function request limits. | Client/server share a 4MB limit with a useful rejection message. |
+| P1 | New creator had to leave the composer to create/fund a wallet. | Inline Create wallet / Get testnet USDC actions; tested in the browser. |
+| P1 | First-buy presets were $1/$5/$10 against a tiny testnet faucet. | Testnet presets None/$0.01/$0.05/$0.10; real launches used $0.01. |
+| P1 | Name/ticker/caption had visual text but no accessible input names. | Explicit labels, used by the browser flow. |
+| P1 | Gasless choice sat below the long quote breakdown. | Visible near the top; receipt shows gas to buyer $0. Buyer balance changed by exactly 0.01 USDC. |
+| P1 | Tracker intro claimed on-chain marking on testnet; feed board said live. | Display-only labels in board, intro and composer; no on-chain NAV/band-enforcement promise. |
+| P1 | A direct route visit could look like mainnet. | Persistent Arc testnet / no-real-money strip across deep links. |
+| P2 | Trade opened on an empty tracker list. | Opens on the real post markets; Trackers remains explicitly display-only. |
+| P2 | Feed had only three older test posts; Reels was empty without an action. | Three photo launches plus one labelled test-pattern reel, all on-chain; empty Reels also has a working Post a reel CTA. |
+| P2 | Search Cancel did nothing on a cold deep link; failed reads looked like zero markets. | Cancel returns to feed, and failed reads show Retry. |
+| P2 | Creator profile called aggregate market cap “coins worth”. | Explicit “launched market cap”; not wallet wealth or realizable proceeds. |
+| P2 | Relayer configuration claimed “funded”; faucet promised enough money unconditionally. | Configured/requires gas wording and conditional faucet copy. |
+
+No simulated transactions, fake holders/volume, or invented prices were introduced. The PNG demonstration cards and
+one-second video test pattern are **labelled demonstration media**, attached to real contracts. Existing unit-test mocks
+remain confined to tests. Unavailable claims/withdrawals are disabled with their balance state, not presented as working stubs.
+
+## Verification and evidence
+
+- Core flow: browser wallet creation → faucet → upload/metadata → three photo launches with first buys, a reel launch,
+  signature buy, signed buy, sell all ONEARC holdings, creator fee claim. All receipts succeeded on chain 5042002.
+- Reel: actual video upload, server poster generation, browser playback (`readyState >= 2`).
+- Social: profile name/bio save, comment and linked launch announcement; watch, alert creation/removal, schedule creation/pause/removal, reply and follow also passed.
+- Read-only browser suite: all route families, including valid/invalid post, unknown route, tracker/reel composer, trader,
+  search, inbox, Arc evidence page; desktop 1440 and mobile 390. 36 route/viewport checks plus signed-in tabs passed; checks overflow, browser/console errors, unexpected HTTP errors, broken images and stale-chain copy.
+- API/server: 407 unit tests, 11 integration tests passed / 1 skipped. Contracts: 85 passed / 2 fork-gated skipped.
+- Root and Expo typechecks, Biome lint, Next production build and Expo web export passed. Fresh local runner startup/cleanup passed. Mechanical design detector: no findings on changed primary surfaces.
+- Screens and machine-readable receipts: [round2 evidence](screens/testnet/round2/), [transactions](screens/testnet/round2/transactions.json), [routes](screens/testnet/round2/routes.json).
+- [E2E-TESTNET.md](E2E-TESTNET.md) records explorer links and budget. Throwaway key and recovery state remain in gitignored `.juno/browser-round2/`.
+
+## Still weak / explicitly not claimed
+
+1. **Vercel hosting not run in this pass.** The deleted Railway URLs are not proof of a live app. This pass used the local web
+   export and API against real testnet. The hosting lead must supply an isolated managed Postgres DB/schema and Mongo DB,
+   deploy the API and Expo export to Vercel, and run the included receipt-verified seed restore. No always-on indexer is needed
+   for the tested flow. No Railway or other paid resources were created.
+2. Local test launches necessarily have local API tokenURI origins. Their images are recoverable through the fixture/seed script,
+   but their immutable tokenURI cannot be rewritten for a hosted explorer. Set the public API origin before new hosted launches;
+   Pinata is optional, demo storage remains labelled.
+3. Graduation and CCIP delivery remain **Fork / Not run live**; CCTP destination mint and Gateway cross-chain mint remain **Not run**.
+   Trackers have no registered testnet feeds and cannot enforce the mainnet price on chain.
+4. Device-key wallets and process-local faucet/rate limits are testnet conveniences, not production custody or abuse protection.
+   Social attribution is still permissive; this round is not a security audit. The seed media is demonstration content, not an organic community.
+
+---
+
+## Archived round-1 report
+
 # Judge report: Juno on Arc
 
 Strict pass as an Arc Microgrants judge (relevance to Arc, technical credibility, quality of what was built, worth taking further),

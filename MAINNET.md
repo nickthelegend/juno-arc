@@ -69,7 +69,9 @@ as part of a test.**
 
 ## 5. Hosting (lead)
 
-API (Railway or Vercel, Node 22), env:
+API: Vercel Next.js functions, using existing managed Postgres/Mongo credentials. Frontend: Vercel Expo web export.
+Do not provision Railway or paid resources. For a local demonstration, run databases/API on demand with the browser runner.
+Mainnet remains a separate, explicitly authorized rollout; this pass used testnet only. Environment:
 
 | Var | Value |
 |---|---|
@@ -79,14 +81,15 @@ API (Railway or Vercel, Node 22), env:
 | `JUNO_DEPLOYMENT_FILE` | `deployments/arc-mainnet.json` (default) |
 | `JUNO_RELAYER_PRIVATE_KEY` | a dedicated hot key with a few USDC (gasless buys, Gateway mints) — **not** the deployer |
 | `DATABASE_URL`, `MONGODB_URI`, `MONGODB_DB` | Postgres 16 and Mongo 7 |
-| `PINATA_JWT`, `NEXT_PUBLIC_IPFS_GATEWAY` | media and token metadata |
+| `PINATA_JWT`, `NEXT_PUBLIC_IPFS_GATEWAY` | optional IPFS pinning; otherwise Vercel uses the existing Mongo database for labelled demo media (4MB limit) |
+| `JUNO_API_URL` | canonical public API origin, embedded in demo token metadata; set before launching |
 | `JUNO_APP_URL`, `NEXT_PUBLIC_SITE_URL` | the web app's origin |
 | `ENVIO_GRAPHQL_URL` | optional |
 | `FAUCET_AMOUNT_USDC` | leave unset on mainnet (the faucet is testnet-only) |
 | `CIRCLE_GATEWAY_API_URL`, `CIRCLE_IRIS_API_URL` | optional overrides; mainnet defaults are Circle's production APIs |
 
 Then `npm run db:migrate`. Web app: `cd juno-expo && EXPO_PUBLIC_API_URL=https://<api> npx expo export --platform web`,
-deploy `juno-expo/dist` as a static site (SPA fallback to `index.html`). No
+deploy `juno-expo/dist` to Vercel as a static site (SPA fallback to `index.html`). No
 keeper or cron is required: graduation is one permissionless transaction —
 the coin page shows a **Graduate** button to anyone once a curve is full
 (`POST /api/juno/tx/graduate` builds it; `npm run juno:graduate` from a
