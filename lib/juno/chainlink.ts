@@ -2,7 +2,7 @@ import { createPublicClient, http, keccak256, parseAbi, stringToBytes, type Addr
 
 import { junoTrackersAbi } from "./abi";
 import { publicClient } from "./client";
-import { arcMainnetChain, mainnetRpcEndpoint, trackersAddress } from "./network";
+import { arcMainnetChain, chainId, mainnetRpcEndpoint, trackersAddress } from "./network";
 import { ttlCache, withRetry } from "./rpc";
 
 /**
@@ -112,7 +112,7 @@ export function readingFrom(
 
 let mainnet: PublicClient | null = null;
 function mainnetClient(): PublicClient {
-  if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:|\/|$)/.test(mainnetRpcEndpoint())) throw Error("Reference feeds require a local Arc mainnet fork; unavailable on hosted testnet");
+  if (chainId() !== 5042 && !/^https?:\/\/(127\.0\.0\.1|localhost)(:|\/|$)/.test(mainnetRpcEndpoint())) throw Error("Reference feeds require a local Arc mainnet fork; unavailable on hosted testnet");
   mainnet ??= createPublicClient({
     chain: arcMainnetChain,
     transport: http(mainnetRpcEndpoint(), { retryCount: 0, timeout: 15_000 }),

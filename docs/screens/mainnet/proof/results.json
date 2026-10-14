@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-14T20:43:17.412Z",
+  "results": [
+    {
+      "pegReadable": true,
+      "stale": false
+    },
+    {
+      "videoCoin": true,
+      "mediaStatus": 200
+    },
+    {
+      "consoleErrors": [],
+      "httpErrors": [],
+      "ok": true
+    }
+  ]
+}

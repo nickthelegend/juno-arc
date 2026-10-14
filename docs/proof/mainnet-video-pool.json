@@ -1,0 +1,11 @@
+{
+  "token": "0x82a82fA14e0a15C62901081E8d188220E1A4bC5C",
+  "createTx": "0x84c87baf30a149681cef70ee99ea0c46a3cdd672c7f735ba695bd551b02ff7ac",
+  "name": "Own the moment",
+  "symbol": "ARCVID",
+  "description": "A tiny real market on Arc mainnet. Demonstration artwork; no investment promise.",
+  "curvePreset": "content",
+  "format": "post",
+  "mediaUrl": "https://juno-arc-api.vercel.app/proof/mainnet-video.png",
+  "mediaMime": "image/png"
+}
