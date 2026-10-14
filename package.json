@@ -30,7 +30,8 @@
     "ccip:remote": "dotenv -e .env.local -- tsx scripts/ccip-remote.ts",
     "ccip:send": "dotenv -e .env.local -- tsx scripts/ccip-send.ts",
     "ccip:status": "dotenv -e .env.local -- tsx scripts/ccip-status.ts",
-    "demo:local": "bash scripts/local-demo.sh"
+    "demo:local": "bash scripts/local-demo.sh",
+    "dryrun:mainnet": "node --import ./scripts/dryrun-loader.mjs scripts/dryrun-mainnet.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.9",

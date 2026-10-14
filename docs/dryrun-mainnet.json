@@ -1,0 +1,314 @@
+{
+  "project": "juno",
+  "mode": "Fork",
+  "timestamp": "2026-10-14T17:23:10.369Z",
+  "chainId": 5042,
+  "remote": "https://rpc.mainnet.arc.io",
+  "transactions": [
+    {
+      "purpose": "approve 0x3600000000000000000000000000000000000000 to 0x52D364dF075CEC807f854d2f7D7ff8485dedf641",
+      "to": "0x3600000000000000000000000000000000000000",
+      "selector": "0x095ea7b3",
+      "from": "0xA62cfadB6cC63A2cDedbD8402892612B4C4e5A11",
+      "nonce": 0,
+      "chainId": 5042,
+      "signedHash": "0xc1cf52fedcaed89fb3f71788df3179b1c54bb33c7f8df5e937c89d67ab4ac9a9",
+      "calldataHash": "0xabcdab6c66311914e4bd1298a115317300b9051d24855668d330d0875f80aa90",
+      "signedGas": "76984",
+      "decodedVerified": true,
+      "simulatedSignedFields": true,
+      "call": "ok",
+      "estimate": "ok",
+      "gas": "55820",
+      "usdcFeeAtBaseFee": "0.0011164",
+      "result": "ok",
+      "mode": "Fork",
+      "localGasUsed": "55438",
+      "localReceiptStatus": "success"
+    },
+    {
+      "purpose": "launch photo with 0.1 USDC",
+      "to": "0x5294E9927c3306DcBaDb03fe70b92e01cCede505",
+      "selector": "0xc3b2c4f8",
+      "from": "0xA62cfadB6cC63A2cDedbD8402892612B4C4e5A11",
+      "nonce": 1,
+      "chainId": 5042,
+      "signedHash": "0x988a29bc16bf0b58ecf43ee4fe359004ff8a5de70dd59d6670f9c7b104f6f518",
+      "calldataHash": "0xfbd1f39e10996905181b2b427a80f4bfbe060f3d7c207f4ab9cc6c83d6bf8050",
+      "signedGas": "3088819",
+      "decodedVerified": true,
+      "simulatedSignedFields": true,
+      "call": "ok",
+      "estimate": "ok",
+      "gas": "2565683",
+      "usdcFeeAtBaseFee": "0.05131366",
+      "result": "ok",
+      "mode": "Fork",
+      "localGasUsed": "2492336",
+      "localReceiptStatus": "success"
+    },
+    {
+      "purpose": "scroll buy 0.1 USDC",
+      "to": "0x5294E9927c3306DcBaDb03fe70b92e01cCede505",
+      "selector": "0xc3b2c4f8",
+      "from": "0xA62cfadB6cC63A2cDedbD8402892612B4C4e5A11",
+      "nonce": 2,
+      "chainId": 5042,
+      "signedHash": "0xd52d0279cb9f122ad7ba9ea597f2c3d4680719efd50c4e4fda0329dd211fc2b2",
+      "calldataHash": "0x30017122e01b00939eadf60a2fcfa63c8c64a2cdfa0c2cbdcb872af942885057",
+      "signedGas": "180065",
+      "decodedVerified": true,
+      "simulatedSignedFields": true,
+      "call": "ok",
+      "estimate": "ok",
+      "gas": "141721",
+      "usdcFeeAtBaseFee": "0.00283442",
+      "result": "ok",
+      "mode": "Fork",
+      "localGasUsed": "141721",
+      "localReceiptStatus": "success"
+    },
+    {
+      "purpose": "gasless second buyer 0.1 USDC",
+      "to": "0x5294E9927c3306DcBaDb03fe70b92e01cCede505",
+      "selector": "0xc3b2c4f8",
+      "from": "0xF142b9C793ec7c6b047591B543159a4d0C2Aed06",
+      "nonce": 0,
+      "chainId": 5042,
+      "signedHash": "0x6bf8e1e39e6ada15792ad82457226c4d87f1ebeb1ff61e76f53e9db4eccbf297",
+      "calldataHash": "0x93428e8db94a7c17a82902beba4c423a82659d7523e51afe554a3f97bbd4aaec",
+      "signedGas": "245804",
+      "decodedVerified": true,
+      "simulatedSignedFields": true,
+      "call": "ok",
+      "estimate": "ok",
+      "gas": "196504",
+      "usdcFeeAtBaseFee": "0.00393008",
+      "result": "ok",
+      "mode": "Fork",
+      "localGasUsed": "196263",
+      "localReceiptStatus": "success"
+    },
+    {
+      "purpose": "approve 0x33C29f108DD075eE530ea1332209D9De4d862384 to 0x52D364dF075CEC807f854d2f7D7ff8485dedf641",
+      "to": "0x33C29f108DD075eE530ea1332209D9De4d862384",
+      "selector": "0x095ea7b3",
+      "from": "0xA62cfadB6cC63A2cDedbD8402892612B4C4e5A11",
+      "nonce": 3,
+      "chainId": 5042,
+      "signedHash": "0x9fc28f12a1e764d193c5084e96c5219dc162d24ca657eaf74e3cc81356ec3830",
+      "calldataHash": "0x732832e1ebf8344f9cff0620492d5a36134f113e91db9e474727cd20bdd46f16",
+      "signedGas": "65329",
+      "decodedVerified": true,
+      "simulatedSignedFields": true,
+      "call": "ok",
+      "estimate": "ok",
+      "gas": "46108",
+      "usdcFeeAtBaseFee": "0.00092216",
+      "result": "ok",
+      "mode": "Fork",
+      "localGasUsed": "46108",
+      "localReceiptStatus": "success"
+    },
+    {
+      "purpose": "sell all buyer",
+      "to": "0x5294E9927c3306DcBaDb03fe70b92e01cCede505",
+      "selector": "0xc3b2c4f8",
+      "from": "0xA62cfadB6cC63A2cDedbD8402892612B4C4e5A11",
+      "nonce": 4,
+      "chainId": 5042,
+      "signedHash": "0xc7384dc54808a4392ba651d54bd35fd163698414b3fb51ca901edf79fe09e31c",
+      "calldataHash": "0x3872d580be11a78b6842a3ca8433ac069aec7f1c80b701203edf29718b6620e1",
+      "signedGas": "211427",
+      "decodedVerified": true,
+      "simulatedSignedFields": true,
+      "call": "ok",
+      "estimate": "ok",
+      "gas": "167856",
+      "usdcFeeAtBaseFee": "0.00335712",
+      "result": "ok",
+      "mode": "Fork",
+      "localGasUsed": "163056",
+      "localReceiptStatus": "success"
+    },
+    {
+      "purpose": "approve 0x33C29f108DD075eE530ea1332209D9De4d862384 to 0x52D364dF075CEC807f854d2f7D7ff8485dedf641",
+      "to": "0x33C29f108DD075eE530ea1332209D9De4d862384",
+      "selector": "0x095ea7b3",
+      "from": "0xc20831e86f4ae1Efd8427AEe85729e82f065320a",
+      "nonce": 0,
+      "chainId": 5042,
+      "signedHash": "0xa4256f4ca80523905bc121da4ac466358d008de390d2914abbd3f5d169d4e9d9",
+      "calldataHash": "0x39611336994386c20a8eb383d2a16d2053e5e4af8e5103466c3234587f3d5b77",
+      "signedGas": "65315",
+      "decodedVerified": true,
+      "simulatedSignedFields": true,
+      "call": "ok",
+      "estimate": "ok",
+      "gas": "46096",
+      "usdcFeeAtBaseFee": "0.00092192",
+      "result": "ok",
+      "mode": "Fork",
+      "localGasUsed": "46096",
+      "localReceiptStatus": "success"
+    },
+    {
+      "purpose": "sell all buyer2",
+      "to": "0x5294E9927c3306DcBaDb03fe70b92e01cCede505",
+      "selector": "0xc3b2c4f8",
+      "from": "0xc20831e86f4ae1Efd8427AEe85729e82f065320a",
+      "nonce": 1,
+      "chainId": 5042,
+      "signedHash": "0x11e1f576181be7c891f261f442f8b2c45e7f5bee50ebe00e85ccbde09c22b7b0",
+      "calldataHash": "0xb1f615eb35fb5a00d23adf7d6237e3be7b32a840feef9831fb8b4abbffd2139e",
+      "signedGas": "211427",
+      "decodedVerified": true,
+      "simulatedSignedFields": true,
+      "call": "ok",
+      "estimate": "ok",
+      "gas": "167856",
+      "usdcFeeAtBaseFee": "0.00335712",
+      "result": "ok",
+      "mode": "Fork",
+      "localGasUsed": "163056",
+      "localReceiptStatus": "success"
+    },
+    {
+      "purpose": "creator claims fees",
+      "to": "0x52D364dF075CEC807f854d2f7D7ff8485dedf641",
+      "selector": "0xb947efcb",
+      "from": "0xA62cfadB6cC63A2cDedbD8402892612B4C4e5A11",
+      "nonce": 5,
+      "chainId": 5042,
+      "signedHash": "0xe101f0416f92d405d9ad15284cc1c9d129a14ff2a896a36ce18e372a23ef97ab",
+      "calldataHash": "0x77f02fa6a7ea8b8535d8540cb1f0ce1c42b9d430abe051cdccfa159b401e609f",
+      "signedGas": "111604",
+      "decodedVerified": true,
+      "simulatedSignedFields": true,
+      "call": "ok",
+      "estimate": "ok",
+      "gas": "84670",
+      "usdcFeeAtBaseFee": "0.0016934",
+      "result": "ok",
+      "mode": "Fork",
+      "localGasUsed": "79870",
+      "localReceiptStatus": "success"
+    }
+  ],
+  "notes": {
+    "forkReason": "Sequential dependent flows require persisted approvals, deposits, new token addresses and spent authorization nonces. Only signer balances are overridden; contract code, oracle and pool state are unchanged.",
+    "feedPrices": [
+      {
+        "id": "0xee62665949c883f9e0f6f002eac32e00bd59dfe6c34e92a91c37d6a8322d6489",
+        "price": [
+          "81992329736970000000000",
+          "1791997523"
+        ]
+      },
+      {
+        "id": "0x0b43555ace6b39aae1b894097d0a9fc17f504c62fea598fa206cc6f5088e6e45",
+        "price": [
+          "2442603029580000000000",
+          "1791996124"
+        ]
+      },
+      {
+        "id": "0x2b1b43ec7f6691d6bf679978bab5c093fa45ee74c0baac6cc75649dc59cc21d3",
+        "price": [
+          "105256230270000000000",
+          "1791997293"
+        ]
+      },
+      {
+        "id": "0x062e57bcf79ec1579df888e32a3f07cc899dc60a904a55e6d5b9d83e5bfb7564",
+        "price": [
+          "12562340700000000000",
+          "1791996704"
+        ]
+      },
+      {
+        "id": "0x25864cb48e1a7f80db71ea933b81816d71f4f4a71101304b62d55d648fb7f5af",
+        "price": [
+          "4096425823090000000000",
+          "1791981852"
+        ]
+      },
+      {
+        "id": "0xa9226449042e36bf6865099eec57482aa55e3ad026c315a0e4a692b776c318ca",
+        "price": [
+          "1114570000000000000",
+          "1791981350"
+        ]
+      },
+      {
+        "id": "0xf9e627ddbdb060c1c9126daeb9addcd1d1ce7d49dbb540e2677f1c572bc8d195",
+        "price": [
+          "6299190000000000",
+          "1791981231"
+        ]
+      },
+      {
+        "id": "0xf6993c04cda85f392b2692bf0e068a0207c9693bab10d3ba31c84e9430ef718a",
+        "price": [
+          "9926753760000000000",
+          "1791997768"
+        ]
+      },
+      {
+        "id": "0xcee9ef626e0e51af00f547361de8015348d47d9189f1c12c69297dbe06e98bb5",
+        "price": [
+          "1333230500000000000",
+          "1791996086"
+        ]
+      },
+      {
+        "id": "0x160a9630e8b9343f7fccdecf67bf1a59fe8d2b58e4e8d3246a74f5cd6d6fed5d",
+        "price": [
+          "730079256750000000000",
+          "1791990706"
+        ]
+      }
+    ],
+    "positionBeforeSell": {
+      "pool": {
+        "creator": "0xA62cfadB6cC63A2cDedbD8402892612B4C4e5A11",
+        "launchedAt": 1791998620,
+        "preset": 0,
+        "complete": false,
+        "graduated": false,
+        "quote": "0x3600000000000000000000000000000000000000",
+        "startFeeBps": 900,
+        "endFeeBps": 100,
+        "feeDecaySeconds": 600,
+        "protocolShareBps": 2000,
+        "feeDecayWad": "35957993026439420",
+        "sqrtPriceX96": "14273248805433895693",
+        "sqrtStartPriceX96": "13722720286502979760",
+        "venue": "0x78ba51a9F1f2a153D0C856931bfa5b01CE8aB5C5",
+        "graduator": "0x524874735655963a82F160Cb741153F50CdebcF6",
+        "baseReserve": "645357967278722264602949088",
+        "quoteReserve": "273000",
+        "migrationBase": "335893049999999998896574134",
+        "migrationQuoteThreshold": "100767915",
+        "leftover": "9999975658524376250990800",
+        "creatorFees": "21600",
+        "creatorFeesClaimed": "0"
+      },
+      "token": "0x33C29f108DD075eE530ea1332209D9De4d862384"
+    }
+  },
+  "verdict": "PASS",
+  "forkBlock": "25957017",
+  "forkBlockHash": "0x0d813a4771056bce337b0859807a3e698763e12cbf9520e0bd465e2fb63ad5de",
+  "baseFeePerGas": "20000000000",
+  "remoteOverrideProbe": [
+    {
+      "status": "ok",
+      "value": "0x0000000000000000000000000000000000000000000000000000000000000001"
+    },
+    {
+      "status": "ok",
+      "value": "0xdb8d"
+    }
+  ]
+}
