@@ -190,6 +190,7 @@ export function CommentsSheet({
         <Field>
           <TextInput
             value={draft}
+            accessibilityLabel="Comment"
             onChangeText={setDraft}
             placeholder="Add a comment..."
             placeholderTextColor={theme.colors.faint}

@@ -382,6 +382,7 @@ export function AlertSheet({
           <FieldUnit>{coin.marketCapCurrency === "USD" ? "$" : coin.marketCapCurrency}</FieldUnit>
           <TextInput
             value={value}
+            accessibilityLabel="Alert target price"
             onChangeText={(next) => setValue(decimalOnly(next))}
             keyboardType="decimal-pad"
             placeholder="0.00"
@@ -521,6 +522,7 @@ export function PlanSheet({
           <FieldUnit>{coin.quote.symbol}</FieldUnit>
           <TextInput
             value={amount}
+            accessibilityLabel="Scheduled buy amount in USDC"
             onChangeText={(next) => setAmount(decimalOnly(next))}
             keyboardType="decimal-pad"
             placeholder="0.00"
@@ -546,6 +548,7 @@ export function PlanSheet({
             <FieldUnit>{coin.quote.symbol}</FieldUnit>
             <TextInput
               value={target}
+              accessibilityLabel="Optional goal in USDC"
               onChangeText={(next) => setTarget(decimalOnly(next))}
               keyboardType="decimal-pad"
               placeholder="No goal"

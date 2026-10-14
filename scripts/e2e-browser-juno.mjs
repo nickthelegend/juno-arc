@@ -37,6 +37,9 @@ page.setDefaultTimeout(45000);
 let step = 'open';
 const errors = [];
 page.on('pageerror', e => errors.push(e.message));
+const expected404 = () => new URL(page.url()).pathname === '/post/999999';
+page.on('console', m => { if(m.type()==='error' && !(expected404() && m.text().includes('404')))errors.push(m.text()); });
+page.on('response', r => {if(r.status()>=400 && !(r.status()===404 && expected404()))errors.push(r.status()+' '+new URL(r.url()).pathname);});
 const pending = new Set();
 page.on('response', r => {
   if (!flow || !r.url().includes('/api/juno/')) return;
@@ -64,6 +67,7 @@ async function fundRelayer() {
   assert.equal(deployer.address.toLowerCase(),'0x0648adf1967692a0c991d7715b0b588452321fbd');
   const to=config.arc.relayer.address;
   assert.ok(to);
+  assert.equal(privateKeyToAccount(process.env.JUNO_RELAYER_PRIVATE_KEY).address.toLowerCase(),to.toLowerCase(),'Only fund this server’s configured relayer');
   const lock=resolve('../.deployer/lock');
   while(true) {try{mkdirSync(lock);break;}catch{await new Promise(r=>setTimeout(r,3000));}}
   try {
@@ -185,30 +189,33 @@ async function runFlow() {
   if(!state.extras) {
     await open('/coin/'+token);await page.getByRole('button',{name:'Details',exact:true}).click();
     const watch=page.getByLabel('Watch',{exact:true});if(await watch.isVisible())await watch.click();
-    await page.getByRole('button',{name:/Alert me at a price/}).click();
-    await page.getByPlaceholder('0.00',{exact:true}).fill('0.000002');await waitButton('Set alert');
+    await page.getByRole('button',{name:/Alert (?:me at a price|at)/}).click();
+    await page.getByPlaceholder('0.00',{exact:true}).last().fill('0.000002');await waitButton('Set alert');
     await page.getByRole('button',{name:/Alert at/}).waitFor();
     await page.getByRole('button',{name:'Buy this every week',exact:true}).click();
-    await page.getByPlaceholder('0.00',{exact:true}).fill('0.01');
+    await page.getByPlaceholder('0.00',{exact:true}).last().fill('0.01');
     await page.getByPlaceholder('No goal',{exact:true}).fill('0.05');await waitButton('Start');
-    await page.getByLabel('Pause 0.01 USDC weekly',{exact:true}).click();
-    await page.getByLabel('Resume 0.01 USDC weekly',{exact:true}).waitFor();
+    await page.getByLabel(/^Pause .* USDC weekly$/).click();
+    await page.getByLabel(/^Resume .* USDC weekly$/).waitFor();
     await screenshot('alert-and-paused-plan');
-    await page.getByLabel('Remove 0.01 USDC weekly',{exact:true}).click();
+    await page.getByLabel(/^Remove .* USDC weekly$/).click();
     await page.getByRole('button',{name:'Buy this every week',exact:true}).waitFor();
     await page.getByRole('button',{name:/Alert at/}).click();await page.getByLabel('Remove the alert',{exact:true}).click();
-    await page.getByRole('button',{name:/Alert me at a price/}).waitFor();
+    await page.getByRole('button',{name:/Alert (?:me at a price|at)/}).waitFor();
     await open('/post/'+state.postId);
     const reply='Demonstration reply: all trades above are real Arc testnet transactions.';
-    await page.getByPlaceholder('Write a reply…').fill(reply);await waitButton('Reply');
-    await page.getByText(reply,{exact:true}).waitFor();await screenshot('post-reply');
-    await open('/social');const follow=page.getByRole('button',{name:'Follow',exact:true}).first();await follow.click();
+    if(!await page.getByText(reply,{exact:true}).count()){await page.getByPlaceholder('Write a reply…').fill(reply);await waitButton('Reply');}
+    await page.getByText(reply,{exact:true}).first().waitFor();await screenshot('post-reply');
+    const others=(await get('/api/juno/pools')).pools.find(p=>p.creatorWallet.toLowerCase()!==state.wallet.toLowerCase());
+    await open('/trader/'+others.creatorWallet);const follow=page.getByRole('button',{name:'Follow',exact:true});if(await follow.count())await follow.click();
+    await open('/social');
     await page.getByRole('tab',{name:'Following',exact:true}).click();await page.waitForTimeout(1500);
     assert.ok(!(await page.locator('body').innerText()).includes('Follow someone'));
     await screenshot('following-real-creator');
     state.extras=true;save();console.log('PASS browser watch, alert create/remove, plan create/pause/remove, reply, follow');
   }
-  const proof={checkedAt:new Date().toISOString(),chainId:5042002,wallet:state.wallet,funding:state.funding,launches:state.launches,reel:state.reel,gaslessBalanceProof:state.gaslessBalanceProof,receipts:state.receipts};
+  const priorProof=existsSync(resolve(OUT,'transactions.json'))?JSON.parse(readFileSync(resolve(OUT,'transactions.json'))):{};
+  const proof={...(priorProof.wallet===state.wallet?priorProof:{}),checkedAt:new Date().toISOString(),chainId:5042002,wallet:state.wallet,funding:state.funding,launches:state.launches,reel:state.reel,gaslessBalanceProof:state.gaslessBalanceProof,receipts:state.receipts};
   for(const r of proof.receipts){const receipt=await rpc.getTransactionReceipt({hash:r.hash});assert.equal(receipt.status,'success');r.gasUSDC=formatEther(receipt.gasUsed*receipt.effectiveGasPrice);r.explorer='https://explorer.testnet.arc.io/tx/'+r.hash;}
   writeFileSync(resolve(OUT,'transactions.json'),JSON.stringify(proof,null,2));
 }
@@ -231,7 +238,7 @@ async function audit() {
       const brokenImages=await page.locator('img').evaluateAll(nodes=>nodes.filter(n=>n.complete&&n.naturalWidth===0).map(n=>n.getAttribute('src')));
       assert.equal(overflow,false,route+' overflow');assert.deepEqual(errors,[],route+' browser errors');assert.deepEqual(brokenImages,[],route+' broken images');
       assert.ok(!/\b(Monad|AUSD|Kuru|Mera|lorem|undefined)\b|\[object Object\]/i.test(text),route+' stale/placeholder copy');
-      if(route==='/post') assert.match(text,/Demo storage:/);
+      if(route==='/post' && config.storage==='local') assert.match(text,/Demo storage:/);
       await screenshot(`route-${width}-${String(i).padStart(2,'0')}`);
       results.push({width,route,overflow,brokenImages,errors:[...errors],text});
       writeFileSync(resolve(OUT,'routes.json'),JSON.stringify({checkedAt:new Date().toISOString(),api:API,web:WEB,chainId:config.chainId,results},null,2));

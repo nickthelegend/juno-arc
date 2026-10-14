@@ -14,10 +14,11 @@ const chain=defineChain({id:5042002,name:'Arc testnet',nativeCurrency:{name:'USD
 const transport=http('https://rpc.testnet.arc.io');
 const rpc=createPublicClient({chain,transport});assert.equal(await rpc.getChainId(),5042002);
 const recipient='0x0648aDF1967692A0c991d7715b0b588452321FBd';
-async function send(account,to,value){
+async function send(account,to,value,onHash){
   const gasPrice=await rpc.getGasPrice();assert.ok(gasPrice*21000n<parseEther('0.01'));
   const client=createWalletClient({account,chain,transport});
   const hash=await client.sendTransaction({to,value,gas:21000n,maxFeePerGas:gasPrice,maxPriorityFeePerGas:0n});
+  onHash?.(hash);
   assert.equal((await rpc.waitForTransactionReceipt({hash})).status,'success');return hash;
 }
 if(process.argv.includes('--top-up-faucet')&&!state.reserveFunding){
@@ -27,12 +28,12 @@ if(process.argv.includes('--top-up-faucet')&&!state.reserveFunding){
   const account=privateKeyToAccount(raw.startsWith('0x')?raw:'0x'+raw);assert.equal(account.address,recipient);
   const lock=resolve('../.deployer/lock');
   while(true){try{mkdirSync(lock);break}catch{await new Promise(r=>setTimeout(r,3000))}}
-  try{const hash=await send(account,state.funding.to,parseEther('0.2'));state.reserveFunding={hash,amountUSDC:0.2};save();}finally{rmdirSync(lock)}
+  try{await send(account,state.funding.to,parseEther('0.2'),hash=>{state.reserveFunding={hash,amountUSDC:0.2};save();});}finally{rmdirSync(lock)}
 }
 if(!state.sweep){
   const account=privateKeyToAccount(state.key);const before=await rpc.getBalance({address:account.address});
   const fee=(await rpc.getGasPrice())*21000n;
-  if(before>fee){const amount=before-fee;const hash=await send(account,recipient,amount);state.sweep={hash,to:recipient,amountUSDC:formatEther(amount),remainingUSDC:formatEther(await rpc.getBalance({address:account.address}))};save();}
+  if(before>fee){const amount=before-fee;await send(account,recipient,amount,hash=>{state.sweep={hash,to:recipient,amountUSDC:formatEther(amount)};save();});state.sweep.remainingUSDC=formatEther(await rpc.getBalance({address:account.address}));save();}
 }
 const proofPath='docs/screens/testnet/round2/transactions.json';const proof=JSON.parse(readFileSync(proofPath));proof.reserveFunding=state.reserveFunding;proof.sweep=state.sweep;
 proof.budget={grossFundingUSDC:state.funding.amountUSDC+(state.reserveFunding?.amountUSDC||0),sweptBackUSDC:state.sweep?.amountUSDC||'0',capUSDC:1};

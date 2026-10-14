@@ -157,6 +157,7 @@ export default function PostScreen() {
             <Identicon seed={wallet.address ?? "guest"} size={30} />
             <Input
               value={draft}
+              accessibilityLabel="Reply"
               onChangeText={setDraft}
               placeholder="Write a reply…"
               placeholderTextColor={theme.colors.faint}

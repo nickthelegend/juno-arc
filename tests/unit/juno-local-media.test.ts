@@ -1,7 +1,7 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mediaCid } from "@/lib/juno/media";
 import { MAX_UPLOAD_BYTES, demoStorageBackend, localStorageMode, rawCid, readLocal, storeLocal } from "@/lib/juno/local-media";
@@ -26,7 +26,12 @@ describe("rawCid", () => {
 describe("storeLocal / readLocal", () => {
   const previous = process.env.JUNO_MEDIA_DIR;
   let dir: string | undefined;
+  beforeEach(() => {
+    vi.stubEnv("VERCEL", "");
+    vi.stubEnv("JUNO_MEDIA_BACKEND", "disk");
+  });
   afterEach(async () => {
+    vi.unstubAllEnvs();
     if (previous === undefined) delete process.env.JUNO_MEDIA_DIR;
     else process.env.JUNO_MEDIA_DIR = previous;
     if (dir) await rm(dir, { recursive: true, force: true });

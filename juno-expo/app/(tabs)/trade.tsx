@@ -284,7 +284,7 @@ function MarketCard({
             </View>
             <View style={[styles.preBadge, tracker ? styles.badgeInk : styles.badgeHeart]}>
               <Text style={[styles.preBadgeText, tracker ? styles.badgeInkText : styles.badgeHeartText]}>
-                {tracker ? "TRACKER" : coin.format === "reel" ? "REEL" : "MEME"}
+                {tracker ? "TRACKER" : coin.format === "reel" ? "REEL" : "POST"}
               </Text>
             </View>
           </View>

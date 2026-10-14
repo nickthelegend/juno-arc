@@ -2,7 +2,7 @@
 // One command: node scripts/e2e-browser-juno-local.mjs
 // Uses the existing testnet .env.local, .next build and Expo dist export.
 // Reuses listeners; starts missing local services only, stops its own PIDs.
-import { spawn } from 'node:child_process';
+import { spawn, execFileSync } from 'node:child_process';
 import { createServer } from 'node:http';
 import { createConnection } from 'node:net';
 import { createReadStream, existsSync, mkdirSync, openSync, statSync } from 'node:fs';
@@ -33,6 +33,7 @@ try{
   process.env.JUNO_API_URL='http://127.0.0.1:8911';
   process.env.JUNO_MEDIA_BACKEND='mongo';
   if(process.argv.includes('--flow'))process.env.FAUCET_AMOUNT_USDC='0.5';
+  if(!await listening(8910) && execFileSync('ps',['-axo','comm='],{encoding:'utf8'}).split('\n').some(s=>/(?:^|\/)anvil$/.test(s.trim())))throw new Error('Another anvil is running; do not start a second fork.');
   if(!await listening(8910))await start('feeds',[resolve('../.tools/arcfoundry/anvil'),'--network','arc','--fork-url','https://rpc.mainnet.arc.io','--port','8910','--silent'],8910);
   if(new URL(process.env.MONGODB_URI).hostname==='127.0.0.1'){
     mkdirSync(resolve('.juno/testnet/mongo'),{recursive:true});

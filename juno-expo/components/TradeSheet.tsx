@@ -953,6 +953,7 @@ export function TradeSheet({
             <Note>
               <TextInput
                 value={note}
+                accessibilityLabel="Trade comment"
                 onChangeText={setNote}
                 placeholder="Add a comment..."
                 placeholderTextColor={theme.colors.faint}
