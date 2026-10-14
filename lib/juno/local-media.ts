@@ -3,16 +3,12 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 /**
- * Demo storage: the upload path when no Pinata key is configured.
- *
- * Pinning to IPFS needs a Pinata account (`PINATA_JWT`). Without one the app
- * used to refuse every launch. Instead, the server keeps the bytes itself,
- * on disk, under their real IPFS content address: a CIDv1 (raw codec,
- * sha2-256) — the CID `ipfs add --cid-version 1 --raw-leaves` prints for a
- * file this size. So the address is honest and the content is verifiable, but
- * **nothing is pinned to the IPFS network**: only this server serves it (at
- * `/api/ipfs/<cid>`). The app says so wherever it shows the receipt, and
- * `/api/juno/config` reports `storage: "local"`.
+ * Demo media when Pinata is not configured. Bytes use a CIDv1 raw SHA-256
+ * content address, but are NOT pinned to IPFS. Return an HTTPS URI that a
+ * wallet or explorer can actually resolve. Vercel stores bytes in the app's
+ * existing Mongo database; local development can use disk or the same backend.
+ * `storage: "local"` is retained in the API for existing clients and means
+ * app-hosted demo storage, not a promise of local disk persistence on Vercel.
  */
 
 const BASE32 = "abcdefghijklmnopqrstuvwxyz234567";
@@ -39,10 +35,18 @@ export function rawCid(bytes: Uint8Array): string {
   return `b${base32(Buffer.concat([Buffer.from([0x01, 0x55, 0x12, 0x20]), digest]))}`;
 }
 
-/** True when uploads and metadata go to this server's own disk instead of Pinata. */
+/** True when uploads and metadata use app-hosted demo storage instead of Pinata. */
 export function localStorageMode(): boolean {
   return !process.env.PINATA_JWT?.trim();
 }
+
+/** Vercel instances have no persistent disk. Reuse the app's existing Mongo database. */
+export function demoStorageBackend(): "mongo" | "disk" {
+  return process.env.VERCEL || process.env.JUNO_MEDIA_BACKEND === "mongo" ? "mongo" : "disk";
+}
+
+// Leaves room for multipart headers under Vercel's request body ceiling.
+export const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
 
 function dir(): string {
   return path.resolve(process.env.JUNO_MEDIA_DIR?.trim() || ".juno/media");
@@ -56,15 +60,31 @@ export function publicOrigin(request: Request): string {
 export type LocalPin = { cid: string; uri: string; url: string };
 
 export async function storeLocal(bytes: Uint8Array, type: string, origin: string): Promise<LocalPin> {
+  if (bytes.byteLength > MAX_UPLOAD_BYTES) throw new Error("File is over 4MB. Pick a smaller photo or a shorter video.");
   const cid = rawCid(bytes);
-  await mkdir(dir(), { recursive: true });
-  await writeFile(path.join(dir(), cid), bytes);
-  await writeFile(path.join(dir(), `${cid}.type`), type);
-  return { cid, uri: `ipfs://${cid}`, url: `${origin.replace(/\/$/, "")}/api/ipfs/${cid}` };
+  if (demoStorageBackend() === "mongo") {
+    const { db } = await import("./social");
+    const { Binary } = await import("mongodb");
+    await (await db()).collection<{ _id: string; bytes: InstanceType<typeof Binary>; type: string }>("demo_media")
+      .updateOne({ _id: cid }, { $setOnInsert: { bytes: new Binary(bytes), type } }, { upsert: true });
+  } else {
+    await mkdir(dir(), { recursive: true });
+    await writeFile(path.join(dir(), cid), bytes);
+    await writeFile(path.join(dir(), `${cid}.type`), type);
+  }
+  const url = `${origin.replace(/\/$/, "")}/api/ipfs/${cid}`;
+  // An unpinned ipfs:// URI cannot resolve in explorers. The content-addressed
+  // HTTPS URL is both honest and usable outside Juno (including tokenURI).
+  return { cid, uri: url, url };
 }
 
 export async function readLocal(cid: string): Promise<{ bytes: Uint8Array; type: string } | null> {
   if (!/^b[a-z2-7]{58}$/.test(cid)) return null;
+  if (demoStorageBackend() === "mongo") {
+    const { db } = await import("./social");
+    const doc = await (await db()).collection<{ _id: string; bytes: import("mongodb").Binary; type: string }>("demo_media").findOne({ _id: cid });
+    return doc ? { bytes: new Uint8Array(doc.bytes.buffer), type: doc.type } : null;
+  }
   try {
     const bytes = new Uint8Array(await readFile(path.join(dir(), cid)));
     const type = (await readFile(path.join(dir(), `${cid}.type`), "utf8").catch(() => "application/octet-stream")).trim();

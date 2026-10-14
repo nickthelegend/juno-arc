@@ -4,7 +4,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { mediaCid } from "@/lib/juno/media";
-import { localStorageMode, rawCid, readLocal, storeLocal } from "@/lib/juno/local-media";
+import { MAX_UPLOAD_BYTES, demoStorageBackend, localStorageMode, rawCid, readLocal, storeLocal } from "@/lib/juno/local-media";
 
 /**
  * Demo storage: the upload path when no Pinata key is set. Its address must be a
@@ -38,7 +38,7 @@ describe("storeLocal / readLocal", () => {
     process.env.JUNO_MEDIA_DIR = dir;
     const bytes = new TextEncoder().encode("a post");
     const pin = await storeLocal(bytes, "image/png", "http://api.example/");
-    expect(pin.uri).toBe(`ipfs://${pin.cid}`);
+    expect(pin.uri).toBe(pin.url);
     expect(pin.url).toBe(`http://api.example/api/ipfs/${pin.cid}`);
     const back = await readLocal(pin.cid);
     expect(back?.type).toBe("image/png");
@@ -48,6 +48,19 @@ describe("storeLocal / readLocal", () => {
   it("refuses anything that is not a CID (no path traversal)", async () => {
     expect(await readLocal("../../etc/passwd")).toBeNull();
   });
+
+  it("rejects oversized files before storing them", async () => {
+    await expect(storeLocal(new Uint8Array(MAX_UPLOAD_BYTES + 1), "image/png", "https://api.example"))
+      .rejects.toThrow("over 4MB");
+  });
+});
+
+it("uses persistent storage automatically on Vercel", () => {
+  const previous = process.env.VERCEL;
+  process.env.VERCEL = "1";
+  expect(demoStorageBackend()).toBe("mongo");
+  if (previous === undefined) delete process.env.VERCEL;
+  else process.env.VERCEL = previous;
 });
 
 describe("localStorageMode", () => {

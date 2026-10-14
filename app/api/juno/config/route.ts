@@ -63,7 +63,7 @@ export async function GET() {
     quoteTokens: [usdc],
     faucet: net === "testnet",
     // "ipfs": photos and metadata are pinned to IPFS on Pinata. "local": no Pinata key is set, so this server
-    // keeps them on its own disk under their IPFS content address (demo storage; not pinned to the network).
+    // hosts them under a content address (Mongo on Vercel, disk or Mongo locally; not pinned to IPFS).
     storage: localStorageMode() ? "local" : "ipfs",
     v2Trading: d.swapRouter !== null,
     venues: [{ id: "uniswap-v2", name: "Uniswap v2", quotes: [usdc.address] }],

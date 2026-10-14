@@ -2,7 +2,7 @@
 import { junoJson, junoOptions } from "@/lib/juno/api";
 import { rateLimit } from "@/lib/rate-limit";
 import { rememberContent } from "@/lib/juno/ipfs-cache";
-import { localStorageMode, publicOrigin, storeLocal } from "@/lib/juno/local-media";
+import { MAX_UPLOAD_BYTES, localStorageMode, publicOrigin, storeLocal } from "@/lib/juno/local-media";
 import { pinFile } from "@/lib/juno/pinata";
 import { videoPoster } from "@/lib/juno/poster";
 import sharp from "sharp";
@@ -12,7 +12,7 @@ export const runtime = "nodejs";
 export const OPTIONS = junoOptions;
 
 /** Anything larger is a problem for the pinning step, not a real upload. */
-const MAX_BYTES = 25 * 1024 * 1024;
+const MAX_BYTES = MAX_UPLOAD_BYTES;
 /** Raster images and video only: an SVG is a document that can carry script, and this route serves what it stores. */
 const ALLOWED = /^(image\/(jpeg|png|gif|webp|avif|heic|heif)|video\/)/;
 
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     return junoJson({ error: "Only photos (JPEG, PNG, GIF, WebP, AVIF, HEIC) and video" }, { status: 415 });
   }
   if (file.size > MAX_BYTES) {
-    return junoJson({ error: "File is over 25MB" }, { status: 413 });
+    return junoJson({ error: "File is over 4MB. Pick a smaller photo or a shorter video." }, { status: 413 });
   }
 
   try {
