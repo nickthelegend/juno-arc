@@ -1,0 +1,13 @@
+{
+  "address": "0x3C2c8155A3DcFfCDADB901a6D578eE4f20536cd1",
+  "owners": [
+    "0x97e9bf60DCcb175031601228e1fbc8348CEE1a6A",
+    "0x622a26f08Ce6676dd6c026A765bD460f92F2214c"
+  ],
+  "threshold": 2,
+  "version": "1.4.1",
+  "factory": "0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67",
+  "singleton": "0x41675C099F32341bf84BFc5382aF534df5C7461a",
+  "creation": "0x0f738812c2edd46c8d17df67fffa86ac372f2cb0d93ea942b2c3b3898dfaffbe",
+  "ownerKeys": "Both keys saved locally in .deployer/mainnet/admin.env; not independently held."
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Juno deployment smoke",
+  "description": "Mainnet contract launch check. No purchase, trading, graduation or hosted application flow was run.",
+  "token": "0xc5fb7Fa453C646A1de2724C92Dc4f22122730a4b"
+}

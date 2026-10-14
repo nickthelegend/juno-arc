@@ -53,7 +53,7 @@ cd contracts
 [ "$BAL" = 0 ] && { echo "The deployer holds no USDC on $NETWORK: fund $DEPLOYER (about 1 USDC covers the deploy)."; exit 1; }
 
 # 2. Broadcast, holding the shared deployer lock only for the broadcast itself.
-LOCK="$ROOT/../.deployer/lock"
+LOCK="${DEPLOY_LOCK:-$ROOT/../.deployer/lock}"
 until mkdir "$LOCK" 2>/dev/null; do sleep 3; done
 trap 'rmdir "$LOCK" 2>/dev/null' EXIT
 "$FORGE" script script/Deploy.s.sol --network arc --rpc-url "$RPC" --broadcast --slow
