@@ -1,0 +1,177 @@
+{
+  "project": "juno",
+  "chainId": 5042,
+  "video": "video/out/juno-5min.mp4",
+  "durationSeconds": 300,
+  "narrationWords": 686,
+  "voiceGenerated": false,
+  "checkedAt": "2026-10-14T18:36:06.793Z",
+  "successfulReceipts": 14,
+  "expectedRevertReceipts": 0,
+  "transactions": [
+    {
+      "action": "Fund Job A persona 0.18 USDC",
+      "hash": "0x04fbe131b524f837bc19cab3f61f75cb78116eb9ccbb8ba204fb17e2e026d0a8",
+      "url": "https://explorer.arc.io/tx/0x04fbe131b524f837bc19cab3f61f75cb78116eb9ccbb8ba204fb17e2e026d0a8",
+      "status": "success",
+      "from": "0x0648aDF1967692A0c991d7715b0b588452321FBd",
+      "to": "0x99f5e521f3c597866e14b8cdb373dddd42e29516",
+      "blockNumber": "25962708",
+      "feeUSDC": "0.000441",
+      "feeWei": "441000000000000"
+    },
+    {
+      "action": "Fund Job A persona 0.06 USDC",
+      "hash": "0x8edea7fbe084f9fdeaec0aa7af4df94fceb5124803df2aed2c560916eeed1bf8",
+      "url": "https://explorer.arc.io/tx/0x8edea7fbe084f9fdeaec0aa7af4df94fceb5124803df2aed2c560916eeed1bf8",
+      "status": "success",
+      "from": "0x0648aDF1967692A0c991d7715b0b588452321FBd",
+      "to": "0x42e12e1bffe911dea7e672819d75780ddcb633d8",
+      "blockNumber": "25962715",
+      "feeUSDC": "0.000441",
+      "feeWei": "441000000000000"
+    },
+    {
+      "action": "Fund Job A persona 0.08 USDC",
+      "hash": "0xd03f1bfb54fb0240fac8db8740a146215fcf3809f17dfe58128f28a18c184bc3",
+      "url": "https://explorer.arc.io/tx/0xd03f1bfb54fb0240fac8db8740a146215fcf3809f17dfe58128f28a18c184bc3",
+      "status": "success",
+      "from": "0x0648aDF1967692A0c991d7715b0b588452321FBd",
+      "to": "0x31aec00571d837819b535a5e2f2e994e1222e9c8",
+      "blockNumber": "25962722",
+      "feeUSDC": "0.000441",
+      "feeWei": "441000000000000"
+    },
+    {
+      "action": "Launch post coin",
+      "hash": "0x84c87baf30a149681cef70ee99ea0c46a3cdd672c7f735ba695bd551b02ff7ac",
+      "url": "https://explorer.arc.io/tx/0x84c87baf30a149681cef70ee99ea0c46a3cdd672c7f735ba695bd551b02ff7ac",
+      "status": "success",
+      "from": "0x99F5e521F3c597866E14B8cDB373dDdd42E29516",
+      "to": "0x52d364df075cec807f854d2f7d7ff8485dedf641",
+      "blockNumber": "25963124",
+      "feeUSDC": "0.047194142720742171",
+      "feeWei": "47194142720742171"
+    },
+    {
+      "action": "Gasless $0.02 buy",
+      "hash": "0x167364e00844119840c9e4052c4349cb56572d886270ddfce8a6dd14a62ec126",
+      "url": "https://explorer.arc.io/tx/0x167364e00844119840c9e4052c4349cb56572d886270ddfce8a6dd14a62ec126",
+      "status": "success",
+      "from": "0xd904186540c2Ac2344b0289336157f15E882160B",
+      "to": "0x5294e9927c3306dcbadb03fe70b92e01ccede505",
+      "blockNumber": "25963273",
+      "feeUSDC": "0.004968360286425954",
+      "feeWei": "4968360286425954"
+    },
+    {
+      "action": "Second buyer approves USDC",
+      "hash": "0xdc2b756619dd683ad06751a3bce521ce04783e291d3d80dba703449e44391480",
+      "url": "https://explorer.arc.io/tx/0xdc2b756619dd683ad06751a3bce521ce04783e291d3d80dba703449e44391480",
+      "status": "success",
+      "from": "0x31aEC00571D837819b535a5e2f2e994E1222e9c8",
+      "to": "0x3600000000000000000000000000000000000000",
+      "blockNumber": "25963368",
+      "feeUSDC": "0.001115720064321258",
+      "feeWei": "1115720064321258"
+    },
+    {
+      "action": "Second buyer buys $0.02",
+      "hash": "0xb8c2ecd95878f5ac2cbffd7fae86c6ea7ce257faf984e817b824c55ec9512a85",
+      "url": "https://explorer.arc.io/tx/0xb8c2ecd95878f5ac2cbffd7fae86c6ea7ce257faf984e817b824c55ec9512a85",
+      "status": "success",
+      "from": "0x31aEC00571D837819b535a5e2f2e994E1222e9c8",
+      "to": "0x5294e9927c3306dcbadb03fe70b92e01ccede505",
+      "blockNumber": "25963376",
+      "feeUSDC": "0.003204540184741731",
+      "feeWei": "3204540184741731"
+    },
+    {
+      "action": "First buyer sells tokens",
+      "hash": "0x913b1315e0c50b53686ee5287ce34e1ea75e591e73a2d81e4fc5de15da21e780",
+      "url": "https://explorer.arc.io/tx/0x913b1315e0c50b53686ee5287ce34e1ea75e591e73a2d81e4fc5de15da21e780",
+      "status": "success",
+      "from": "0x42e12E1BfFe911dEa7E672819d75780DDCB633d8",
+      "to": "0x5294e9927c3306dcbadb03fe70b92e01ccede505",
+      "blockNumber": "25963415",
+      "feeUSDC": "0.003291660189764199",
+      "feeWei": "3291660189764199"
+    },
+    {
+      "action": "Creator claims trading fees",
+      "hash": "0xff6884956d0dcb9399cc4843dfbf0bb9f0d1951e767b01da1050a6f42f005188",
+      "url": "https://explorer.arc.io/tx/0xff6884956d0dcb9399cc4843dfbf0bb9f0d1951e767b01da1050a6f42f005188",
+      "status": "success",
+      "from": "0x99F5e521F3c597866E14B8cDB373dDdd42E29516",
+      "to": "0x52d364df075cec807f854d2f7d7ff8485dedf641",
+      "blockNumber": "25963486",
+      "feeUSDC": "0.00159740009209011",
+      "feeWei": "1597400092090110"
+    },
+    {
+      "action": "Second buyer closes position",
+      "hash": "0x28d6d87098a66c237a8fbfe4530265e7ea151e59801bdff974539337ba041546",
+      "url": "https://explorer.arc.io/tx/0x28d6d87098a66c237a8fbfe4530265e7ea151e59801bdff974539337ba041546",
+      "status": "success",
+      "from": "0x31aEC00571D837819b535a5e2f2e994E1222e9c8",
+      "to": "0x5294e9927c3306dcbadb03fe70b92e01ccede505",
+      "blockNumber": "25963551",
+      "feeUSDC": "0.003638160209376108",
+      "feeWei": "3638160209376108"
+    },
+    {
+      "action": "Creator claims final fees",
+      "hash": "0xcfb279f725105e23e20d042a78e3426ad5340703e59c0de9e9127fb6a96e3d06",
+      "url": "https://explorer.arc.io/tx/0xcfb279f725105e23e20d042a78e3426ad5340703e59c0de9e9127fb6a96e3d06",
+      "status": "success",
+      "from": "0x99F5e521F3c597866E14B8cDB373dDdd42E29516",
+      "to": "0x52d364df075cec807f854d2f7d7ff8485dedf641",
+      "blockNumber": "25963593",
+      "feeUSDC": "0.00125540007237381",
+      "feeWei": "1255400072373810"
+    },
+    {
+      "action": "Sweep Job A persona to deployer",
+      "hash": "0xa1c86df1d70a6c622352b7ecd38eef663096cab176db131364b722f76470e3c8",
+      "url": "https://explorer.arc.io/tx/0xa1c86df1d70a6c622352b7ecd38eef663096cab176db131364b722f76470e3c8",
+      "status": "success",
+      "from": "0x99F5e521F3c597866E14B8cDB373dDdd42E29516",
+      "to": "0x0648adf1967692a0c991d7715b0b588452321fbd",
+      "blockNumber": "25963616",
+      "feeUSDC": "0.000441",
+      "feeWei": "441000000000000"
+    },
+    {
+      "action": "Sweep Job A persona to deployer",
+      "hash": "0x720df6957ac6e931cb6168c4340cbfb073a8407ce5434086317ec5177b800521",
+      "url": "https://explorer.arc.io/tx/0x720df6957ac6e931cb6168c4340cbfb073a8407ce5434086317ec5177b800521",
+      "status": "success",
+      "from": "0x42e12E1BfFe911dEa7E672819d75780DDCB633d8",
+      "to": "0x0648adf1967692a0c991d7715b0b588452321fbd",
+      "blockNumber": "25963629",
+      "feeUSDC": "0.000441",
+      "feeWei": "441000000000000"
+    },
+    {
+      "action": "Sweep Job A persona to deployer",
+      "hash": "0x5cec0e4fc70e67402237aceb796cf43fd898ad111c7273bd445bd0b8e4b58bdd",
+      "url": "https://explorer.arc.io/tx/0x5cec0e4fc70e67402237aceb796cf43fd898ad111c7273bd445bd0b8e4b58bdd",
+      "status": "success",
+      "from": "0x31aEC00571D837819b535a5e2f2e994E1222e9c8",
+      "to": "0x0648adf1967692a0c991d7715b0b588452321fbd",
+      "blockNumber": "25963644",
+      "feeUSDC": "0.000441",
+      "feeWei": "441000000000000"
+    }
+  ],
+  "limitations": [
+    "Hosted UI, isolated local API/database/media, same mainnet contracts.",
+    "Photo upload forwarded as original local file bytes after browser proxy omitted multipart content.",
+    "Gasless buyer balance fell by exactly 0.02 USDC.",
+    "Both buyers sold all tokens; available USDC swept.",
+    "No generated voice or paid API."
+  ],
+  "renderedAt": "2026-10-14T18:35:43.847Z",
+  "exactFees": true,
+  "decodedExplorerEventsShown": true
+}
