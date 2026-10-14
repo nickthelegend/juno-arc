@@ -1,8 +1,8 @@
-Hosted Arc testnet: https://juno-arc.vercel.app · [Vercel checks and storage limitation](docs/HOSTED.md).
+Live: https://juno-arc.vercel.app (Arc mainnet, chain 5042)
 
 # Juno on Arc — DoraHacks submission
 
-Live contracts: Arc testnet. The former hosting was removed; public Vercel hosting is pending.
+Contracts and production frontend now target Arc mainnet; prior network evidence remains labelled below.
 Browser reproduction and current evidence: [docs/JUDGE-REPORT.md](docs/JUDGE-REPORT.md).
 
 
@@ -69,3 +69,7 @@ Testnet **5042002: Live**; [testnet deployment](deployments/arc-testnet.json) an
 
 Mainnet smoke: [Smoke: launch content coin with zero purchase](https://explorer.arc.io/tx/0xfde385889cc303e46ee7c132b2c5cfd1f33ef9e6d396448210a51ebd6e688143).
 <!-- /MAINNET-ADDRESSES -->
+
+## Production network
+
+Live: https://juno-arc.vercel.app (Arc mainnet, chain 5042). [Hosted mainnet checks](docs/HOSTED-MAINNET.md). The API uses an isolated mainnet database; storage readiness remains separately reported. The faucet is disabled on mainnet. No mainnet transactions were sent during the hosting migration. Historical **Live (testnet)** and **Fork** results elsewhere in this document are separate evidence, not production smoke results.

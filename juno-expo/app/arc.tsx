@@ -148,7 +148,7 @@ export default function ArcScreen() {
           <Text style={styles.heroTitle}>What runs on Arc.</Text>
           <Text style={styles.heroBody}>
             Juno is a social app where every post is a market. Arc is Circle&rsquo;s chain for stablecoin finance: here is
-            each piece of it Juno uses, what it does for you, what has been exercised on testnet, and whether this server has it configured.
+            each piece of it Juno uses, what it does for you, whether this server has it configured, and the verification available for this network.
           </Text>
           <PegChip dark style={{ marginTop: 4 }} />
         </View>

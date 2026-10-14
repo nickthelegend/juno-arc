@@ -1,8 +1,8 @@
-Hosted Arc testnet: https://juno-arc.vercel.app · [Vercel checks and storage limitation](docs/HOSTED.md).
+Live: https://juno-arc.vercel.app (Arc mainnet, chain 5042)
 
 # Juno on Arc — every post is a market
 
-Live contracts: Arc testnet. The former hosting was removed; public Vercel hosting is pending.
+Contracts and production frontend now target Arc mainnet; prior network evidence remains labelled below.
 Browser reproduction and current evidence: [docs/JUDGE-REPORT.md](docs/JUDGE-REPORT.md).
 
 
@@ -20,7 +20,7 @@ own history.
 
 | | |
 |---|---|
-| **Network** | Arc **testnet** (chain 5042002), deployed and exercised with real transactions: [docs/E2E-TESTNET.md](docs/E2E-TESTNET.md). Arc **mainnet** (5042) is one command, not yet run — see [MAINNET.md](MAINNET.md). |
+| **Network** | Arc **mainnet** (5042): [deployment and receipts](docs/MAINNET-DEPLOYMENT.md), [hosted read checks](docs/HOSTED-MAINNET.md). Earlier testnet flows and fork results are labelled separately. |
 | **Contracts** | [`contracts/`](contracts/) — `JunoLaunchpad`, `JunoToken`, `UniswapV2Graduator`, `JunoSwapRouter`, `JunoCrossChain`, `JunoTrackers`, plus Uniswap's published v2 factory + Router02. Addresses: [`deployments/`](deployments/). |
 | **App** | [`juno-expo/`](juno-expo/) — the web app (Expo / React Native Web). |
 | **API** | [`app/api/juno/`](app/api/juno/) — the Next.js server: builds unsigned transactions, relays gasless buys, talks to Circle Gateway / Iris and Chainlink. [docs/API.md](docs/API.md). |
@@ -192,3 +192,7 @@ Testnet **5042002: Live**; [testnet deployment](deployments/arc-testnet.json) an
 
 Mainnet smoke: [Smoke: launch content coin with zero purchase](https://explorer.arc.io/tx/0xfde385889cc303e46ee7c132b2c5cfd1f33ef9e6d396448210a51ebd6e688143).
 <!-- /MAINNET-ADDRESSES -->
+
+## Production network
+
+Live: https://juno-arc.vercel.app (Arc mainnet, chain 5042). [Hosted mainnet checks](docs/HOSTED-MAINNET.md). The API uses an isolated mainnet database; storage readiness remains separately reported. The faucet is disabled on mainnet. No mainnet transactions were sent during the hosting migration. Historical **Live (testnet)** and **Fork** results elsewhere in this document are separate evidence, not production smoke results.

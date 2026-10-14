@@ -1,0 +1,166 @@
+{
+  "network": "mainnet",
+  "networkKey": "arc",
+  "chainId": 5042,
+  "rpcUrl": "https://rpc.mainnet.arc.io",
+  "localFork": false,
+  "explorer": "https://explorer.arc.io",
+  "usdc": "0x3600000000000000000000000000000000000000",
+  "launchpad": "0x52D364dF075CEC807f854d2f7D7ff8485dedf641",
+  "contracts": {
+    "launchpad": "0x52D364dF075CEC807f854d2f7D7ff8485dedf641",
+    "swapRouter": "0x90948fda347bBF1fb6f2A6F7Cd4765D6ffD7cfBe",
+    "crossChain": "0xeBFD4d58972e5231FB816515198fC4E63593091b",
+    "trackers": "0x05Ff7d5cfd43b714e4abA00493459A600320a406",
+    "graduator": "0x524874735655963a82F160Cb741153F50CdebcF6",
+    "uniswapV2Factory": "0x1294aF729364c40F43A891e92E9A2196D3385c77",
+    "uniswapV2Router02": "0x29CAa1fa4a9456d5B511e4607033026FE512CD09"
+  },
+  "deployBlock": 25939456,
+  "quoteTokens": [
+    {
+      "address": "0x3600000000000000000000000000000000000000",
+      "symbol": "USDC",
+      "decimals": 6,
+      "native": false
+    }
+  ],
+  "faucet": false,
+  "storage": "ipfs",
+  "v2Trading": true,
+  "venues": [
+    {
+      "id": "uniswap-v2",
+      "name": "Uniswap v2",
+      "quotes": [
+        "0x3600000000000000000000000000000000000000"
+      ]
+    }
+  ],
+  "arc": {
+    "finality": "deterministic, ~0.5 s blocks",
+    "gasToken": "USDC",
+    "memo": {
+      "address": "0x5294E9927c3306DcBaDb03fe70b92e01cCede505",
+      "live": true
+    },
+    "gateway": {
+      "available": true,
+      "wallet": "0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE",
+      "minter": "0x2222222d7164433c4C09B0b0D809a9b52C04C205",
+      "domain": 26,
+      "sources": [
+        {
+          "domain": 6,
+          "name": "Base"
+        },
+        {
+          "domain": 0,
+          "name": "Ethereum"
+        },
+        {
+          "domain": 3,
+          "name": "Arbitrum"
+        },
+        {
+          "domain": 1,
+          "name": "Avalanche"
+        },
+        {
+          "domain": 2,
+          "name": "OP Mainnet"
+        },
+        {
+          "domain": 7,
+          "name": "Polygon PoS"
+        },
+        {
+          "domain": 26,
+          "name": "Arc"
+        }
+      ]
+    },
+    "cctp": {
+      "domain": 26,
+      "tokenMessenger": "0x28b5a0e9C621a5BadaA536219b3a228C8168cf5d",
+      "destinations": [
+        {
+          "domain": 6,
+          "name": "Base"
+        },
+        {
+          "domain": 0,
+          "name": "Ethereum"
+        },
+        {
+          "domain": 3,
+          "name": "Arbitrum"
+        },
+        {
+          "domain": 2,
+          "name": "OP Mainnet"
+        },
+        {
+          "domain": 1,
+          "name": "Avalanche"
+        },
+        {
+          "domain": 7,
+          "name": "Polygon PoS"
+        },
+        {
+          "domain": 10,
+          "name": "Unichain"
+        },
+        {
+          "domain": 11,
+          "name": "Linea"
+        },
+        {
+          "domain": 13,
+          "name": "Sonic"
+        },
+        {
+          "domain": 14,
+          "name": "World Chain"
+        },
+        {
+          "domain": 5,
+          "name": "Solana"
+        }
+      ]
+    },
+    "ccip": {
+      "router": "0xB79791184973589c38e114D43Eb8E4588C283A18",
+      "chainSelector": "6370580034781731079",
+      "crossChain": "0xeBFD4d58972e5231FB816515198fC4E63593091b",
+      "lanes": [
+        {
+          "selector": "15971525489660198786",
+          "name": "Base"
+        },
+        {
+          "selector": "5009297550715157269",
+          "name": "Ethereum"
+        },
+        {
+          "selector": "4051577828743386545",
+          "name": "Polygon"
+        },
+        {
+          "selector": "124615329519749607",
+          "name": "Solana"
+        }
+      ],
+      "explorer": "https://ccip.chain.link"
+    },
+    "feeds": {
+      "network": "mainnet",
+      "count": 10
+    },
+    "relayer": {
+      "available": true,
+      "address": "0xd904186540c2Ac2344b0289336157f15E882160B"
+    }
+  }
+}

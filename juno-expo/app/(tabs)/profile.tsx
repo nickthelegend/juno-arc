@@ -320,8 +320,8 @@ function WalletTab({ address }: { address: string }) {
         <Card>
           <Body muted>
             {Platform.OS === "web"
-              ? "This wallet lives in this browser's storage and signs here. It is a testnet key and is not recoverable — clearing site data deletes it, and Juno never sees it."
-              : "This wallet lives in the device keychain and signs on-device. It is a testnet key and is not recoverable — Juno never sees it."}
+              ? "This wallet lives in this browser's storage and signs here. It is not recoverable — clearing site data deletes it, and Juno never sees it."
+              : "This wallet lives in the device keychain and signs on-device. It is not recoverable — Juno never sees it."}
           </Body>
         </Card>
       )}

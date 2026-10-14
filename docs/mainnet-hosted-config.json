@@ -1,0 +1,26 @@
+[
+  {
+    "base": "https://juno-arc.vercel.app",
+    "routes": [
+      "/",
+      "/social",
+      "/trade",
+      "/profile",
+      "/reels",
+      "/post",
+      "/arc",
+      "/inbox",
+      "/search"
+    ],
+    "waitMs": 9000,
+    "name": "juno",
+    "contract": "0x52D364dF075CEC807f854d2f7D7ff8485dedf641",
+    "networkApi": "https://juno-arc-api.vercel.app/api/juno/config",
+    "requireVisible": true,
+    "requireExplorer": true,
+    "explorerClick": {
+      "route": "/arc",
+      "text": "Arc's explorer"
+    }
+  }
+]

@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { CoinArt, Identicon } from "./art";
 import { Button, Caption } from "./kit";
-import { api, juno, onTestnet } from "../lib/api";
+import { api, juno } from "../lib/api";
 import { topCreatorOf } from "../lib/discover";
 import { loadMarkets } from "../lib/markets";
 import { useApi } from "../lib/useApi";
@@ -27,7 +27,8 @@ export function WalletPreview() {
   const wallet = useWallet();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const testnet = onTestnet();
+  const config = useApi(() => juno.config(), []);
+  const testnet = config.data?.network === "testnet";
   const faucet = useApi(() => (testnet ? api.get<{ amount: number }>("/api/juno/faucet").catch(() => null) : Promise.resolve(null)), [testnet]);
   const markets = useApi(() => loadMarkets(), []);
   const example = useMemo(() => topCreatorOf(markets.data?.posts ?? []), [markets.data?.posts]);
