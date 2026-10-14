@@ -1,8 +1,7 @@
 import "../lib/polyfills";
 
-import { Stack } from "expo-router";
-import { useEffect } from "react";
-import { Platform, View, useWindowDimensions } from "react-native";
+import { Stack, usePathname } from "expo-router";
+import { Platform, Text, View, useWindowDimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -12,6 +11,7 @@ import { LeftRail, RAILS_MIN_WIDTH, RightRail } from "../components/DesktopRails
 import { PortalHost } from "../components/Portal";
 import { juno } from "../lib/api";
 import { WalletProvider } from "../lib/wallet";
+import { useApi } from "../lib/useApi";
 import { theme } from "../theme";
 
 /**
@@ -29,9 +29,8 @@ export default function RootLayout() {
   // Which network, which explorer, which parts of the Arc stack — read once, early, so
   // the first explorer link and the first balance already know the answer.
   // A failure is not kept; the next screen that needs it asks again.
-  useEffect(() => {
-    juno.config().catch(() => undefined);
-  }, []);
+  const config = useApi(() => juno.config(), []);
+  const pathname = usePathname();
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -42,6 +41,11 @@ export default function RootLayout() {
         <WalletProvider>
         <PortalHost>
           <StatusBar style="dark" />
+          {config.data?.network === "testnet" && pathname !== "/" ? (
+            <Text style={{ backgroundColor: theme.colors.surfaceAlt, color: theme.colors.muted, textAlign: "center", paddingVertical: 7, fontSize: 12 }}>
+              {config.data.localFork ? "Local Arc fork · demo balances" : "Arc testnet · test USDC, no real money"}
+            </Text>
+          ) : null}
           <Stack
             screenOptions={{
               headerShown: false,

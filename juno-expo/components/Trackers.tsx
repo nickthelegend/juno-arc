@@ -78,7 +78,7 @@ export function FeedBoard({ onLaunch }: { onLaunch: (feed: TrackerFeed) => void 
     <View style={styles.board} testID="feed-board">
       <View style={styles.boardHead}>
         <Text style={styles.boardTitle}>Chainlink prices from Arc mainnet</Text>
-        <Text style={styles.boardMeta}>{feeds.data.feeds.length} feeds · live</Text>
+        <Text style={styles.boardMeta}>{feeds.data.feeds.length} feeds · {onTestnet() ? "display-only" : "reference prices"}</Text>
       </View>
       {feeds.data.feeds.map((feed, index) => {
         const base = feed.id.split("/")[0];

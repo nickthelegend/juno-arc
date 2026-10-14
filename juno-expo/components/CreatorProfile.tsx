@@ -238,7 +238,7 @@ export function CreatorProfile({
               {/* The address, under a name; without one the name line already is it. */}
               {data.name || (totalCap && created.length > 0) ? (
                 <Mono muted style={{ fontSize: 12 }}>
-                  {[data.name ? shortAddress(wallet) : null, totalCap && created.length > 0 ? `coins worth ${money(totalCap.value, totalCap.currency)}` : null]
+                  {[data.name ? shortAddress(wallet) : null, totalCap && created.length > 0 ? `launched market cap ${money(totalCap.value, totalCap.currency)}` : null]
                     .filter(Boolean)
                     .join("  ·  ")}
                 </Mono>

@@ -158,6 +158,7 @@ export default function ReelsScreen() {
         <NightState
           title="No reels yet"
           detail="A reel is a vertical video with its own market. Post one and it lands here."
+          action={{ label: "Post a reel", onPress: () => router.push("/post?format=reel" as never) }}
         />
       ) : (
         <FlatList

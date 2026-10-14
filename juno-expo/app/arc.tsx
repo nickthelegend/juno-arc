@@ -64,7 +64,7 @@ const PIECES: Piece[] = [
     proof: { kind: "tx", text: "One relayed buy on testnet: the buyer paid exactly the trade, no gas." },
     status: (c) =>
       c?.arc?.relayer
-        ? { live: c.arc.relayer.available, detail: c.arc.relayer.available ? "relayer funded" : "no relayer on this server" }
+        ? { live: c.arc.relayer.available, detail: c.arc.relayer.available ? "relayer configured; requires USDC gas" : "no relayer on this server" }
         : { live: null },
   },
   {

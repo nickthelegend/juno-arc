@@ -1,0 +1,11 @@
+.git
+.env*
+.juno
+.fork
+node_modules
+.next
+contracts
+juno-expo
+docs
+scripts
+*.tsbuildinfo

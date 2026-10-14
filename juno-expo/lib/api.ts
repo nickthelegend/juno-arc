@@ -268,7 +268,7 @@ export type ChainConfig = {
    * confirmation time is the fork's. Absent on an older server.
    */
   localFork?: boolean;
-  /** "local": no Pinata key on the server, so uploads are kept on its own disk (demo storage), not pinned to IPFS. */
+  /** "local": no Pinata key on the server, so uploads use app-hosted demo storage (Mongo on Vercel), not pinned to IPFS. */
   storage?: "ipfs" | "local";
   launchpad?: string | null;
   /** The explorer's base URL. Links are `${explorer}/tx/${hash}` and so on. */

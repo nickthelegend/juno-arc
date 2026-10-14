@@ -61,7 +61,7 @@ export function WalletPreview() {
           title={testnet ? (faucet.data ? `${faucet.data.amount} USDC to start` : "Testnet USDC to start") : "USDC is the only token"}
           detail={
             testnet
-              ? "Juno's faucet pays a new wallet testnet USDC, enough for a launch and a few buys. USDC is also the gas."
+              ? "Get testnet USDC while Juno's faucet is funded, or use Circle's faucet from your wallet. A photo launch costs about $0.06 in gas; buys need extra USDC."
               : "It is what you trade with and what pays the gas. There is no second token to hold."
           }
         />

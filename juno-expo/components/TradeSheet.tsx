@@ -718,6 +718,28 @@ export function TradeSheet({
           </Done>
         ) : (
           <>
+            {/* Pay with a signature instead of gas: shown only when Juno's
+                relayer is configured. */}
+            {gaslessOffered ? (
+              <Tappable
+                onPress={() => setGasless((on) => !on)}
+                to={0.98}
+                accessibilityRole="switch"
+                aria-checked={gasless}
+                accessibilityLabel="Pay with signature, no gas"
+              >
+                <Gasless $on={gasless} testID="gasless-toggle">
+                  <Check $on={gasless}>{gasless ? <CheckMark>✓</CheckMark> : null}</Check>
+                  <Col gap={2} style={{ flex: 1 }}>
+                    <Label style={{ fontWeight: "800" }}>Gasless buy — pay with signature</Label>
+                    <Caption>
+                      Sign an EIP-3009 USDC authorisation; Juno&rsquo;s relayer submits the buy and pays the gas.
+                    </Caption>
+                  </Col>
+                </Gasless>
+              </Tappable>
+            ) : null}
+
             {/* The field, the token it is denominated in, and what you have to
                 spend — the three things the number has to be read against, in
                 one box. */}
@@ -924,28 +946,6 @@ export function TradeSheet({
                   </LinkTap>
                 ) : null}
               </FillNote>
-            ) : null}
-
-            {/* Pay with a signature instead of gas: shown only when Juno's
-                relayer is configured. */}
-            {gaslessOffered ? (
-              <Tappable
-                onPress={() => setGasless((on) => !on)}
-                to={0.98}
-                accessibilityRole="switch"
-                aria-checked={gasless}
-                accessibilityLabel="Pay with signature, no gas"
-              >
-                <Gasless $on={gasless} testID="gasless-toggle">
-                  <Check $on={gasless}>{gasless ? <CheckMark>✓</CheckMark> : null}</Check>
-                  <Col gap={2} style={{ flex: 1 }}>
-                    <Label style={{ fontWeight: "800" }}>Pay with signature — no gas</Label>
-                    <Caption>
-                      Sign an EIP-3009 USDC authorisation; Juno&rsquo;s relayer submits the buy and pays the gas.
-                    </Caption>
-                  </Col>
-                </Gasless>
-              </Tappable>
             ) : null}
 
             {/* The announcement. Optional, and never the default — a trade is

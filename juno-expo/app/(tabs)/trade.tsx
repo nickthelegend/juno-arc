@@ -50,7 +50,7 @@ export default function TradeScreen() {
   const [sort, setSort] = useLinkedState<Sort>(
     "sort",
     SORTS.map((option) => option.id),
-    "trackers",
+    "posts",
   );
   const onTraders = sort === "traders";
 
@@ -101,7 +101,9 @@ export default function TradeScreen() {
               <Intro
                 pill={onTestnet() ? "Display-only on testnet · mainnet prices" : "Chainlink on Arc mainnet"}
                 title="Track anything with a feed."
-                body="Bitcoin, Ether, gold, the euro: each tracker is a USDC bonding curve on Arc marked against a Chainlink Data Feed, with its premium and band shown against the live feed price."
+                body={onTestnet()
+                  ? "Compare a USDC bonding curve with Chainlink prices from Arc mainnet. Testnet trackers show the reference price only; no on-chain NAV marks or price-band enforcement."
+                  : "Bitcoin, Ether, gold, the euro: each tracker is a USDC bonding curve on Arc marked against a Chainlink Data Feed, with its premium and band shown against the feed price."}
               />
               <FeedBoard onLaunch={(feed) => router.push(`/post?tracker=${encodeURIComponent(feed.id)}` as never)} />
             </>
@@ -643,4 +645,3 @@ const Loading = styled.View`
   padding-horizontal: ${(p) => p.theme.space(4)}px;
   gap: ${(p) => p.theme.space(3)}px;
 `;
-

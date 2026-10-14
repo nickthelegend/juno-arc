@@ -83,6 +83,8 @@ const PRESETS = [
 export default function PostScreen() {
   const router = useRouter();
   const wallet = useWallet();
+  const config = useApi(() => juno.config(), []);
+  const [funding, setFunding] = useState(false);
   /*
    * Which kind of thing is being launched, chosen in the create sheet.
    *
@@ -215,7 +217,7 @@ export default function PostScreen() {
       if (result.canceled || !result.assets[0]) return;
       const asset = result.assets[0];
       if (asset.fileSize && asset.fileSize > MAX_BYTES) {
-        setError("That file is over 25MB. Pick a smaller one.");
+        setError("That file is over 4MB. Pick a smaller photo or a shorter video.");
         return;
       }
       setMedia(asset);
@@ -414,17 +416,29 @@ export default function PostScreen() {
           </Text>
 
           <MediaPicker kind={kind} media={media} onPick={pick} disabled={busy} />
-          {juno.loadedConfig()?.storage === "local" ? (
+          {config.data?.storage === "local" ? (
             <Text style={styles.storageNote}>
-              Demo storage: this server keeps your {kind === "reel" ? "video" : "photo"} on its own disk under its IPFS
-              content address. It is not pinned to the IPFS network. The market itself is a real contract on Arc.
+              Demo storage: Juno hosts your {kind === "reel" ? "video" : "photo"} at a content-addressed URL;
+              it is not pinned to IPFS. Keep files under 4MB. The market itself is a real contract on Arc.
             </Text>
+          ) : null}
+
+          {!wallet.address ? (
+            <Button label="Create wallet to launch" onPress={() => void wallet.connect().catch((e) => setError(e.message))} />
+          ) : testnet && unfunded ? (
+            <Button label="Get testnet USDC" loading={funding} onPress={() => {
+              setFunding(true);
+              setError(null);
+              void juno.faucet(wallet.address!).then(() => usdcBalance.refresh())
+                .catch((e) => setError(e.message)).finally(() => setFunding(false));
+            }} />
           ) : null}
 
           <Card style={styles.form}>
             <Field label="Name">
               <TextInput
                 value={name}
+                accessibilityLabel="Name"
                 onChangeText={setName}
                 placeholder="Night Market"
                 placeholderTextColor={theme.colors.faint}
@@ -436,6 +450,7 @@ export default function PostScreen() {
             <Field label="Ticker" hint={symbol.length > 0 && !symbolOk ? "2–10 letters or digits" : undefined}>
               <TextInput
                 value={symbol}
+                accessibilityLabel="Ticker"
                 onChangeText={(next) => setSymbol(next.toUpperCase())}
                 placeholder="NIGHT"
                 placeholderTextColor={theme.colors.faint}
@@ -451,6 +466,7 @@ export default function PostScreen() {
             >
               <TextInput
                 value={caption}
+                accessibilityLabel="Caption"
                 onChangeText={setCaption}
                 placeholder={kind === "reel" ? "Street level, 2am." : "Say what this is"}
                 placeholderTextColor={theme.colors.faint}
@@ -505,6 +521,7 @@ export default function PostScreen() {
               <Text style={styles.sectionLede}>
                 A Chainlink Data Feed on Arc mainnet. The curve opens at the feed&apos;s price times what one token stands
                 for, and the coin page shows its NAV, premium and band against the feed.
+                {testnet ? " Display-only on testnet: no on-chain NAV marks or price-band enforcement." : ""}
               </Text>
               {feeds.loading ? (
                 <Text style={styles.sectionLede}>Reading Chainlink feeds…</Text>
@@ -564,7 +581,7 @@ export default function PostScreen() {
             Bought in the launch transaction itself, at the opening price, so nobody can get in ahead of you.
           </Text>
           <View style={styles.chips} role="radiogroup" aria-label="First buy">
-            {FIRST_BUYS.map((amount) => {
+            {(testnet ? [0, 0.01, 0.05, 0.1] : FIRST_BUYS).map((amount) => {
               const on = firstBuy === amount;
               return (
                 <Pressable
@@ -623,7 +640,7 @@ const LAUNCH_GAS_USDC = 0.1;
 /** First-buy sizes offered at launch, in USDC. */
 const FIRST_BUYS = [0, 1, 5, 10] as const;
 /** Matches the upload route's own limit, so a doomed upload is refused before it starts. */
-const MAX_BYTES = 25 * 1024 * 1024;
+const MAX_BYTES = 4 * 1024 * 1024;
 
 /**
  * The photo or video, picked from the library and previewed at its own shape.
@@ -651,7 +668,7 @@ function MediaPicker({
           </View>
           <Text style={styles.dropTitle}>{kind === "reel" ? "Add a video" : "Add a photo"}</Text>
           <Text style={styles.dropBlurb}>
-            {kind === "reel" ? "Vertical works best. Up to 25MB." : "Square works best. Up to 25MB."}
+            {kind === "reel" ? "Vertical works best. Up to 4MB." : "Square works best. Up to 4MB."}
           </Text>
         </View>
       </Pressable>

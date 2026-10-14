@@ -42,12 +42,19 @@ export default function SearchScreen() {
           style={styles.input}
           accessibilityLabel="Search coins and creators"
         />
-        <Pressable onPress={() => router.back()} accessibilityRole="button" style={styles.cancel}>
+        <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace("/(tabs)/social" as never)} accessibilityRole="button" style={styles.cancel}>
           <Text style={styles.cancelText}>Cancel</Text>
         </Pressable>
       </View>
       <ScrollView contentContainerStyle={styles.list} keyboardShouldPersistTaps="handled">
-        {query.trim().length < 2 ? (
+        {markets.error ? (
+          <View>
+            <Text style={styles.hint}>Markets could not be loaded. Check your connection and try again.</Text>
+            <Pressable onPress={markets.refresh} accessibilityRole="button" style={styles.cancel}>
+              <Text style={styles.cancelText}>Try again</Text>
+            </Pressable>
+          </View>
+        ) : query.trim().length < 2 ? (
           <Text style={styles.hint}>{markets.loading ? "Reading the markets…" : `${all.length} markets. Type a ticker, a name or a handle.`}</Text>
         ) : hits.length === 0 ? (
           <Text style={styles.hint}>Nothing matches “{query.trim()}”.</Text>
